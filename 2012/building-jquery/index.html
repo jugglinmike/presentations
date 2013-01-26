@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=1024" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<title>Building jQuery - Mike Pennisi</title>
+
+	<meta name="description" content="Learn how jQuery 1.8 can be custom-built to suite your needs." />
+	<meta name="author" content="Mike Pennisi" />
+
+	<link href="styles/impress-demo.css" rel="stylesheet" />
+
+	<link rel="shortcut icon" href="favicon.png" />
+	<link rel="apple-touch-icon" href="apple-touch-icon.png" />
+</head>
+	<body class="impress-not-supported">
+
+		<div class="fallback-message">
+			<p>Your browser <b>doesn't support the features required</b> by impress.js, so you are presented with a simplified version of this presentation.</p>
+			<p>For the best experience please use the latest <b>Chrome</b>, <b>Safari</b> or <b>Firefox</b> browser.</p>
+		</div>
+
+		<div id="impress">
+
+<hgroup class="step" id="title" data-x="0" data-y="0">
+	<div class="burst-8">FRESH!</div>
+	<h1>Home-Made jQuery</h1>
+	<h2>Building jQuery 1.8.0 based on your needs</h2>
+</hgroup>
+
+<div class="step" id="who-am-i" data-x="0" data-y="1500">
+	<h1>Who am I?</h1>
+	<ul>
+		<li>Mike Pennisi</h2></li>
+		<li>Front-end developer <a href="http://bocoup.com">@bocoup</a></li>
+	</ul>
+	<img src="img/bob.png">
+</div>
+
+<div class="step" id="new-in-1-8" data-x="1500" data-y="0">
+	<h1>New in jQuery 1.8.0</h1>
+	<ol>
+		<li>Sizzle re-written</li>
+		<li>Animations re-written</li>
+		<li>Automatic CSS prefixing</li>
+		<li>Extended $(html, props)</li>
+		<li>Modularity</li>
+	</ol>
+
+	<p class="more">
+		...plus more! See Dave Methvin's blog post, "jQuery 1.8 Released" for all the deets:
+		<a href="http://blog.jquery.com/2012/08/09/jquery-1-8-released/">http://blog.jquery.com/2012/08/09/jquery-1-8-released/</a>
+	</p>
+</div>
+
+<div class="step" id="grunt" data-x="1500" data-y="1500" data-rotate="90">
+	<h1>Grunt</h1>
+	<p class="description">a task-based build tool for JavaScript projects</a>
+	<ul>
+		<li><a href="http://gruntjs.com">gruntjs.com</a></li>
+		<li><a href="http://twitter.com/gruntjs">@gruntjs</a></li>
+		<li>#grunt</li>
+	</ul>
+</div>
+
+<div class="step" id="live-demo" data-x="0" data-y="0" data-z="5000">
+	<h1>Live demo</h1>
+	<p>the part where Mike struggles with OSX</p>
+</div>
+
+<div class="step" id="dependencies" data-x="0" data-y="1500" data-z="5000">
+	<h1>Dependencies</h1>
+	<ul>
+		<li>
+			ajax
+			<ul>
+				<li>ajax/jsonp</li>
+				<li>ajax/xhr</li>
+				<li>ajax/script</li>
+			</ul>
+		</li>
+		<li>
+			css
+			<ul>
+				<li>effects</li>
+				<li>offset</li>
+				<li>dimensions</li>
+			</ul>
+		</li>
+		<li>deprecated</li>
+	</ul>
+</div>
+
+<div class="step" data-x="1500" data-y="1500" data-z="5000">
+	Lets get down to brass tacks.
+</div>
+
+<div class="step" data-x="1500" data-y="500" data-z="5000">
+	<img src="img/sizes-full-min-gzip.png">
+</div>
+
+<div class="step" data-x="1500" data-y="-500" data-z="5000">
+	<img src="img/sizes-gzip-only.png">
+</div>
+
+		</div>
+
+		<div class="hint">
+			<p>Use a spacebar or arrow keys to navigate</p>
+		</div>
+		<script>
+		if ("ontouchstart" in document.documentElement) { 
+			document.querySelector(".hint").innerHTML = "<p>Tap on the left or right to navigate</p>";
+		}
+		</script>
+
+		<script src="scripts/impress.js"></script>
+		<script>impress().init();</script>
+
+	</body>
+</html>
