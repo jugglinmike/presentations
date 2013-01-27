@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	<script>
+	(function(){
+		// Look for a jqversion query parameter and grab any following version.
+		// Limit to digits and letters to prevent any XSS attempts
+		var verMatch = /jqversion=([\w\.]+)/.exec( location.search ),
+			// our matched version, e.g., 1.6.4 or 1.7rc1
+			version = verMatch && verMatch[1],
+			src;
+		if (version) {
+			// version was specified, use jQuery's CDN to acccess non-mininfied
+			// betas and RCs
+			src = 'code.jquery.com/jquery-' + version;
+		} else {
+			// nothing was specified, use the Google CDN (or jQuery's or
+			// Microsoft's) with a minified copy
+			src = 'ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min';
+		}
+		// create the script tag
+		document.write('<script src="//' + src + '.js"><\/script>');
+	})();
+	</script>
+	<script>
+	// Use a local copy in case the above didn't load
+	if (!window.jQuery) {
+		document.write('<script src="/scripts/lib/jquery-1.8.3.min.js"><\/script>');
+	}
+	</script>
+	<script src="/scripts/app.js"></script>
+	</head>
+	<body>
+
+		<div class="status">&nbsp;</div>
+		<button class="set-color">Red</button>
+		<button class="set-color">#bada55</button>
+		<button class="set-color">Blue</button>
+
+		<button class="enable-chooser">Enable</button>
+
+		<div class="thanks"></div>
+	</body>
+</html>
