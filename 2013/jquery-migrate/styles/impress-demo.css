@@ -214,6 +214,11 @@ code.inline {
   text-align: right;
 }
 
+#this-breaks-web code {
+  font-size: 0.5em;
+  display: block;
+}
+
 #grunt {
   text-align: center;
 } #grunt h1 {
