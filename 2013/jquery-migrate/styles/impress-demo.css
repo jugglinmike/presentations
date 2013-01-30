@@ -219,6 +219,12 @@ code.inline {
   display: block;
 }
 
+#jquery-plugins {
+  text-align: center;
+} #jquery-plugins h1 {
+  margin-bottom: 0.3em;
+}
+
 #grunt {
   text-align: center;
 } #grunt h1 {
