@@ -203,6 +203,15 @@ code.inline {
   display: block;
 }
 
+#jquery1-9 .date {
+  font-size: 0.7em;
+  line-height: 0.7em;
+  margin-bottom: 0.5em;
+} #jquery1-9 ul {
+  list-style-type: disc;
+  margin-left: 1.2em;
+}
+
 #why blockquote {
   text-align: justify;
   font-style: italic;
