@@ -1,0 +1,36 @@
+body {
+	color: #333;
+}
+a, a:visited {
+	color: #333;
+	text-decoration: underline;
+} a:hover {
+	text-decoration: none;
+}
+.main {
+	width: 400px;
+	margin: 0 auto;
+} .main h1 {
+	font-weight: normal;
+	margin: 0;
+} .main h2 {
+	font-style: italic;
+	font-weight: normal;
+	font-size: 1em;
+	margin: 0;
+} .main hgroup {
+	margin-bottom: 1.5em;
+}
+.status {
+	width: 300px;
+	height: 70px;
+	border: solid 1px #333;
+	text-align: center;
+	padding: 1em;
+	margin-bottom: 1em;
+}
+.explanation {
+	font-size: 0.9em;
+	margin: 2em 0;
+	text-align: center;
+}

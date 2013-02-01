@@ -1,6 +1,9 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 	<head>
+	<meta charset="utf-8" />
+	<title>jQuery Migrate Demo Application</title>
+	<link href="styles/index.css" rel="stylesheet" />
 	<script>
 	(function(){
 		// Look for a jqversion query parameter and grab any following version.
@@ -25,20 +28,33 @@
 	<script>
 	// Use a local copy in case the above didn't load
 	if (!window.jQuery) {
-		document.write('<script src="/scripts/lib/jquery-1.8.3.min.js"><\/script>');
+		document.write('<script src="scripts/lib/jquery-1.8.3.min.js"><\/script>');
 	}
 	</script>
-	<script src="/scripts/app.js"></script>
+	<script src="scripts/app.js"></script>
 	</head>
 	<body>
 
-		<div class="status">&nbsp;</div>
-		<button class="set-color">Red</button>
-		<button class="set-color">#bada55</button>
-		<button class="set-color">Blue</button>
+		<div class="main">
+			<hgroup>
+				<h1>Color Changer</h1>
+				<h2>a jQuery Migrate Plugin demo application</h2>
+			</hgroup>
 
-		<button class="enable-chooser">Enable</button>
+			<div class="color-changer">
+				<div class="status">&nbsp;</div>
+				<button class="set-color">Red</button>
+				<button class="set-color">#bada55</button>
+				<button class="set-color">Blue</button>
 
-		<div class="thanks"></div>
+				<button class="enable-chooser">Enable</button>
+			</div>
+
+			<div class="explanation">
+				Confused? <a href="..">Check out the accompanying presentation here.</a>
+			</div>
+
+			<div class="thanks"></div>
+		</div>
 	</body>
 </html>
