@@ -1,0 +1,35 @@
+---
+index: true
+---
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Presentations</title>
+		<link rel="stylesheet" href="styles/index.css" type="text/css">
+	</head>
+	<body>
+		<div id="container">
+			<header>
+				<h1 class="title">Presentations</h1>
+				<h2 class="byline">by <a href="http://mikepennisi.com">Mike Pennisi</a></h2>
+			</header>
+			<ul class="presentations">
+			{% for page in site.pages reversed %}
+				{% if page.index == null %}
+				<li class="presentation">
+					<span class="date">{{ page.date | date:'%b %d, %Y' }}</span>
+					<span class="title">
+						<a href="{{ page.url | remove:'index.html' | replace_first:'/','' }}">
+							{{ page.title }}
+						</a>
+					</span>
+				</li>
+				{% endif %}
+			{% endfor %}
+			</ul>
+			<footer>
+				Copyright &copy; Mike Pennisi {{ 'now' | date:'%Y' }}. All presentations are <a href="http://github.com/jugglinmike/presentations">open source</a>.
+			</footer>
+		</div>
+	</body>
+<html>
