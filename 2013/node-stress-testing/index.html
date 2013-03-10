@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=1024" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<title>Stress Testing Realtime Node.js Apps</title>
+	<meta name="DC.created" content="2013-03-12" />
+
+	<meta name="description" content="Techniques for building and scaling a realtime application with Node.js" />
+	<meta name="author" content="Mike Pennisi" />
+
+	<link href="styles/impress-demo.css" rel="stylesheet" />
+	<link href="styles/prism.css" rel="stylesheet" />
+
+	<link rel="shortcut icon" href="favicon.png" />
+	<link rel="apple-touch-icon" href="apple-touch-icon.png" />
+</head>
+	<body class="impress-not-supported">
+
+		<div class="fallback-message">
+			<p>Your browser <b>doesn't support the features required</b> by impress.js, so you are presented with a simplified version of this presentation.</p>
+			<p>For the best experience please use the latest <b>Chrome</b>, <b>Safari</b> or <b>Firefox</b> browser.</p>
+		</div>
+
+		<div id="impress">
+
+<hgroup class="step" id="title">
+	<h1>Stress Testing Realtime Node.js Apps</h1>
+</hgroup>
+
+<div class="step" id="overview">
+	<h2>Overview</h2>
+	<ol>
+		<li>Project background</li>
+		<li>Building an application</li>
+		<li>Configuring a server</li>
+		<li>Gathering a swarm</li>
+		<li>Demonstration</li>
+	</ol>
+</div>
+
+<div class="step">
+	<h2>Project Background</h2>
+	<ol>
+		<li>PBS built a client-side Electoral College map</li>
+		<li>We built a real-time backend</li>
+		<li>We researched production readiness</li>
+	</ol>
+</div>
+
+<div class="step">
+	<h2>Project Background: PBS's Offline Application</h2>
+	<video controls>
+		<source src="video/map-center-offline.webm"></source>
+		Your browser does not support video playback.
+	</video>
+</div>
+
+<div class="step">
+	<h2>Project Background: Our Realtime Extension</h2>
+	<video controls>
+		<source src="video/map-center-networked.avi"></source>
+		Your browser does not support video playback.
+	</video>
+</div>
+
+<div class="step">
+	<h1>Building the Application</h1>
+</div>
+
+<div class="step" id="client-modularization" data-scale="0.3" data-rotate="90" data-x="350" data-y="7500">
+	<h2>The Client: Modularization</h2>
+	<div class="body">
+		<img src="img/file-hierarchy.png">
+	</div>
+</div>
+
+<div class="step" id="intro-to-socket-io-1" data-scale="0.3" data-rotate="90" data-x="200" data-y="7320">
+	<h2>Intro to Socket.io</h2>
+	<blockquote>
+		"Socket.IO aims to make realtime apps possible in every browser and
+		mobile device, blurring the differences between the different transport
+		mechanisms. It's care-free realtime 100% in JavaScript."
+	</blockquote>
+	<span class="quote-attribution">&mdash; <a href="http://socket.io/">http://socket.io</a></span>
+</div>
+
+<div class="step" id="intro-to-socket-io-2" data-scale="0.3" data-rotate="90" data-x="200" data-y="7700">
+	<h2>Intro to Socket.io (cont.)</h2>
+	<p>Sometimes called "the jQuery for realtime applications."</p>
+	<p>
+		Two components:
+		<ul>
+			<li>
+				<code class="inline">socket.io-client</code>: runs in the
+				browser
+			</li>
+			<li>
+				<code class="inline">socket.io</code>: runs on the server;
+				serves the static JS
+				<code class="inline">socket.io-client</code> files
+			</li>
+		</ul>
+	</p>
+</div>
+
+<div class="step" id="client-server-endpoint-1" data-scale="0.3" data-rotate="90" data-x="0" data-y="7320">
+	<h2>The Client: Endpoint Parameterization</h2>
+	<pre class="code"><code class="lang-javascript">// Client source file
+var defaultOptions = {
+    // These values are expanded at build time.
+    host: "{{ NODE_HOST }}",
+    port: "{{ NODE_PORT }}"
+};</code></pre>
+</div>
+
+<div class="step" id="client-server-endpoint-2" data-scale="0.3" data-rotate="90" data-x="0" data-y="7700">
+	<h2>The Client: Endpoint Parameterization (cont.)</h2>
+	<pre class="code"><code class="lang-javascript">// Build script (Grunt)
+NODE_HOST: process.env.NODE_HOST || "127.0.0.1",
+NODE_PORT: process.env.NODE_PORT || 8000,
+
+// Inject NODE_HOST and NODE_PORT values into files as they are
+// copied
+processContent: function(content) {
+  return content.replace(/\{\{\s*(NODE_HOST|NODE_PORT)\s*\}\}/g,
+      function(match, varName) {
+          return grunt.config("meta." + varName);
+      }
+  );
+}</code></pre>
+</div>
+
+<div class="step" data-scale="0.3" data-rotate="90" data-x="-200" data-y="7320">
+	<h2>(Mostly) Avoiding <code class="inline">fs.*Sync()</code></h2>
+	<p>Generally a bad practice--it blocks the execution thread.</p>
+	<p>Acceptable during application initialization.</p>
+</div>
+
+<div class="step" data-scale="0.3" data-rotate="90" data-x="-200" data-y="7700" id="socket-io-api">
+	<h2>Advanced Socket.io usage: Learning the API</h2>
+	<ul class="references">
+		<li><a href="http://socket.io/#how-to-use">Socket.io's examples</a> (somewhat high-level)</li>
+		<li><a href="https://github.com/learnboost/socket.io/wiki">The wiki</a> (incomplete)</li>
+		<li><a href="https://github.com/LearnBoost/socket.io">The source code</a> (documents public API)</li>
+	</ul>
+</div>
+
+<div class="step" data-scale="0.3" data-rotate="90" data-x="-400" data-y="7320">
+	<h2>Advanced Socket.io usage: Dynamic connection handler</h2>
+	<pre class="code"><code class="lang-javascript">// One approach
+socketServer.sockets.on("connection", function(socket) {
+  if (app.isLive()) {
+    connectLive.apply(socket, arguments);
+  } else {
+    offlineConnection.apply(socket, arguments);
+  }
+});</code></pre>
+</div>
+
+<div class="step" data-scale="0.3" data-rotate="90" data-x="-400" data-y="7700">
+	<h2>Advanced Socket.io usage: Dynamic connection handler</h2>
+	<pre class="code"><code class="lang-javascript">// Another approach
+socketServer.sockets.on("connect", function(socket) {
+  socketHandlers.connection.apply(socket, arguments);
+});
+
+// elsewhere...
+socketHandlers.connection = connectLive;</code></pre>
+</div>
+
+<div class="step" data-scale="0.3" data-rotate="90" data-x="-600" data-y="7500">
+	<h2>Warning! Version 1.0 is on its way!</h2>
+</div>
+
+<div class="step">
+	<h1>Configuring a Realtime Server</h1>
+</div>
+
+<div class="step" data-scale="0.3" data-rotate="90" data-x="250" data-y="8850">
+	<h2>Security: Threat Model</h2>
+	<ul>
+		<li>Brute force password guessing</li>
+		<li>Private key theft</li>
+		<li>Application logic compromise</li>
+	</ul>
+</div>
+
+<div class="step" data-scale="0.3" data-rotate="90" data-x="250" data-y="9200">
+	<h2>Security: Precautions</h2>
+	<ul>
+		<li>Disallow SSH password login</li>
+		<li>Create <code class="inline">dev</code> user with <code class="inline">sudo</code> rights</li>
+		<li>Create <code class="inline">node</code> user with limited rights</li>
+	</ul>
+</div>
+
+<div class="step" data-scale="0.3" data-rotate="90" data-x="0" data-y="8850" id="node-tech-details">
+	<h2>Technical requirements: Node.js</h2>
+	<div class="body">
+		<p>Install to <code class="inline">/opt/joyent/node/</code> (check out <a href="http://refspecs.linuxfoundation.org/fhs.shtml">the Filesystem Hierarchy Standard</a> for some light reading)</p>
+		<p><code class="inline">$ sudo chown users:dev /opt/joyent/node</code></p>
+	</div>
+</div>
+
+<div class="step" data-scale="0.3" data-rotate="90" data-x="0" data-y="9200">
+	<h2>Technical requirements: Locking down dependencies</h2>
+	<ul>
+		<li><a href="https://npmjs.org/doc/shrinkwrap.html">NPM shrinkwrap</a></li>
+		<li><a href="https://npmjs.org/package/lockdown">npm-lockdown</a></li>
+	</ul>
+</div>
+
+<div class="step" data-scale="0.3" data-rotate="90" data-x="-250" data-y="8850">
+	<h2>Data collection tools: htop</h2>
+	<img src="img/htop.png">
+	<code class="inline">apt-get install htop</code>
+</div>
+
+<div class="step" data-scale="0.3" data-rotate="90" data-x="-250" data-y="9200">
+	<h2>Data collection tools: SAR</h2>
+	<img src="img/sar.png">
+	<code class="inline">apt-get install sysstat</code>
+</div>
+
+<div class="step">
+	<h1>Gathering a Swarm</h1>
+</div>
+
+<div class="step" data-scale="0.3" data-rotate="90" data-x="350" data-y="10500" id="simulator-design">
+	<h2>Client Simulator: Design</h2>
+	<dl>
+		<dt>Goal</dt>
+		<dd>A script that simulates many people using your application simultaneously</dd>
+		<dt>Possible solutions</dt>
+		<dd>
+			<ul class="solutions">
+				<li>Script a real browser to run your application (i.e. <a href="http://seleniumhq.org">Selenium</a>)</li>
+				<li>Load your application in <a href="http://phantomjs.org">PhantomJS</a></li>
+				<li>Strip out the network module and run that from Node.js</li>
+			</ul>
+		</dd>
+	</dl>
+</div>
+
+<div class="step" data-scale="0.3" data-rotate="90" data-x="100" data-y="10300" id="simulator-tech-details">
+	<h2>Client Simulator: Technical Considerations</h2>
+	<ul class="considerations">
+		<li class="consideration">Using <code class="inline"><a href="https://github.com/LearnBoost/socket.io-client">socket.io-client</a></code> from Node.js (<a href="https://github.com/bocoup/map_center/blob/00cee94436ec8879fb32d349604dc4f755c265c0/backend/stress/client/index.js#L62-L77">example</a>)</li>
+		<li class="consideration">Supporting run-time configuration with <a href="https://github.com/substack/node-optimist">optimist</a> (<a href="https://github.com/bocoup/map_center/blob/00cee94436ec8879fb32d349604dc4f755c265c0/backend/stress/client/index.js#L8-L41">example</a>)</li>
+		<li class="consideration">Avoiding disk writes (even asynchronous) (<a href="https://github.com/bocoup/map_center/blob/00cee94436ec8879fb32d349604dc4f755c265c0/backend/stress/client/index.js#L90-L103">example</a>)</li>
+		<li class="consideration">Dispersing client connections (<a href="https://github.com/bocoup/map_center/blob/00cee94436ec8879fb32d349604dc4f755c265c0/backend/stress/client/index.js#L178-L187">example</a>)</li>
+	</ul>
+</div>
+
+<div class="step" data-scale="0.3" data-rotate="90" data-x="100" data-y="10000" id="aside-on-deps">
+	<h2>Aside: Modifying upstream dependencies</h2>
+	<div class="explanation">
+		<p>
+			I wanted to simulate long-polling connections from Node.js
+			(<a href="https://github.com/bocoup/map_center/blob/00cee94436ec8879fb32d349604dc4f755c265c0/backend/stress/client/index.js#L84-L88">see how</a>).
+			<a href="https://github.com/LearnBoost/socket.io-client/commit/d37e3ec8085b66dcb3b3d6c11bc73c5283756f04">Socket.io required a patch</a> to support this.
+		</p>
+		<ol>
+			<li>Before that was merged, <a href="https://github.com/bocoup/map_center/commit/b8680f784a568183fc18811ec60b6ac442fba420">we needed to use our fork of the project</a>.</li>
+			<li>After it was merged, <a href="https://github.com/bocoup/map_center/commit/dbf5635b58b43f5636568dd09bb6e8dcbca6d392">we needed to specify the dependency with a git URL</a></li>
+			<li>After a new version was published, we could have simply specified the latest version.</li>
+		</ol>
+	</div>
+</div>
+
+<div class="step" data-scale="0.3" data-rotate="90" data-x="100" data-y="10700">
+	<h2>Small-scale Demonstration</h2>
+</div>
+
+<div class="step" data-scale="0.3" data-rotate="90" data-x="-150" data-y="10300" id="intro-to-aws-1">
+	<h2>AWS*</h2>
+	<blockquote>
+		"<a href="http://aws.amazon.com">Amazon Web Services</a> offers a
+		complete set of infrastructure and application services that enable you
+		to run virtually everything in the cloud: from enterprise applications
+		and big data projects to social games and mobile apps."
+	</blockquote>
+	<p>Lucky for us, there's a <a href="http://aws.amazon.com/free/">Free usage tier</a>.</p>
+	<span class="disclaimer">* Amazon refused to pay me for this slide</span>
+</div>
+
+<div class="step" data-scale="0.3" data-rotate="90" data-x="-150" data-y="10700" id="intro-to-aws-2">
+	<h2>AWS (cont.)</h2>
+	<ul>
+		<li>Relax security considerations (instances are short-lived)</li>
+		<li>Install your VCS to ease on-the-fly updates</li>
+	</ul>
+</div>
+
+<div class="step" data-scale="0.3" data-rotate="90" data-x="-350" data-y="10300">
+	<h2>Bees with Machine Guns</h2>
+	<blockquote>
+		A utility for arming (creating) many bees (micro EC2 instances) to
+		attack (load test) targets (web applications).
+	</blockquote>
+	<span class="quote-attribution">&mdash; <a href="https://github.com/newsapps/beeswithmachineguns">Bees with Machine Guns project page</a></span>
+</div>
+
+<div class="step" data-scale="0.3" data-rotate="90" data-x="-350" data-y="10700" id="my-fork-of-bees">
+	<h2>My awful hacked-up fork</h2>
+	<a href="https://github.com/jugglinmike/beeswithmachineguns">jugglinmike/beeswithmachineguns</a>
+	<p class="question">"But... why?!"</p>
+	<p>We need a slightly more generalized approach to run our Node.js client simulator.</p>
+</div>
+
+
+<div class="step">
+	<h1>Demonstration</h1>
+</div>
+
+<div class="step">
+	<h2>What's Next?</h2>
+	<ul>
+		<li><a href="https://github.com/bumptech/stud">stud</a> and <a href="https://github.com/mikeal/stud-proxy">stud-proxy</a></li>
+		<li><a href="https://github.com/LearnBoost/socket.io">Socket.io 1.0</a> and <a href="https://github.com/LearnBoost/engine.io">Engine.io</a></li>
+	</ul>
+</div>
+
+<div class="step" id="resources">
+	<h2>Resources</h2>
+	<ul class="resource-list">
+		<li><a href="http://www.devthought.com/2012/07/07/the-realtime-engine/">The Realtime Engine</a> by <a href="http://devthought.com/">Guillermo Rauch</a></li>
+		<li>Source code
+			<ul class="source-code">
+				<li><a href="https://github.com/LearnBoost/socket.io">Socket.io</a></li>
+				<li><a href="https://github.com/LearnBoost/engine.io">Engine.io</a></li>
+				<li><a href="https://github.com/newsapps/beeswithmachineguns">Bees with Machine Guns</a></li>
+				<li><a href="https://github.com/newshour/map_center">PBS Map Center</a></li>
+			</ul>
+		</li>
+		<li>Related article series
+			<ul class="article-series">
+				<li><a href="http://weblog.bocoup.com/bocoup-and-pbs-realtime/">Bocoup & PBS: Building and Scaling a Realtime Node.js Application</a></li>
+				<li><a href="http://weblog.bocoup.com/node-stress-test-analysis/">A Stress Testing Story</a></li>
+				<li><a href="http://weblog.bocoup.com/node-stress-test-procedure/">Stress Testing Procedure</a></li>
+				<li><a href="http://weblog.bocoup.com/node-stress-test-server/">Building a Server</a></li>
+			</ul>
+		</li>
+		<li>Related screencast series
+			<ul class="screencast-series">
+				<li><a href="http://training.bocoup.com/screencasts/configuring-aws/">Configuring AWS</a></li>
+				<li><a href="http://training.bocoup.com/screencasts/running-the-simulation/">Running the Simulation</a></li>
+				<li><a href="http://training.bocoup.com/screencasts/preparing-a-server/">Preparing a Server</a></li>
+			</ul>
+		</li>
+</div>
+
+		</div>
+
+		<div class="hint">
+			<p>Use a spacebar or arrow keys to navigate</p>
+		</div>
+		<script>
+		if ("ontouchstart" in document.documentElement) { 
+			document.querySelector(".hint").innerHTML = "<p>Tap on the left or right to navigate</p>";
+		}
+		</script>
+
+		<script src="scripts/impress.js"></script>
+		<script src="scripts/prism.js"></script>
+		<script>
+			var s = Array.prototype.slice.call(document.querySelectorAll("#impress > .step"));
+			var idx = 0;
+			s.forEach(function(elem) {
+				if (!elem.getAttribute("data-y")) {
+					elem.setAttribute("data-y",idx++*1500);
+				}
+			});
+		</script>
+		<script>impress().init();</script>
+
+	</body>
+</html>
