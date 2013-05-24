@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=1024" />
+ 	<title>jQuery's Place in JavaScript Frameworks</title>
+	<meta name="DC.created" content="2013-05-29" />
+
+	<meta name="description" content="Why jQuery remains relevant in the world of application frameworks." />
+	<meta name="author" content="Mike Pennisi" />
+
+    <script src="scripts/lib/jquery.js"></script>
+    <script src="scripts/lib/modernizr.custom.js"></script>
+    <script src="scripts/lib/deck.core.js"></script>
+    <script src="scripts/lib/deck.hash.js"></script>
+    <link href="styles/lib/deck.core.css" rel="stylesheet" />
+    <link href="styles/lib/prism.css" rel="stylesheet" />
+    <link href="styles/index.css" rel="stylesheet" />
+
+  </head>
+  <body>
+
+    <div class="deck-container">
+
+      <section class="slide">
+        <h1>jQuery's Place in JavaScript Frameworks</h1>
+      </section>
+
+	<section class="slide full-image" id="in-the-beginning">
+		<h2>In the Beginning</h2>
+	</section>
+
+	<section class="slide full-image" id="a-new-wave">
+		<h2>A New Wave</h2>
+	</section>
+
+	<section class="slide full-image" id="jquery-spaghetti">
+		<h2>jQuery Spaghetti</h2>
+	</section>
+
+	<section class="slide full-image" id="enter-the-framework">
+		<h2>Enter the Framework</h2>
+	</section>
+
+	<section class="slide">
+		<h2>Tonight Only!*</h2>
+		<h3>See how these frameworks interact with jQuery</h3>
+		<div class="asterisk">* Also all following nights on GitHub.com</div>
+	</section>
+
+      <section class="slide">
+        <h2>Backbone.js: Capturing</h2>
+		<pre><code class="lang-javascript">// Initial Setup
+// -------------
+
+// Save a reference to the global object (`window` in the browser, `exports`
+// on the server).
+var root = this;</code></pre>
+
+		<pre><code class="lang-javascript">// For Backbone's purposes, jQuery, Zepto, Ender, or My Library (kidding) owns
+// the `$` variable.
+Backbone.$ = root.jQuery || root.Zepto || root.ender || root.$;</code></pre>
+      </section>
+
+      <section class="slide">
+        <h2>Backbone.js: Internal Usage</h2>
+        <pre><code class="lang-markup"></code></pre>
+      </section>
+
+      <section class="slide">
+        <h2>Backbone.js: Extensions</h2>
+        <pre><code class="lang-javascript"></code></pre>
+      </section>
+
+      <section class="slide">
+        <h2>Backbone.js: Application Usage</h2>
+        <pre><code class="lang-javascript"></code></pre>
+      </section>
+
+      <section class="slide">
+        <h2>Ember.js: Capturing</h2>
+        <pre><code class="lang-javascript"></code></pre>
+      </section>
+
+      <section class="slide">
+        <h2>Ember.js: Internal Usage</h2>
+        <pre><code class="lang-javascript"></code></pre>
+      </section>
+
+      <section class="slide">
+        <h2>Ember.js: Extensions</h2>
+        <pre><code class="lang-javascript"></code></pre>
+      </section>
+
+      <section class="slide">
+        <h2>Ember.js: Application Usage</h2>
+        <pre><code class="lang-javascript"></code></pre>
+      </section>
+
+      <section class="slide">
+        <h2>Angular.js: Capturing</h2>
+        <pre><code class="lang-javascript"></code></pre>
+      </section>
+
+      <section class="slide">
+        <h2>Angular.js: Internal Usage</h2>
+        <pre><code class="lang-javascript"></code></pre>
+      </section>
+
+      <section class="slide">
+        <h2>Angular.js: Extensions</h2>
+        <pre><code class="lang-javascript"></code></pre>
+      </section>
+
+      <section class="slide">
+        <h2>Angular.js: Application Usage</h2>
+        <pre><code class="lang-javascript"></code></pre>
+      </section>
+
+    </div>
+
+    <script src="scripts/lib/prism.js"></script>
+    <script src="scripts/app.js"></script>
+  </body>
+</html>

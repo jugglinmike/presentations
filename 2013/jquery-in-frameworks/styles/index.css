@@ -1,0 +1,110 @@
+@font-face {
+  font-family: 'Sorts Mill Goudy';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Sorts Mill Goudy Regular'), local('SortsMillGoudy-Regular'), url(sorts-mill-goudy.woff) format('woff');
+}
+
+body {
+  background: url(bg.jpg);
+}
+.deck-container {
+  font-family: Helvetica, sans-serif;
+  background: url(stripe.png) repeat-x 0 -5px;
+  position: relative;
+  height: 100%;
+  padding: 20px;
+  box-sizing: border-box;
+}
+.deck-container h1, .deck-container h2 {
+  font-family: 'Sorts Mill Goudy', serif;
+}
+.deck-container h1:before, .deck-container h1:after {
+  font-family: Arial, Helvetica, sans-serif;
+  color: #b9b9b9;
+  color: rgba(0, 0, 0, 0.2);
+  font-size: 1.5em;
+  line-height: 1em;
+  padding: 0 0.3em;
+} .deck-container h1:before {
+  content: "{";
+} .deck-container h1:after {
+  content: "}";
+}
+
+.deck-container blockquote {
+  font-style: italic;
+  text-align: justify;
+  padding: 0 1em;
+} .deck-container .quote-attribution {
+  display: block;
+  text-align: right;
+  padding: 0 1em;
+} .deck-container .quote-attribution:before {
+  content: "--"
+}
+
+.deck-container dt {
+  font-weight: bold;
+} .deck-container dt:after {
+  content: ":";
+} .deck-container dd {
+  margin-left: 1em;
+}
+
+.deck-container code.inline {
+  background-color: #eee;
+  background-color: rgba(255, 255, 255, 0.7);
+  border-radius: 0.3em;
+  border: solid 0.1em #aaa;
+  padding: 0 0.2em;
+  display: inline;
+  font-family: monospace;
+}
+
+.deck-container .slide-link {
+  float: right;
+}
+
+.deck-container .large {
+  font-size: 2em;
+}
+.deck-container .small {
+  font-size: 1em;
+}
+.deck-container .logo {
+  text-align: center;
+  display: block;
+}
+
+.slide.full-image {
+	background-size: cover;
+}
+.slide.full-image.deck-current {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+}
+.slide.full-image h2 {
+	margin-top: 4em;
+
+	text-align: center;
+	font-size: 34pt;
+	color: #fff;
+	border: none;
+}
+
+#in-the-beginning {
+	background-image: url(../images/galaxy-by-Sweetie187-on-flickr.jpg);
+}
+#a-new-wave {
+	background-image: url(../images/wave-by-neva-swensen-on-flickr.jpg);
+}
+#jquery-spaghetti {
+	background-image: url(../images/spaghetti-by-hatm-on-flickr.jpg);
+}
+#enter-the-framework {
+	background-image: url(../images/trellis-by-eirian-on-deviantart.jpg);
+}
