@@ -1,0 +1,178 @@
+@font-face {
+  font-family: 'Sorts Mill Goudy';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Sorts Mill Goudy Regular'), local('SortsMillGoudy-Regular'), url(sorts-mill-goudy.woff) format('woff');
+}
+
+body {
+  background: url(bg.jpg);
+}
+.deck-container {
+  font-family: Helvetica, sans-serif;
+  background: url(stripe.png) repeat-x 0 -5px;
+  position: relative;
+  height: 100%;
+  padding: 20px;
+  box-sizing: border-box;
+}
+.deck-container h1, .deck-container h2 {
+  font-family: 'Sorts Mill Goudy', serif;
+}
+.deck-container h1:before, .deck-container h1:after {
+  font-family: Arial, Helvetica, sans-serif;
+  color: #b9b9b9;
+  color: rgba(0, 0, 0, 0.2);
+  font-size: 1.5em;
+  line-height: 1em;
+  padding: 0 0.3em;
+} .deck-container h1:before {
+  content: "{";
+} .deck-container h1:after {
+  content: "}";
+}
+
+.deck-container blockquote {
+  font-style: italic;
+  text-align: justify;
+  padding: 0 1em;
+} .deck-container .quote-attribution {
+  display: block;
+  text-align: right;
+  padding: 0 1em;
+} .deck-container .quote-attribution:before {
+  content: "--"
+}
+
+.slide[data-framework] {
+  padding-left: 5em;
+  height: 100%;
+} .slide[data-framework] header {
+  width: 4em;
+  margin-left: -5em;
+  float: left;
+  height: 100%;
+} .slide[data-framework] header h2 {
+  color: transparent;
+  height: 2em;
+  padding: 0;
+  border: 0;
+  margin: 0 0 1em 0;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center center;
+} .slide[data-framework] header h3 {
+  white-space: nowrap;
+  -webkit-transform: rotate(90deg);
+  -moz-transform: rotate(90deg);
+  -ms-transform: rotate(90deg);
+  transform: rotate(90deg);
+  filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=1);
+}
+.slide[data-framework="backbone"] h2 {
+  background-image: url(../images/backbone-logo.png);
+} .slide[data-framework="ember"] h2 {
+  background-image: url(../images/ember-logo.png);
+} .slide[data-framework="angular"] h2 {
+  background-image: url(../images/angular-logo.png);
+}
+
+.deck-container code.inline {
+  background-color: #eee;
+  background-color: rgba(255, 255, 255, 0.7);
+  border-radius: 0.3em;
+  border: solid 0.1em #aaa;
+  padding: 0 0.2em;
+  display: inline;
+  font-family: monospace;
+}
+
+.deck-container pre {
+  max-height: 20em;
+  overflow-y: auto;
+  resize: vertical;
+}
+
+.deck-container .slide-link {
+  float: right;
+}
+
+.deck-container .large {
+  font-size: 2em;
+}
+.deck-container .small {
+  font-size: 1em;
+}
+.deck-container .logo {
+  text-align: center;
+  display: block;
+}
+
+.slide.full-image {
+	background-size: cover;
+}
+.slide.full-image.deck-current {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+}
+.slide.full-image h2 {
+	margin-top: 20%;
+
+	text-align: center;
+	font-size: 34pt;
+	color: #fff;
+	border: none;
+	background-color: rgba(0, 0, 0, 0.7);
+}
+
+#in-the-beginning {
+	background-image: url(../images/galaxy-by-Sweetie187-on-flickr.jpg);
+}
+#a-new-wave {
+	background-image: url(../images/wave-by-neva-swensen-on-flickr.jpg);
+}
+#jquery-spaghetti {
+	background-image: url(../images/spaghetti-by-hatm-on-flickr.jpg);
+}
+#enter-the-framework {
+	background-image: url(../images/trellis-by-eirian-on-deviantart.jpg);
+}
+
+/* Logo styling */
+.framework-logo:before {
+	margin: 0 auto;
+	content: ' ';
+	background-size: contain;
+	background-repeat: no-repeat;
+	background-position: center center;
+} .framework-logo[data-framework="backbone"]:before {
+	background-image: url(../images/backbone-logo.png);
+} .framework-logo[data-framework="ember"]:before {
+	background-image: url(../images/ember-logo.png);
+} .framework-logo[data-framework="angular"]:before {
+	background-image: url(../images/angular-logo.png);
+}
+.framework-logos {
+	list-style-type: none;
+	text-align: center;
+}
+
+/* List-specific styling */
+.framework-logos .framework-logo {
+	display: inline-block;
+	margin: 0 50px;
+	font-size: 4em;
+} .framework-logos .framework-logo:before {
+	display: block;
+	width: 180px;
+	height: 180px;
+}
+
+h2.framework-logo:before {
+	display: inline-block;
+	width: 2em;
+	height: 1em;
+}
