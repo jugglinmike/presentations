@@ -62,6 +62,12 @@ body {
   font-family: monospace;
 }
 
+.deck-container pre {
+  max-height: 20em;
+  overflow-y: auto;
+  resize: vertical;
+}
+
 .deck-container .slide-link {
   float: right;
 }
@@ -88,12 +94,13 @@ body {
 	bottom: 0;
 }
 .slide.full-image h2 {
-	margin-top: 4em;
+	margin-top: 20%;
 
 	text-align: center;
 	font-size: 34pt;
 	color: #fff;
 	border: none;
+	background-color: rgba(0, 0, 0, 0.7);
 }
 
 #in-the-beginning {
@@ -107,4 +114,40 @@ body {
 }
 #enter-the-framework {
 	background-image: url(../images/trellis-by-eirian-on-deviantart.jpg);
+}
+
+/* Logo styling */
+.framework-logo:before {
+	margin: 0 auto;
+	content: ' ';
+	background-size: contain;
+	background-repeat: no-repeat;
+	background-position: center center;
+} .framework-logo[data-framework="backbone"]:before {
+	background-image: url(../images/backbone-logo.png);
+} .framework-logo[data-framework="ember"]:before {
+	background-image: url(../images/ember-logo.png);
+} .framework-logo[data-framework="angular"]:before {
+	background-image: url(../images/angular-logo.png);
+}
+.framework-logos {
+	list-style-type: none;
+	text-align: center;
+}
+
+/* List-specific styling */
+.framework-logos .framework-logo {
+	display: inline-block;
+	margin: 0 50px;
+	font-size: 4em;
+} .framework-logos .framework-logo:before {
+	display: block;
+	width: 180px;
+	height: 180px;
+}
+
+h2.framework-logo:before {
+	display: inline-block;
+	width: 2em;
+	height: 1em;
 }

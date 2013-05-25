@@ -2,12 +2,12 @@
 
   "use strict";
 
-  var $slides, $lastTopLevel;
-
-  // Duplicate the first slide and place the copy at the end of the show
-  $slides = $(".slide");
-  $lastTopLevel = $slides.last().parents().andSelf().filter(".slide").first();
-  $lastTopLevel.after($slides.eq(0).clone());
+  // Remove leading and trailing white space from code blocks. This allows the
+  // markup to be slightly more readable without introducing empty lines in the
+  // code blocks themselves.
+  $("code").html(function(idx, html) {
+    return $.trim(html);
+  });
 
   $.deck(".slide");
 

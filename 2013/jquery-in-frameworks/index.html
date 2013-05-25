@@ -1,125 +1,446 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=1024" />
- 	<title>jQuery's Place in JavaScript Frameworks</title>
-	<meta name="DC.created" content="2013-05-29" />
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=1024" />
+		<title>jQuery's Place in JavaScript Frameworks</title>
+		<meta name="DC.created" content="2013-05-29" />
 
-	<meta name="description" content="Why jQuery remains relevant in the world of application frameworks." />
-	<meta name="author" content="Mike Pennisi" />
+		<meta name="description" content="Why jQuery remains relevant in the world of application frameworks." />
+		<meta name="author" content="Mike Pennisi" />
 
-    <script src="scripts/lib/jquery.js"></script>
-    <script src="scripts/lib/modernizr.custom.js"></script>
-    <script src="scripts/lib/deck.core.js"></script>
-    <script src="scripts/lib/deck.hash.js"></script>
-    <link href="styles/lib/deck.core.css" rel="stylesheet" />
-    <link href="styles/lib/prism.css" rel="stylesheet" />
-    <link href="styles/index.css" rel="stylesheet" />
+		<script src="scripts/lib/jquery.js"></script>
+		<script src="scripts/lib/modernizr.custom.js"></script>
+		<script src="scripts/lib/deck.core.js"></script>
+		<script src="scripts/lib/deck.hash.js"></script>
+		<link href="styles/lib/deck.core.css" rel="stylesheet" />
+		<link href="styles/lib/prism.css" rel="stylesheet" />
+		<link href="styles/index.css" rel="stylesheet" />
+	</head>
 
-  </head>
-  <body>
+	<body>
 
-    <div class="deck-container">
+	<div class="deck-container">
 
-      <section class="slide">
-        <h1>jQuery's Place in JavaScript Frameworks</h1>
-      </section>
+		<section class="slide">
+			<h1>jQuery's Place in JavaScript Frameworks</h1>
+		</section>
 
-	<section class="slide full-image" id="in-the-beginning">
-		<h2>In the Beginning</h2>
-	</section>
+		<section class="slide full-image" id="in-the-beginning">
+			<h2>In the Beginning</h2>
+		</section>
 
-	<section class="slide full-image" id="a-new-wave">
-		<h2>A New Wave</h2>
-	</section>
+		<section class="slide full-image" id="a-new-wave">
+			<h2>A New Wave</h2>
+		</section>
 
-	<section class="slide full-image" id="jquery-spaghetti">
-		<h2>jQuery Spaghetti</h2>
-	</section>
+		<section class="slide full-image" id="jquery-spaghetti">
+			<h2>jQuery Spaghetti</h2>
+		</section>
 
-	<section class="slide full-image" id="enter-the-framework">
-		<h2>Enter the Framework</h2>
-	</section>
+		<section class="slide full-image" id="enter-the-framework">
+			<h2>Enter the Framework</h2>
+		</section>
 
-	<section class="slide">
-		<h2>Tonight Only!*</h2>
-		<h3>See how these frameworks interact with jQuery</h3>
-		<div class="asterisk">* Also all following nights on GitHub.com</div>
-	</section>
+		<section class="slide">
+			<h2>Tonight Only!*</h2>
+			<h3>See how these frameworks interact with jQuery:</h3>
+			<ul class="framework-logos">
+				<li class="framework-logo" data-framework="backbone">
+					<a href="http://backbonejs.org">Backbone.js</a>
+				</li>
+				<li class="framework-logo" data-framework="ember">
+					<a href="http://emberjs.com">Ember.js</a>
+				</li>
+				<li class="framework-logo" data-framework="angular">
+					<a href="http://angularjs.org">Angular.js</a>
+				</li>
+			</ul>
+			<div class="asterisk">
+				* Also all following nights on <a href="http://jugglinmike.github.io/presentations">GitHub</a>
+			</div>
+		</section>
 
-      <section class="slide">
-        <h2>Backbone.js: Capturing</h2>
-		<pre><code class="lang-javascript">// Initial Setup
+			<section class="slide">
+				<header>
+					<h2 class="framework-logo" data-framework="backbone">Backbone.js</h2>
+					<h3> Capturing</h3>
+				</header>
+				<pre><code class="lang-javascript">
+// Initial Setup
 // -------------
 
 // Save a reference to the global object (`window` in the browser, `exports`
 // on the server).
-var root = this;</code></pre>
+var root = this;
+				</code></pre>
 
-		<pre><code class="lang-javascript">// For Backbone's purposes, jQuery, Zepto, Ender, or My Library (kidding) owns
+				<pre><code class="lang-javascript">
+// For Backbone's purposes, jQuery, Zepto, Ender, or My Library (kidding) owns
 // the `$` variable.
-Backbone.$ = root.jQuery || root.Zepto || root.ender || root.$;</code></pre>
-      </section>
+Backbone.$ = root.jQuery || root.Zepto || root.ender || root.$;
+				</code></pre>
+			</section>
 
-      <section class="slide">
-        <h2>Backbone.js: Internal Usage</h2>
-        <pre><code class="lang-markup"></code></pre>
-      </section>
+			<section class="slide">
+				<header>
+					<h2 class="framework-logo" data-framework="backbone">Backbone.js</h2>
+					<h3>Internal Usage</h3>
+				</header>
+				<pre><code class="lang-javascript">
+// Set callbacks, where `this.events` is a hash of
+//
+// *{"event selector": "callback"}*
+//
+//     {
+//       'mousedown .title':  'edit',
+//       'click .button':     'save'
+//       'click .open':       function(e) { ... }
+//     }
+//
+// pairs. Callbacks will be bound to the view, with `this` set properly.
+// Uses event delegation for efficiency.
+// Omitting the selector binds the event to `this.el`.
+// This only works for delegate-able events: not `focus`, `blur`, and
+// not `change`, `submit`, and `reset` in Internet Explorer.
+delegateEvents: function(events) {
+  if (!(events || (events = _.result(this, 'events')))) return this;
+  this.undelegateEvents();
+  for (var key in events) {
+    var method = events[key];
+    if (!_.isFunction(method)) method = this[events[key]];
+    if (!method) continue;
 
-      <section class="slide">
-        <h2>Backbone.js: Extensions</h2>
-        <pre><code class="lang-javascript"></code></pre>
-      </section>
+    var match = key.match(delegateEventSplitter);
+    var eventName = match[1], selector = match[2];
+    method = _.bind(method, this);
+    eventName += '.delegateEvents' + this.cid;
+    if (selector === '') {
+      this.$el.on(eventName, method);
+    } else {
+      this.$el.on(eventName, selector, method);
+    }
+  }
+  return this;
+},
+				</code></pre>
+			</section>
 
-      <section class="slide">
-        <h2>Backbone.js: Application Usage</h2>
-        <pre><code class="lang-javascript"></code></pre>
-      </section>
+			<section class="slide" id="backbone-extensions">
+				<header>
+					<h2 class="framework-logo" data-framework="backbone">Backbone.js</h2>
+					<h3>Extensions</h3>
+				</header>
+				<pre><code class="lang-javascript">
+Backbone.sync = function(method, model, options) {
+				</code></pre>
 
-      <section class="slide">
-        <h2>Ember.js: Capturing</h2>
-        <pre><code class="lang-javascript"></code></pre>
-      </section>
+				<aside class="code-note">
+					(Some `Backbone.sync` logic omitted for brevity)
+				</aside>
 
-      <section class="slide">
-        <h2>Ember.js: Internal Usage</h2>
-        <pre><code class="lang-javascript"></code></pre>
-      </section>
+				<pre><code class="lang-javascript">
+// If we're sending a `PATCH` request, and we're in an old Internet Explorer
+// that still has ActiveX enabled by default, override jQuery to use that
+// for XHR instead. Remove this line when jQuery supports `PATCH` on IE8.
+if (params.type === 'PATCH' && noXhrPatch) {
+  params.xhr = function() {
+    return new ActiveXObject("Microsoft.XMLHTTP");
+  };
+}
+				</code></pre>
+			</section>
 
-      <section class="slide">
-        <h2>Ember.js: Extensions</h2>
-        <pre><code class="lang-javascript"></code></pre>
-      </section>
+			<section class="slide" id="backbone-application">
+				<header>
+					<h2 class="framework-logo" data-framework="backbone">Backbone.js</h2>
+					<h3>Application Usage</h3>
+				</header>
+				<pre><code class="lang-javascript">
+var MyView = Backbone.View.extend({
+	events: {
+		"click .hedgehog": "winPrize"
+	},
+	winPrize: function(event) {
+		event.stopPropagation();
+		this.$(".status").text("You won!");
+	}
+});
+				</code></pre>
+			</section>
 
-      <section class="slide">
-        <h2>Ember.js: Application Usage</h2>
-        <pre><code class="lang-javascript"></code></pre>
-      </section>
+			<section class="slide" id="ember-capturing">
+				<header>
+					<h2 class="framework-logo" data-framework="ember">Ember.js</h2>
+					<h3>Capturing</h3>
+				</header>
+				<aside class="code-note">
+					<a href="https://github.com/emberjs/ember.js/blob/b9ca320a6050aca96107769ad6988c83a78693b4/packages/ember-views/lib/core.js">
+						<span class="file-name">packages/ember-views/lib/core.js</span>
+					</a>
+				</aside>
+				<pre><code class="lang-javascript">
+var jQuery = Ember.imports.jQuery;
+Ember.assert("Ember Views require jQuery 1.8, 1.9 or 2.0", jQuery && (jQuery().jquery.match(/^((1\.(8|9))|2.0)(\.\d+)?(pre|rc\d?)?/) || Ember.ENV.FORCE_JQUERY));
+				</code></pre>
 
-      <section class="slide">
-        <h2>Angular.js: Capturing</h2>
-        <pre><code class="lang-javascript"></code></pre>
-      </section>
+				<section class="slide">
+				<aside class="code-note">
+					<a href="https://github.com/emberjs/ember.js/blob/b9ca320a6050aca96107769ad6988c83a78693b4/packages/ember-metal/lib/core.js">
+						<span class="file-name">packages/ember-metal/lib/core.js</span>
+					</a>
+				</aside>
+				<pre><code class="lang-javascript">
+// Default imports, exports and lookup to the global object;
+var imports = Ember.imports = Ember.imports || this;
+var exports = Ember.exports = Ember.exports || this;
+var lookup  = Ember.lookup  = Ember.lookup  || this;
+				</code></pre>
+				</section>
+			</section>
 
-      <section class="slide">
-        <h2>Angular.js: Internal Usage</h2>
-        <pre><code class="lang-javascript"></code></pre>
-      </section>
+			<section class="slide" id="ember-internal">
+				<header>
+					<h2 class="framework-logo" data-framework="ember">Ember.js</h2>
+					<h3>Internal Usage</h3>
+				</header>
+				<aside class="code-note">
+					<a href="https://github.com/emberjs/ember.js/blob/b9ca320a6050aca96107769ad6988c83a78693b4/packages/ember-views/lib/system/event_dispatcher.js">
+						<span class="file-name">packages/ember-views/lib/system/event_dispatcher.js</span>
+					</a>
+				</aside>
+				<pre><code class="lang-javascript">
+/**
+  @private
 
-      <section class="slide">
-        <h2>Angular.js: Extensions</h2>
-        <pre><code class="lang-javascript"></code></pre>
-      </section>
+  Sets up event listeners for standard browser events.
 
-      <section class="slide">
-        <h2>Angular.js: Application Usage</h2>
-        <pre><code class="lang-javascript"></code></pre>
-      </section>
+  This will be called after the browser sends a `DOMContentReady` event. By
+  default, it will set up all of the listeners on the document body. If you
+  would like to register the listeners on a different element, set the event
+  dispatcher's `root` property.
 
-    </div>
+  @method setup
+  @param addedEvents {Hash}
+*/
+setup: function(addedEvents, rootElement) {
+  var event, events = {
+    touchstart  : 'touchStart',
+    touchmove   : 'touchMove',
+    touchend    : 'touchEnd',
+    touchcancel : 'touchCancel',
+    keydown     : 'keyDown',
+    keyup       : 'keyUp',
+    keypress    : 'keyPress',
+    mousedown   : 'mouseDown',
+    mouseup     : 'mouseUp',
+    contextmenu : 'contextMenu',
+    click       : 'click',
+    dblclick    : 'doubleClick',
+    mousemove   : 'mouseMove',
+    focusin     : 'focusIn',
+    focusout    : 'focusOut',
+    mouseenter  : 'mouseEnter',
+    mouseleave  : 'mouseLeave',
+    submit      : 'submit',
+    input       : 'input',
+    change      : 'change',
+    dragstart   : 'dragStart',
+    drag        : 'drag',
+    dragenter   : 'dragEnter',
+    dragleave   : 'dragLeave',
+    dragover    : 'dragOver',
+    drop        : 'drop',
+    dragend     : 'dragEnd'
+  };
 
-    <script src="scripts/lib/prism.js"></script>
-    <script src="scripts/app.js"></script>
-  </body>
+  Ember.$.extend(events, addedEvents || {});
+
+
+  if (!Ember.isNone(rootElement)) {
+    set(this, 'rootElement', rootElement);
+  }
+
+  rootElement = Ember.$(get(this, 'rootElement'));
+
+  Ember.assert(fmt('You cannot use the same root element (%@) multiple times in an Ember.Application', [rootElement.selector || rootElement[0].tagName]), !rootElement.is('.ember-application'));
+  Ember.assert('You cannot make a new Ember.Application using a root element that is a descendent of an existing Ember.Application', !rootElement.closest('.ember-application').length);
+  Ember.assert('You cannot make a new Ember.Application using a root element that is an ancestor of an existing Ember.Application', !rootElement.find('.ember-application').length);
+
+  rootElement.addClass('ember-application');
+
+  Ember.assert('Unable to add "ember-application" class to rootElement. Make sure you set rootElement to the body or an element in the body.', rootElement.is('.ember-application'));
+
+  for (event in events) {
+    if (events.hasOwnProperty(event)) {
+      this.setupHandler(rootElement, event, events[event]);
+    }
+  }
+},
+				</code></pre>
+			</section>
+
+			<section class="slide" id="ember-extensions">
+				<header>
+					<h2 class="framework-logo" data-framework="ember">Ember.js</h2>
+					<h3>Extensions</h3>
+				</header>
+				<aside class="code-note">
+					<a href="https://github.com/emberjs/ember.js/blob/b9ca320a6050aca96107769ad6988c83a78693b4/packages/ember-views/lib/system/jquery_ext.js">
+						<span class="file-name">packages/ember-views/lib/system/jquery_ext.js</span>
+					</a>
+				</aside>
+
+				<pre><code class="lang-javascript">
+/**
+@module ember
+@submodule ember-views
+*/
+if (Ember.$) {
+  // http://www.whatwg.org/specs/web-apps/current-work/multipage/dnd.html#dndevents
+  var dragEvents = Ember.String.w('dragstart drag dragenter dragleave dragover drop dragend');
+
+  // Copies the `dataTransfer` property from a browser event object onto the
+  // jQuery event object for the specified events
+  Ember.EnumerableUtils.forEach(dragEvents, function(eventName) {
+    Ember.$.event.fixHooks[eventName] = { props: ['dataTransfer'] };
+  });
+}
+				</code></pre>
+			</section>
+
+			<section class="slide" id="ember-application">
+				<header>
+					<h2 class="framework-logo" data-framework="ember">Ember.js</h2>
+					<h3>Application Usage</h3>
+				</header>
+				<pre><code class="lang-javascript">
+App.AudioView = Ember.View.extend({
+  classNames: ['audio-control'],
+  templateName: 'audioControl',
+  play: function() {
+    this.$('audio')[0].play();
+
+    this.set('isPlaying', true);
+  },
+  pause: function() {
+    this.$('audio')[0].pause();
+
+    this.set('isPlaying', false);
+  },
+  didInsertElement: function() {
+    var view = this;
+    var $audio = this.$('audio');
+
+    $audio.prop('autoplay', true)
+      .attr('src', this.get('song.url'));
+
+    $audio.on('canplaythrough', function() {
+      view.set('isLoaded', true);
+    }).on('loadedmetadata', function() {
+      view.set('duration', Math.floor(this.duration));
+    }).on('timeupdate', function() {
+      view.set('currentTime', Math.floor(this.currentTime));
+    }).on('playing', function() {
+      view.set('isPlaying', true);
+    }).on('pause', function() {
+      view.set('isPlaying', false);
+    });
+  },
+  src: function(attr, val) {
+    if (arguments.length === 2) {
+      this.$('audio').attr('src', val);
+      return val;
+    }
+    return $('audio').attr('src');
+  }.property()
+});
+				</code></pre>
+			</section>
+
+			<section class="slide" id="angular-capturing">
+				<header>
+					<h2 class="framework-logo" data-framework="angular">Angular.js</h2>
+					<h3>Capturing</h3>
+				</header>
+				<aside class="code-note">
+					<a href="https://github.com/angular/angular.js/blob/4179f62cc270b9614075095e1e4931736cff30a7/src/Angular.js">
+						<span class="file-name">src/Angular.js</span>
+					</a>
+				</aside>
+
+				<pre><code class="lang-javascript">
+function bindJQuery() {
+  // bind to jQuery if present;
+  jQuery = window.jQuery;
+  // reset to jQuery or default to us.
+  if (jQuery) {
+    jqLite = jQuery;
+    extend(jQuery.fn, {
+      scope: JQLitePrototype.scope,
+      controller: JQLitePrototype.controller,
+      injector: JQLitePrototype.injector,
+      inheritedData: JQLitePrototype.inheritedData
+    });
+    // Method signature: JQLitePatchJQueryRemove(name, dispatchThis, filterElems, getterIfNoArguments)
+    JQLitePatchJQueryRemove('remove', true, true, false);
+    JQLitePatchJQueryRemove('empty', false, false, false);
+    JQLitePatchJQueryRemove('html', false, false, true);
+  } else {
+    jqLite = JQLite;
+  }
+  angular.element = jqLite;
+}
+				</code></pre>
+
+				<aside class="code-note">
+					<a href="https://github.com/angular/angular.js/blob/4179f62cc270b9614075095e1e4931736cff30a7/src/angular.suffix">
+						<span class="file-name">src/angular.suffix</span>
+					</a>
+				</aside>
+
+				<pre><code class="lang-javascript">
+  //try to bind to jquery now so that one can write angular.element().read()
+  //but we will rebind on bootstrap again.
+  bindJQuery();
+
+  publishExternalAPI(angular);
+
+  jqLite(document).ready(function() {
+    angularInit(document, bootstrap);
+  });
+
+})(window, document);
+				</code></pre>
+			</section>
+
+			<section class="slide" id="angular-internal">
+				<header>
+					<h2 class="framework-logo" data-framework="angular">Angular.js</h2>
+					<h3>Internal Usage</h3>
+				</header>
+				<pre><code class="lang-javascript"></code></pre>
+			</section>
+
+			<section class="slide" id="angular-extensions">
+				<header>
+					<h2 class="framework-logo" data-framework="angular">Angular.js</h2>
+					<h3>Extensions</h3>
+				</header>
+				<pre><code class="lang-javascript"></code></pre>
+			</section>
+
+			<section class="slide">
+				<header>
+					<h2 class="framework-logo" data-framework="angular">Angular.js</h2>
+					<h3>Application Usage</h3>
+				</header>
+				<pre><code class="lang-javascript"></code></pre>
+			</section>
+
+		</div>
+
+		<script src="scripts/lib/prism.js"></script>
+		<script src="scripts/app.js"></script>
+	</body>
 </html>
