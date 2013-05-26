@@ -26,6 +26,16 @@
 			<h1>jQuery's Place in JavaScript Frameworks</h1>
 		</section>
 
+		<section class="slide" id="introductions">
+			<h2>About Me</h1>
+			<ul>
+				<li>Developer at <a href="http://bocoup.com">Bocoup</a></li>
+				<li>Organizer of <a href="http://www.meetup.com/jQuery-Boston/">the jQuery Boston Meetup group</a></li>
+				<li>Twitter: <a href="http://twitter.com/jugglinmike">@jugglinmike</a></li>
+				<li>GitHub: <a href="http://github.com/jugglinmike">jugglinmike</a></li>
+			</ul>
+		</section>
+
 		<section class="slide full-image" id="in-the-beginning">
 			<h2>In the Beginning</h2>
 		</section>
@@ -57,37 +67,37 @@
 				</li>
 			</ul>
 			<div class="asterisk">
-				* Also all following nights on <a href="http://jugglinmike.github.io/presentations">GitHub</a>
+				* Also all following nights at <a href="http://jugglinmike.github.io/presentations">http://jugglinmike.github.io/presentations</a>
 			</div>
 		</section>
 
-			<section class="slide">
-				<header>
-					<h2 class="framework-logo" data-framework="backbone">Backbone.js</h2>
-					<h3> Capturing</h3>
-				</header>
-				<pre><code class="lang-javascript">
+		<section class="slide">
+			<header>
+				<h2 class="framework-logo" data-framework="backbone">Backbone.js</h2>
+				<h3> Capturing</h3>
+			</header>
+			<pre><code class="lang-javascript">
 // Initial Setup
 // -------------
 
 // Save a reference to the global object (`window` in the browser, `exports`
 // on the server).
 var root = this;
-				</code></pre>
+			</code></pre>
 
-				<pre><code class="lang-javascript">
+			<pre><code class="lang-javascript">
 // For Backbone's purposes, jQuery, Zepto, Ender, or My Library (kidding) owns
 // the `$` variable.
 Backbone.$ = root.jQuery || root.Zepto || root.ender || root.$;
-				</code></pre>
-			</section>
+			</code></pre>
+		</section>
 
-			<section class="slide">
-				<header>
-					<h2 class="framework-logo" data-framework="backbone">Backbone.js</h2>
-					<h3>Internal Usage</h3>
-				</header>
-				<pre><code class="lang-javascript">
+		<section class="slide">
+			<header>
+				<h2 class="framework-logo" data-framework="backbone">Backbone.js</h2>
+				<h3>Internal Usage</h3>
+			</header>
+			<pre><code class="lang-javascript">
 // Set callbacks, where `this.events` is a hash of
 //
 // *{"event selector": "callback"}*
@@ -123,23 +133,23 @@ delegateEvents: function(events) {
   }
   return this;
 },
-				</code></pre>
-			</section>
+			</code></pre>
+		</section>
 
-			<section class="slide" id="backbone-extensions">
-				<header>
-					<h2 class="framework-logo" data-framework="backbone">Backbone.js</h2>
-					<h3>Extensions</h3>
-				</header>
-				<pre><code class="lang-javascript">
+		<section class="slide" id="backbone-extensions">
+			<header>
+				<h2 class="framework-logo" data-framework="backbone">Backbone.js</h2>
+				<h3>Extensions</h3>
+			</header>
+			<pre><code class="lang-javascript">
 Backbone.sync = function(method, model, options) {
-				</code></pre>
+			</code></pre>
 
-				<aside class="code-note">
-					(Some `Backbone.sync` logic omitted for brevity)
-				</aside>
+			<aside class="code-note">
+				(Some `Backbone.sync` logic omitted for brevity)
+			</aside>
 
-				<pre><code class="lang-javascript">
+			<pre><code class="lang-javascript">
 // If we're sending a `PATCH` request, and we're in an old Internet Explorer
 // that still has ActiveX enabled by default, override jQuery to use that
 // for XHR instead. Remove this line when jQuery supports `PATCH` on IE8.
@@ -148,68 +158,68 @@ if (params.type === 'PATCH' && noXhrPatch) {
     return new ActiveXObject("Microsoft.XMLHTTP");
   };
 }
-				</code></pre>
-			</section>
+			</code></pre>
+		</section>
 
-			<section class="slide" id="backbone-application">
-				<header>
-					<h2 class="framework-logo" data-framework="backbone">Backbone.js</h2>
-					<h3>Application Usage</h3>
-				</header>
-				<pre><code class="lang-javascript">
+		<section class="slide" id="backbone-application">
+			<header>
+				<h2 class="framework-logo" data-framework="backbone">Backbone.js</h2>
+				<h3>Application Usage</h3>
+			</header>
+			<pre><code class="lang-javascript">
 var MyView = Backbone.View.extend({
-	events: {
-		"click .hedgehog": "winPrize"
-	},
-	winPrize: function(event) {
-		event.stopPropagation();
-		this.$(".status").text("You won!");
-	}
+  events: {
+    "click .hedgehog": "winPrize"
+  },
+  winPrize: function(event) {
+    event.stopPropagation();
+    this.$(".status").text("You won!");
+  }
 });
-				</code></pre>
-			</section>
+			</code></pre>
+		</section>
 
-			<section class="slide" id="ember-capturing">
-				<header>
-					<h2 class="framework-logo" data-framework="ember">Ember.js</h2>
-					<h3>Capturing</h3>
-				</header>
-				<aside class="code-note">
-					<a href="https://github.com/emberjs/ember.js/blob/b9ca320a6050aca96107769ad6988c83a78693b4/packages/ember-views/lib/core.js">
-						<span class="file-name">packages/ember-views/lib/core.js</span>
-					</a>
-				</aside>
-				<pre><code class="lang-javascript">
+		<section class="slide" id="ember-capturing">
+			<header>
+				<h2 class="framework-logo" data-framework="ember">Ember.js</h2>
+				<h3>Capturing</h3>
+			</header>
+			<aside class="code-note">
+				<a href="https://github.com/emberjs/ember.js/blob/b9ca320a6050aca96107769ad6988c83a78693b4/packages/ember-views/lib/core.js">
+					<span class="file-name">packages/ember-views/lib/core.js</span>
+				</a>
+			</aside>
+			<pre><code class="lang-javascript">
 var jQuery = Ember.imports.jQuery;
 Ember.assert("Ember Views require jQuery 1.8, 1.9 or 2.0", jQuery && (jQuery().jquery.match(/^((1\.(8|9))|2.0)(\.\d+)?(pre|rc\d?)?/) || Ember.ENV.FORCE_JQUERY));
-				</code></pre>
+			</code></pre>
 
-				<section class="slide">
-				<aside class="code-note">
-					<a href="https://github.com/emberjs/ember.js/blob/b9ca320a6050aca96107769ad6988c83a78693b4/packages/ember-metal/lib/core.js">
-						<span class="file-name">packages/ember-metal/lib/core.js</span>
-					</a>
-				</aside>
-				<pre><code class="lang-javascript">
+			<section class="slide">
+			<aside class="code-note">
+				<a href="https://github.com/emberjs/ember.js/blob/b9ca320a6050aca96107769ad6988c83a78693b4/packages/ember-metal/lib/core.js">
+					<span class="file-name">packages/ember-metal/lib/core.js</span>
+				</a>
+			</aside>
+			<pre><code class="lang-javascript">
 // Default imports, exports and lookup to the global object;
 var imports = Ember.imports = Ember.imports || this;
 var exports = Ember.exports = Ember.exports || this;
 var lookup  = Ember.lookup  = Ember.lookup  || this;
-				</code></pre>
-				</section>
+			</code></pre>
 			</section>
+		</section>
 
-			<section class="slide" id="ember-internal">
-				<header>
-					<h2 class="framework-logo" data-framework="ember">Ember.js</h2>
-					<h3>Internal Usage</h3>
-				</header>
-				<aside class="code-note">
-					<a href="https://github.com/emberjs/ember.js/blob/b9ca320a6050aca96107769ad6988c83a78693b4/packages/ember-views/lib/system/event_dispatcher.js">
-						<span class="file-name">packages/ember-views/lib/system/event_dispatcher.js</span>
-					</a>
-				</aside>
-				<pre><code class="lang-javascript">
+		<section class="slide" id="ember-internal">
+			<header>
+				<h2 class="framework-logo" data-framework="ember">Ember.js</h2>
+				<h3>Internal Usage</h3>
+			</header>
+			<aside class="code-note">
+				<a href="https://github.com/emberjs/ember.js/blob/b9ca320a6050aca96107769ad6988c83a78693b4/packages/ember-views/lib/system/event_dispatcher.js">
+					<span class="file-name">packages/ember-views/lib/system/event_dispatcher.js</span>
+				</a>
+			</aside>
+			<pre><code class="lang-javascript">
 /**
   @private
 
@@ -277,21 +287,21 @@ setup: function(addedEvents, rootElement) {
     }
   }
 },
-				</code></pre>
-			</section>
+			</code></pre>
+		</section>
 
-			<section class="slide" id="ember-extensions">
-				<header>
-					<h2 class="framework-logo" data-framework="ember">Ember.js</h2>
-					<h3>Extensions</h3>
-				</header>
-				<aside class="code-note">
-					<a href="https://github.com/emberjs/ember.js/blob/b9ca320a6050aca96107769ad6988c83a78693b4/packages/ember-views/lib/system/jquery_ext.js">
-						<span class="file-name">packages/ember-views/lib/system/jquery_ext.js</span>
-					</a>
-				</aside>
+		<section class="slide" id="ember-extensions">
+			<header>
+				<h2 class="framework-logo" data-framework="ember">Ember.js</h2>
+				<h3>Extensions</h3>
+			</header>
+			<aside class="code-note">
+				<a href="https://github.com/emberjs/ember.js/blob/b9ca320a6050aca96107769ad6988c83a78693b4/packages/ember-views/lib/system/jquery_ext.js">
+					<span class="file-name">packages/ember-views/lib/system/jquery_ext.js</span>
+				</a>
+			</aside>
 
-				<pre><code class="lang-javascript">
+			<pre><code class="lang-javascript">
 /**
 @module ember
 @submodule ember-views
@@ -306,15 +316,15 @@ if (Ember.$) {
     Ember.$.event.fixHooks[eventName] = { props: ['dataTransfer'] };
   });
 }
-				</code></pre>
-			</section>
+			</code></pre>
+		</section>
 
-			<section class="slide" id="ember-application">
-				<header>
-					<h2 class="framework-logo" data-framework="ember">Ember.js</h2>
-					<h3>Application Usage</h3>
-				</header>
-				<pre><code class="lang-javascript">
+		<section class="slide" id="ember-application">
+			<header>
+				<h2 class="framework-logo" data-framework="ember">Ember.js</h2>
+				<h3>Application Usage</h3>
+			</header>
+			<pre><code class="lang-javascript">
 App.AudioView = Ember.View.extend({
   classNames: ['audio-control'],
   templateName: 'audioControl',
@@ -355,21 +365,21 @@ App.AudioView = Ember.View.extend({
     return $('audio').attr('src');
   }.property()
 });
-				</code></pre>
-			</section>
+			</code></pre>
+		</section>
 
-			<section class="slide" id="angular-capturing">
-				<header>
-					<h2 class="framework-logo" data-framework="angular">Angular.js</h2>
-					<h3>Capturing</h3>
-				</header>
-				<aside class="code-note">
-					<a href="https://github.com/angular/angular.js/blob/4179f62cc270b9614075095e1e4931736cff30a7/src/Angular.js">
-						<span class="file-name">src/Angular.js</span>
-					</a>
-				</aside>
+		<section class="slide" id="angular-capturing">
+			<header>
+				<h2 class="framework-logo" data-framework="angular">Angular.js</h2>
+				<h3>Capturing</h3>
+			</header>
+			<aside class="code-note">
+				<a href="https://github.com/angular/angular.js/blob/4179f62cc270b9614075095e1e4931736cff30a7/src/Angular.js">
+					<span class="file-name">src/Angular.js</span>
+				</a>
+			</aside>
 
-				<pre><code class="lang-javascript">
+			<pre><code class="lang-javascript">
 function bindJQuery() {
   // bind to jQuery if present;
   jQuery = window.jQuery;
@@ -382,7 +392,8 @@ function bindJQuery() {
       injector: JQLitePrototype.injector,
       inheritedData: JQLitePrototype.inheritedData
     });
-    // Method signature: JQLitePatchJQueryRemove(name, dispatchThis, filterElems, getterIfNoArguments)
+    // Method signature:
+    // JQLitePatchJQueryRemove(name, dispatchThis, filterElems, getterIfNoArguments)
     JQLitePatchJQueryRemove('remove', true, true, false);
     JQLitePatchJQueryRemove('empty', false, false, false);
     JQLitePatchJQueryRemove('html', false, false, true);
@@ -391,15 +402,14 @@ function bindJQuery() {
   }
   angular.element = jqLite;
 }
-				</code></pre>
+			</code></pre>
 
-				<aside class="code-note">
-					<a href="https://github.com/angular/angular.js/blob/4179f62cc270b9614075095e1e4931736cff30a7/src/angular.suffix">
-						<span class="file-name">src/angular.suffix</span>
-					</a>
-				</aside>
-
-				<pre><code class="lang-javascript">
+			<aside class="code-note">
+				<a href="https://github.com/angular/angular.js/blob/4179f62cc270b9614075095e1e4931736cff30a7/src/angular.suffix">
+					<span class="file-name">src/angular.suffix</span>
+				</a>
+			</aside>
+			<pre><code class="lang-javascript">
   //try to bind to jquery now so that one can write angular.element().read()
   //but we will rebind on bootstrap again.
   bindJQuery();
@@ -411,36 +421,194 @@ function bindJQuery() {
   });
 
 })(window, document);
-				</code></pre>
-			</section>
+			</code></pre>
+		</section>
 
-			<section class="slide" id="angular-internal">
-				<header>
-					<h2 class="framework-logo" data-framework="angular">Angular.js</h2>
-					<h3>Internal Usage</h3>
-				</header>
-				<pre><code class="lang-javascript"></code></pre>
-			</section>
+		<section class="slide" id="angular-internal">
+			<header>
+				<h2 class="framework-logo" data-framework="angular">Angular.js</h2>
+				<h3>Internal Usage</h3>
+			</header>
 
-			<section class="slide" id="angular-extensions">
-				<header>
-					<h2 class="framework-logo" data-framework="angular">Angular.js</h2>
-					<h3>Extensions</h3>
-				</header>
-				<pre><code class="lang-javascript"></code></pre>
-			</section>
+			<aside class="code-note">
+				<a href="https://github.com/angular/angular.js/blob/4179f62cc270b9614075095e1e4931736cff30a7/src/ng/document.js">
+					<span class="file-name">src/ng/document.js</span>
+				</a>
+			</aside>
+			<pre><code class="lang-javascript">
+/**
+ * @ngdoc object
+ * @name ng.$document
+ * @requires $window
+ *
+ * @description
+ * A {@link angular.element jQuery (lite)}-wrapped reference to the browser's
+ * `window.document` element.
+ */
+function $DocumentProvider(){
+  this.$get = ['$window', function(window){
+    return jqLite(window.document);
+  }];
+}
+			</code></pre>
 
-			<section class="slide">
-				<header>
-					<h2 class="framework-logo" data-framework="angular">Angular.js</h2>
-					<h3>Application Usage</h3>
-				</header>
-				<pre><code class="lang-javascript"></code></pre>
-			</section>
+			<aside class="code-note">
+				<a href="https://github.com/angular/angular.js/blob/4179f62cc270b9614075095e1e4931736cff30a7/src/ng/compile.js">
+					<span class="file-name">src/ng/compile.js</span>
+				</a>
+			</aside>
+			<pre><code class="lang-javascript">
+function compileTemplateUrl(directives, beforeTemplateNodeLinkFn, $compileNode, tAttrs,
+    $rootElement, replace, childTranscludeFn) {
+  var linkQueue = [],
+      afterTemplateNodeLinkFn,
+      afterTemplateChildLinkFn,
+      beforeTemplateCompileNode = $compileNode[0],
+      origAsyncDirective = directives.shift(),
+      // The fact that we have to copy and patch the directive seems wrong!
+      derivedSyncDirective = extend({}, origAsyncDirective, {
+        controller: null, templateUrl: null, transclude: null, scope: null
+      }),
+      templateUrl = (isFunction(origAsyncDirective.templateUrl))
+          ? origAsyncDirective.templateUrl($compileNode, tAttrs)
+          : origAsyncDirective.templateUrl;
 
-		</div>
+  $compileNode.html('');
 
-		<script src="scripts/lib/prism.js"></script>
-		<script src="scripts/app.js"></script>
+  $http.get(templateUrl, {cache: $templateCache}).
+    success(function(content) {
+      var compileNode, tempTemplateAttrs, $template;
+
+      content = denormalizeTemplate(content);
+
+      if (replace) {
+        $template = jqLite('<div>' + trim(content) + '</div>').contents();
+        compileNode = $template[0];
+
+        if ($template.length != 1 || compileNode.nodeType !== 1) {
+          throw new Error(MULTI_ROOT_TEMPLATE_ERROR + content);
+        }
+
+        tempTemplateAttrs = {$attr: {}};
+        replaceWith($rootElement, $compileNode, compileNode);
+        collectDirectives(compileNode, directives, tempTemplateAttrs);
+        mergeTemplateAttributes(tAttrs, tempTemplateAttrs);
+      } else {
+        compileNode = beforeTemplateCompileNode;
+        $compileNode.html(content);
+      }
+			</code></pre>
+
+		</section>
+
+		<section class="slide" id="angular-extensions">
+			<header>
+				<h2 class="framework-logo" data-framework="angular">Angular.js</h2>
+				<h3>Extensions</h3>
+			</header>
+
+			<aside class="code-note">
+				<a href="https://github.com/angular/angular.js/blob/4179f62cc270b9614075095e1e4931736cff30a7/src/Angular.js">
+					<span class="file-name">src/Angular.js</span>
+				</a>
+			</aside>
+			<pre><code class="lang-javascript">
+function bindJQuery() {
+  // bind to jQuery if present;
+  jQuery = window.jQuery;
+  // reset to jQuery or default to us.
+  if (jQuery) {
+    jqLite = jQuery;
+    extend(jQuery.fn, {
+      scope: JQLitePrototype.scope,
+      controller: JQLitePrototype.controller,
+      injector: JQLitePrototype.injector,
+      inheritedData: JQLitePrototype.inheritedData
+    });
+    // Method signature: JQLitePatchJQueryRemove(name, dispatchThis,
+    // filterElems, getterIfNoArguments)
+    JQLitePatchJQueryRemove('remove', true, true, false);
+    JQLitePatchJQueryRemove('empty', false, false, false);
+    JQLitePatchJQueryRemove('html', false, false, true);
+  } else {
+    jqLite = JQLite;
+  }
+  angular.element = jqLite;
+}
+			</code></pre>
+
+			<aside class="code-note">
+				<a href="https://github.com/angular/angular.js/blob/4179f62cc270b9614075095e1e4931736cff30a7/src/jqLite.js">
+					<span class="file-name">src/jqLite.js</span>
+				</a>
+			</aside>
+			<pre><code class="lang-javascript">
+function JQLiteInheritedData(element, name, value) {
+  element = jqLite(element);
+
+  // if element is the document object work with the html element instead
+  // this makes $(document).scope() possible
+  if(element[0].nodeType == 9) {
+    element = element.find('html');
+  }
+
+  while (element.length) {
+    if (value = element.data(name)) return value;
+    element = element.parent();
+  }
+}
+			</code></pre>
+		</section>
+
+		<section class="slide">
+			<header>
+				<h2 class="framework-logo" data-framework="angular">Angular.js</h2>
+				<h3>Application Usage</h3>
+			</header>
+
+			<aside class="code-note">
+				Coutesy of <a href="http://todomvc.com/">TodoMVC</a>.
+				<a href="https://github.com/tastejs/todomvc/blob/609f6cc11acb522bec6a3f7c0a6c4559f5583062/architecture-examples/angularjs/js/directives/todoBlur.js">
+					<span class="file-name">architecture-examples/angularjs/js/directives/todoBlur.js</span>
+				</a>
+			</aside>
+
+			<pre><code class="lang-javascript">
+/*global todomvc */
+'use strict';
+
+/**
+ * Directive that executes an expression when the element it is applied to
+ * loses focus
+ */
+todomvc.directive('todoBlur', function () {
+  return function (scope, elem, attrs) {
+    elem.bind('blur', function () {
+      scope.$apply(attrs.todoBlur);
+    });
+  };
+});
+			</code></pre>
+		</section>
+
+	<section class="slide" id="thanks-jquery">
+		<h2>Thanks, jQuery!</h2>
+		<ul class="framework-logos">
+			<li class="framework-logo" data-framework="backbone">
+				<a href="http://backbonejs.org">Backbone.js</a>
+			</li>
+			<li class="framework-logo" data-framework="ember">
+				<a href="http://emberjs.com">Ember.js</a>
+			</li>
+			<li class="framework-logo" data-framework="angular">
+				<a href="http://angularjs.org">Angular.js</a>
+			</li>
+		</ul>
+	</section>
+
+	</div>
+
+	<script src="scripts/lib/prism.js"></script>
+	<script src="scripts/app.js"></script>
 	</body>
 </html>
