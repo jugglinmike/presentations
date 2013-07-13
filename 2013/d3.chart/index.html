@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=1024" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<title>Exploring Reusability with d3.chart</title>
+	<meta name="DC.created" content="2013-07-16" />
+
+	<meta name="description" content="The concepts that drive our framework for d3.js" />
+	<meta name="author" content="Mike Pennisi" />
+
+	<link href="styles/impress.css" rel="stylesheet" />
+	<link href="styles/prism.css" rel="stylesheet" />
+	<link href="styles/main.css" rel="stylesheet" />
+	<link href="styles/github-button.css" rel="stylesheet" />
+
+	<link rel="shortcut icon" href="favicon.png" />
+	<link rel="apple-touch-icon" href="apple-touch-icon.png" />
+</head>
+	<body class="impress-not-supported">
+
+		<div class="fallback-message">
+			<p>Your browser <b>doesn't support the features required</b> by impress.js, so you are presented with a simplified version of this presentation.</p>
+			<p>For the best experience please use the latest <b>Chrome</b>, <b>Safari</b> or <b>Firefox</b> browser.</p>
+		</div>
+
+		<div id="impress">
+
+<hgroup class="step" id="title">
+	<h1>Exploring Reusability with d3.chart</h1>
+</hgroup>
+
+<section class="step" id="overview">
+	<h2>Overview</h2>
+	<ol>
+		<li>d3.js</li>
+		<li>Reusable Charts</li>
+		<li>d3.chart</li>
+		<li>The Future!</li>
+	</ol>
+</section>
+
+<section class="step" id="about-mike">
+	<h2>All About Mike</h2>
+	<ul>
+		<li>Developer at <a href="http://bocoup.com">Bocoup</a></li>
+		<li>Member of <a href="http://misoproject.com/">the Miso Project</a></li>
+		<li>Freaked out by sprouted potatoes</li>
+	</ul>
+</section>
+
+<section class="step" id="alternate-titles">
+	<h1>Alternate Slide Titles</h1>
+	<ul class="field">
+		<li>This is a slide title</li>
+		<li>this is another slide title</li>
+		<li>This is a slide title</li>
+		<li>this is another slide title</li>
+		<li>This is a slide title</li>
+		<li>this is another slide title</li>
+		<li>This is a slide title</li>
+		<li>this is another slide title</li>
+		<li>This is a slide title</li>
+		<li>this is another slide title</li>
+	</ul>
+</section>
+
+<section class="step">
+	<h1>d3.js</h1>
+	<h2>Data-Driven Documents</h2>
+</section>
+
+<section class="step">
+	<h1>Reusable Charts</h1>
+</section>
+
+<section class="step">
+	<h3>Defining "chart"</h3>
+	<svg>
+		<ellipse class="vis-series1" cx="50%" cy="50%" rx="50%" ry="50%" />
+		<text x="10%" y="40%" class="vis-text">Visualizations</text>
+		<ellipse class="vis-series3" cx="70%" cy="55%" rx="20%" ry="30%" />
+		<text x="61%" y="58%" class="vis-text">Charts</text>
+	</svg>
+</section>
+
+<section class="step">
+	<h2>What does it mean to be "reusable"?</h2>
+</section>
+
+<section class="step" id="reusable-from-creator">
+	<h3>Defining "reusable"</h3>
+	<pre class="code"><code class="lang-javascript">
+		function chart() {
+			// generate chart here
+		}
+	</code></pre>
+	<blockquote>A function; the standard unit of code reuse!</blockquote>
+	<span class="quote-attribution">
+		-- Mike Bostock, <a href="http://bost.ocks.org/mike/chart/">Towards Reusable Charts</a>
+	</span>
+</section>
+
+<section class="step" id="reusable-from-community">
+	<h3>Defining "reusable"</h3>
+	<img src="img/reusable-search.png" />
+	<p>
+		ex:
+		<a href="http://javacrypt.wordpress.com/2012/12/15/improvements-to-d3s-reusable-component-pattern/">
+			Improvements in d3's Reusable Component Pattern
+		</a>
+	</p>
+</section>
+
+<section class="step" id="reusable-our-take">
+	<h3>Defining "reusable"</h3>
+	<h2>Our Take:</h2>
+	<ol>
+		<li>Repeatable</li>
+		<li>Modifiable</li>
+		<li>Configurable</li>
+		<li>Extensible</li>
+		<li>Composable</li>
+	</ol>
+</section>
+
+<section class="step" id="reusable-repeatable">
+	<h1>Repeatable</h1>
+</section>
+
+<section class="step" id="reusable-modifiable">
+	<h1>Modifiable</h1>
+</section>
+
+<section class="step" id="reusable-configurable">
+	<h1>Configurable</h1>
+</section>
+
+<section class="step" id="reusable-extensible">
+	<h1>Extensible</h1>
+</section>
+
+<section class="step" id="reusable-composable">
+	<h1>Composable</h1>
+</section>
+
+<section class="step" id="d3-chart">
+	<h1><img src="img/d3.chart.png" /></h1>
+</section>
+
+<section class="step" id="d3-chart-layer">
+	<h1>Layer</h1>
+</section>
+
+<section class="step" id="d3-chart-chart">
+	<h1>Chart</h1>
+</section>
+
+<section class="step" id="the-future">
+	<img src="img/future-is-cool.jpg" class="full-screen" />
+</section>
+
+<section class="step" id="future-bower-integration">
+	<img src="img/bower-logo.png" />
+</section>
+
+<section class="step" id="future-transitions">
+	<pre class="code"><code class="lang-javascript">
+		this.transition()
+				.transition()
+					.transition().text("Sharing");
+	</code></pre>
+</section>
+
+<section class="step" id="future-layer-types">
+	<h1>Improved <code class="inline">&lt;path&gt;</code> and <code class="inline">d3.layout</code> support</h1>
+</section>
+
+<section class="step" id="future-your-ideas">
+	<h1>Your ideas!</h1>
+	<a href="https://github.com/misoproject/d3.chart/issues"><button class="github-button">New Issue</button></a>
+</section>
+
+<section class="step" id="resources">
+	<h2>Resources</h2>
+	<ul>
+		<li>"The Future is Cool" t-shirt photograph coutesy <a href="https://secure.flickr.com/photos/rj3/">"Cowboy" Ben Alman</a></li>
+	</ul>
+</section>
+
+		</div>
+
+		<div class="hint">
+			<p>Use a spacebar or arrow keys to navigate</p>
+		</div>
+		<script>
+		if ("ontouchstart" in document.documentElement) { 
+			document.querySelector(".hint").innerHTML = "<p>Tap on the left or right to navigate</p>";
+		}
+		</script>
+
+		<script src="scripts/lib/impress.js"></script>
+		<script src="scripts/lib/prism.js"></script>
+		<script src="scripts/app.js"></script>
+		<script>
+
+	</body>
+</html>
