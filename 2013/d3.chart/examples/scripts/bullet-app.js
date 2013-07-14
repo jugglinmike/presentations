@@ -3,9 +3,9 @@ var margin = {top: 5, right: 40, bottom: 20, left: 120},
     width = 960 - margin.left - margin.right,
     height = 50 - margin.top - margin.bottom;
 
-var chart = d3.bullet()
+/*var chart = d3.bullet()
     .width(width)
-    .height(height);
+    .height(height);*/
 
 d3.json("bullets.json", function(error, data) {
   var svg = d3.select("#new").selectAll("svg")
@@ -16,7 +16,9 @@ d3.json("bullets.json", function(error, data) {
       .attr("height", height + margin.top + margin.bottom)
     .append("g")
       .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
-      .call(chart);
+      .each(function(d, i) {
+		d3.select(this).chart("Bullet", d, i);
+	  });
 
   var title = svg.append("g")
       .style("text-anchor", "end")
