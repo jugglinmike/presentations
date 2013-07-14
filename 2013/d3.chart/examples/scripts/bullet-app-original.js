@@ -7,7 +7,7 @@ var chart = d3.bullet()
     .height(height);
 
 d3.json("bullets.json", function(error, data) {
-  var svg = d3.select("body").selectAll("svg")
+  var svg = d3.select("#original").selectAll("svg")
       .data(data)
     .enter().append("svg")
       .attr("class", "bullet")

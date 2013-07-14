@@ -1,3 +1,4 @@
+(function() {
 var margin = {top: 5, right: 40, bottom: 20, left: 120},
     width = 960 - margin.left - margin.right,
     height = 50 - margin.top - margin.bottom;
@@ -7,7 +8,7 @@ var chart = d3.bullet()
     .height(height);
 
 d3.json("bullets.json", function(error, data) {
-  var svg = d3.select("body").selectAll("svg")
+  var svg = d3.select("#new").selectAll("svg")
       .data(data)
     .enter().append("svg")
       .attr("class", "bullet")
@@ -31,7 +32,7 @@ d3.json("bullets.json", function(error, data) {
       .text(function(d) { return d.subtitle; });
 
   d3.selectAll("button").on("click", function() {
-    svg.datum(randomize).call(chart.duration(1000)); // TODO automatic transition
+    //svg.datum(randomize).call(chart.duration(1000)); // TODO automatic transition
   });
 });
 
@@ -49,3 +50,4 @@ function randomizer(d) {
     return Math.max(0, d + k * (Math.random() - .5));
   };
 }
+})();
