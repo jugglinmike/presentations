@@ -25,19 +25,48 @@ d3.chart("Bullet", {
       var x1 = d3.scale.linear()
           .domain([0, Math.max(rangez[0], markerz[0], measurez[0])])
           .range(this._reverse ? [this.width(), 0] : [0, this.width()]);
+	  this.xScale = d3.scale.linear()
+		  .range(this._reverse ? [this.width(), 0] : [0, this.width()]);
 
       // Retrieve the old x-scale, if this is an update.
-      var x0 = this.__chart__ || d3.scale.linear()
+      var x0 = d3.scale.linear()
           .domain([0, Infinity])
           .range(x1.range());
-
-      // Stash the new scale.
-      this.__chart__ = x1;
 
       // Derive width-scales from the x-scales.
       var w0 = bulletWidth(x0),
           w1 = bulletWidth(x1);
 
+		this.layer("ranges", this.base.append("g").classed("ranges", true), {
+			dataBind: function(data) {
+				// This layer operates on "ranges" data
+				data = data.ranges;
+
+				return this.selectAll("rect.range").data(data);
+			},
+			insert: function() {
+				return this.append("rect");
+			},
+			events: {
+				enter: function() {
+					var chart = this.chart();
+					this.attr("class", function(d, i) { return "range s" + i; })
+						.attr("width", chart.xScale)
+						.attr("height", chart.height())
+						.attr("x", this.chart()._reverse ? chart.xScale : 0);
+				},
+				"merge:transition": function() {
+					var chart = this.chart();
+					this.duration(chart.duration())
+						.attr("width", chart.xScale)
+						.attr("x", chart._reverse ? chart.xScale : 0);
+				},
+				exit: function() {
+					this.remove();
+				}
+			}
+		});
+		/*
       // Update the range rects.
       var range = g.selectAll("rect.range")
           .data(rangez);
@@ -57,7 +86,36 @@ d3.chart("Bullet", {
           .attr("x", this._reverse ? x1 : 0)
           .attr("width", w1)
           .attr("height", height);
+		*/
 
+		this.layer("measures", this.base.append("g").classed("measures", true), {
+			dataBind: function(data) {
+				data = data.measures;
+
+				return this.selectAll("rect.measure").data(data);
+			},
+			insert: function() {
+				return this.append("rect");
+			},
+			events: {
+				enter: function() {
+					var chart = this.chart();
+					var hy = chart.height() / 3;
+					this.attr("class", function(d, i) { return "measure s" + i; })
+						.attr("width", chart.xScale)
+						.attr("height", hy)
+						.attr("x", chart._reverse ? chart.xScale : 0)
+						.attr("y", hy);
+				},
+				"merge:transition": function() {
+					var chart = this.chart();
+					this.duration(chart.duration())
+						.attr("width", chart.xScale)
+						.attr("x", chart.reverse ? chart.xScale : 0);
+				}
+			}
+		});
+		/*
       // Update the measure rects.
       var measure = g.selectAll("rect.measure")
           .data(measurez);
@@ -79,7 +137,38 @@ d3.chart("Bullet", {
           .attr("height", height / 3)
           .attr("x", this._reverse ? x1 : 0)
           .attr("y", height / 3);
+		*/
 
+		this.layer("markers", this.base.append("g").classed("markers", true), {
+			dataBind: function(data) {
+				data = data.markers;
+				return this.selectAll("line.marker").data(data);
+			},
+			insert: function() {
+				return this.append("line");
+			},
+			events: {
+				enter: function() {
+					var chart = this.chart();
+					var height = chart.height();
+					this.attr("class", "marker")
+						.attr("x1", chart.xScale)
+						.attr("x2", chart.xScale)
+						.attr("y1", height / 6)
+						.attr("y2", height * 5 / 6);
+				},
+				"merge:transition": function() {
+					var chart = this.chart();
+					var height = chart.height();
+					this.duration(chart.duration())
+						.attr("x1", chart.xScale)
+						.attr("x2", chart.xScale)
+						.attr("y1", height / 6)
+						.attr("y2", height * 5 / 6);
+				}
+			}
+		});
+		/*
       // Update the marker lines.
       var marker = g.selectAll("line.marker")
           .data(markerz);
@@ -101,10 +190,62 @@ d3.chart("Bullet", {
           .attr("x2", x1)
           .attr("y1", height / 6)
           .attr("y2", height * 5 / 6);
+		*/
 
       // Compute the tick format.
-      var format = this.tickFormat() || x1.tickFormat(8);
+      var format = this.tickFormat() || this.xScale.tickFormat(8);
 
+		this.layer("ticks", this.base.append("g").classed("ticks", true), {
+			dataBind: function() {
+				return this.selectAll("g.tick").data(this.chart().xScale.ticks(8), function(d) {
+					return this.textContent || format(d);
+				});
+			},
+			insert: function() {
+				var tick = this.append("g").attr("class", "tick");
+				var height = this.chart().height();
+
+				tick.append("line")
+					.attr("y1", height)
+					.attr("y2", height * 7 / 6);
+
+				tick.append("text")
+					.attr("text-anchor", "middle")
+					.attr("dy", "1em")
+					.attr("y", this.chart().height() * 7 / 6)
+					.text(format);
+
+				return tick;
+			},
+			events: {
+				enter: function() {
+					this.attr("transform", bulletTranslate(this.chart().xScale))
+						.style("opacity", 1e-6);
+				},
+				"merge:transition": function() {
+					var chart = this.chart();
+					var height = chart.height();
+
+					this.duration(chart.duration())
+						.attr("transform", bulletTranslate(chart.xScale))
+						.style("opacity", 1);
+					this.select("line")
+						.attr("y1", height)
+						.attr("y2", height * 7 / 6);
+					this.select("text")
+						.attr("y", height * 7 / 6);
+				},
+				"exit:transition": function() {
+					var chart = this.chart()
+					this.duration(chart.duration())
+						.attr("transform", bulletTranslate(chart.xScale))
+						.style("opacity", 1e-6)
+						.remove();
+				}
+			}
+		});
+
+		/*
       // Update the tick groups.
       var tick = g.selectAll("g.tick")
           .data(x1.ticks(8), function(d) {
@@ -152,9 +293,23 @@ d3.chart("Bullet", {
           .attr("transform", bulletTranslate(x1))
           .style("opacity", 1e-6)
           .remove();
+		*/
     d3.timer.flush();
   //}
   //return bullet;
+	},
+
+	transform: function(data) {
+		var newData = {
+			title: data.title,
+			subtitle: data.subtitle,
+			randomizer: data.randomizer,
+			ranges: data.ranges.slice().sort(d3.descending),
+			measures: data.measures.slice().sort(d3.descending),
+			markers: data.markers.slice().sort(d3.descending)
+		};
+		this.xScale.domain([0, Math.max(newData.ranges[0], newData.measures[0], newData.markers[0])]);
+		return newData;
 	},
 
 	// left, right, top, bottom
