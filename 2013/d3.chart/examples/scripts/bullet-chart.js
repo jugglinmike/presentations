@@ -1,31 +1,30 @@
-(function() {
-
 // Chart design based on the recommendations of Stephen Few. Implementation
 // based on the work of Clint Ivy, Jamie Love, and Jason Davies.
 // http://projects.instantcognition.com/protovis/bulletchart/
-d3.bullet = function() {
-  var orient = "left", // TODO top & bottom
-      reverse = false,
-      duration = 0,
-      ranges = bulletRanges,
-      markers = bulletMarkers,
-      measures = bulletMeasures,
-      width = 380,
-      height = 30,
-      tickFormat = null;
+d3.chart("Bullet", {
+	initialize: function(d, i) {
+		// Default configuration
+		this.duration(0);
+		this.markers(bulletMarkers);
+		this.measures(bulletMeasures);
+		this.width(380);
+		this.height(30);
+		this.tickFormat(null);
+		this.orient("left"); // TODO top & bottom
+		this.ranges(bulletRanges);
 
   // For each small multiple…
-  function bullet(g) {
-    g.each(function(d, i) {
-      var rangez = ranges.call(this, d, i).slice().sort(d3.descending),
-          markerz = markers.call(this, d, i).slice().sort(d3.descending),
-          measurez = measures.call(this, d, i).slice().sort(d3.descending),
-          g = d3.select(this);
+  //function bullet(g) {
+      var rangez = this._ranges.call(this.base, d, i).slice().sort(d3.descending),
+          markerz = this._markers.call(this.base, d, i).slice().sort(d3.descending),
+          measurez = this._measures.call(this.base, d, i).slice().sort(d3.descending),
+          g = this.base;
+		var duration = this.duration();
 
       // Compute the new x-scale.
       var x1 = d3.scale.linear()
           .domain([0, Math.max(rangez[0], markerz[0], measurez[0])])
-          .range(reverse ? [width, 0] : [0, width]);
+          .range(this._reverse ? [this.width(), 0] : [0, this.width()]);
 
       // Retrieve the old x-scale, if this is an update.
       var x0 = this.__chart__ || d3.scale.linear()
@@ -47,15 +46,15 @@ d3.bullet = function() {
           .attr("class", function(d, i) { return "range s" + i; })
           .attr("width", w0)
           .attr("height", height)
-          .attr("x", reverse ? x0 : 0)
+          .attr("x", this._reverse ? x0 : 0)
         .transition()
           .duration(duration)
           .attr("width", w1)
-          .attr("x", reverse ? x1 : 0);
+          .attr("x", this._reverse ? x1 : 0);
 
       range.transition()
           .duration(duration)
-          .attr("x", reverse ? x1 : 0)
+          .attr("x", this._reverse ? x1 : 0)
           .attr("width", w1)
           .attr("height", height);
 
@@ -67,18 +66,18 @@ d3.bullet = function() {
           .attr("class", function(d, i) { return "measure s" + i; })
           .attr("width", w0)
           .attr("height", height / 3)
-          .attr("x", reverse ? x0 : 0)
+          .attr("x", this._reverse ? x0 : 0)
           .attr("y", height / 3)
         .transition()
           .duration(duration)
           .attr("width", w1)
-          .attr("x", reverse ? x1 : 0);
+          .attr("x", this._reverse ? x1 : 0);
 
       measure.transition()
           .duration(duration)
           .attr("width", w1)
           .attr("height", height / 3)
-          .attr("x", reverse ? x1 : 0)
+          .attr("x", this._reverse ? x1 : 0)
           .attr("y", height / 3);
 
       // Update the marker lines.
@@ -104,7 +103,7 @@ d3.bullet = function() {
           .attr("y2", height * 5 / 6);
 
       // Compute the tick format.
-      var format = tickFormat || x1.tickFormat(8);
+      var format = this.tickFormat() || x1.tickFormat(8);
 
       // Update the tick groups.
       var tick = g.selectAll("g.tick")
@@ -153,65 +152,65 @@ d3.bullet = function() {
           .attr("transform", bulletTranslate(x1))
           .style("opacity", 1e-6)
           .remove();
-    });
     d3.timer.flush();
-  }
+  //}
+  //return bullet;
+	},
 
-  // left, right, top, bottom
-  bullet.orient = function(x) {
-    if (!arguments.length) return orient;
-    orient = x;
-    reverse = orient == "right" || orient == "bottom";
-    return bullet;
-  };
+	// left, right, top, bottom
+	orient: function(x) {
+		if (!arguments.length) return this._orient;
+		this._orient = x;
+		this._reverse = this._orient == "right" || this._orient == "bottom";
+		return this;
+	},
 
-  // ranges (bad, satisfactory, good)
-  bullet.ranges = function(x) {
-    if (!arguments.length) return ranges;
-    ranges = x;
-    return bullet;
-  };
+	// ranges (bad, satisfactory, good)
+	ranges: function(x) {
+		if (!arguments.length) return this._ranges;
+		this._ranges = x;
+		return this;
+	},
 
-  // markers (previous, goal)
-  bullet.markers = function(x) {
-    if (!arguments.length) return markers;
-    markers = x;
-    return bullet;
-  };
+	// markers (previous, goal)
+	markers: function(x) {
+		if (!arguments.length) return this._markers;
+		this._markers = x;
+		return this;
+	},
 
-  // measures (actual, forecast)
-  bullet.measures = function(x) {
-    if (!arguments.length) return measures;
-    measures = x;
-    return bullet;
-  };
+	// measures (actual, forecast)
+	measures: function(x) {
+		if (!arguments.length) return this._measures;
+		this._measures = x;
+		return this;
+	},
 
-  bullet.width = function(x) {
-    if (!arguments.length) return width;
-    width = x;
-    return bullet;
-  };
+	width: function(x) {
+		if (!arguments.length) return this._width;
+		this._width = x;
+		return this;
+	},
 
-  bullet.height = function(x) {
-    if (!arguments.length) return height;
-    height = x;
-    return bullet;
-  };
+	height: function(x) {
+		if (!arguments.length) return this._height;
+		this._height = x;
+		return this;
+	},
 
-  bullet.tickFormat = function(x) {
-    if (!arguments.length) return tickFormat;
-    tickFormat = x;
-    return bullet;
-  };
+	tickFormat: function(x) {
+		if (!arguments.length) return this._tickFormat;
+		this._tickFormat = x;
+		return this;
+	},
 
-  bullet.duration = function(x) {
-    if (!arguments.length) return duration;
-    duration = x;
-    return bullet;
-  };
+	duration: function(x) {
+		if (!arguments.length) return this._duration;
+		this._duration = x;
+		return this;
+	}
 
-  return bullet;
-};
+});
 
 function bulletRanges(d) {
   return d.ranges;
@@ -237,5 +236,3 @@ function bulletWidth(x) {
     return Math.abs(x(d) - x0);
   };
 }
-
-})();
