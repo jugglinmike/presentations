@@ -15,7 +15,7 @@ d3.json("bullets.json", function(error, data) {
       .attr("height", height + margin.top + margin.bottom)
     .append("g")
       .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
-      .call(chart);
+      .each(chart);
 
   var title = svg.append("g")
       .style("text-anchor", "end")
@@ -31,7 +31,7 @@ d3.json("bullets.json", function(error, data) {
       .text(function(d) { return d.subtitle; });
 
   d3.selectAll("button").on("click", function() {
-    svg.datum(randomize).call(chart.duration(1000)); // TODO automatic transition
+    svg.datum(randomize).each(chart.duration(1000)); // TODO automatic transition
   });
 });
 

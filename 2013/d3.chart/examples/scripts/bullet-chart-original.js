@@ -15,8 +15,8 @@ d3.bullet = function() {
       tickFormat = null;
 
   // For each small multiple…
-  function bullet(g) {
-    g.each(function(d, i) {
+  function bullet(d, i) {
+    //g.each(function(d, i) {
       var rangez = ranges.call(this, d, i).slice().sort(d3.descending),
           markerz = markers.call(this, d, i).slice().sort(d3.descending),
           measurez = measures.call(this, d, i).slice().sort(d3.descending),
@@ -153,7 +153,7 @@ d3.bullet = function() {
           .attr("transform", bulletTranslate(x1))
           .style("opacity", 1e-6)
           .remove();
-    });
+    //});
     d3.timer.flush();
   }
 
