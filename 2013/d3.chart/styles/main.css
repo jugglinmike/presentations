@@ -29,11 +29,19 @@ pre.code {
 	margin-bottom: 0.4em;
 } .step h1 + h2 {
 	text-align: center;
+} .step h3 {
+	margin-bottom: 3em;
+	font-size: 0.6em;
+	text-align: right;
 }
 
 .step .footnote {
 	font-size: 0.7em;
 	font-style: italic;
+}
+
+img.full-screen {
+	max-width: 100%;
 }
 
 #alternate-titles h1 {
@@ -47,14 +55,31 @@ pre.code {
 	font-size: 0.8em;
 }
 
+#d3-chart {
+	background-color: #fff;
+}
+
+#future-your-ideas {
+	text-align: center;
+} #future-your-ideas a {
+	text-decoration: none;
+	outline: none;
+	border: none;
+} #future-your-ideas .github-button {
+	font-size: 1em;
+}
+
 svg {
-	width: 30em;
-	height: 20em;
+	width: 100%;
+	height: 11em;
+} svg .vis-series1 {
+	fill: #cff09e;
+} svg .vis-series2 {
+	fill: #a8dba8;
+} svg .vis-series3 {
+	fill: #3B8686;
+} svg .vis-outline {
+	stroke: #0b486b;
+} svg .vis-text {
+	fill: #0b486b;
 }
-svg .visualization {
-	fill: #a00;
-	radius: 80%;
-}
-svg .visualization text {
-	top: 100px;
-	left: 100px;

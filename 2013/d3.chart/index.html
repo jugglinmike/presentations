@@ -13,6 +13,7 @@
 	<link href="styles/impress.css" rel="stylesheet" />
 	<link href="styles/prism.css" rel="stylesheet" />
 	<link href="styles/main.css" rel="stylesheet" />
+	<link href="styles/github-button.css" rel="stylesheet" />
 
 	<link rel="shortcut icon" href="favicon.png" />
 	<link rel="apple-touch-icon" href="apple-touch-icon.png" />
@@ -71,11 +72,121 @@
 </section>
 
 <section class="step">
-	<h2>What is a chart?</h2>
+	<h1>Reusable Charts</h1>
+</section>
+
+<section class="step">
+	<h3>Defining "chart"</h3>
 	<svg>
-		<ellipse class="visualization" cx="50%" cy="50%" rx="50%" ry="50%" />
-		<text class="">Visualization</text>
+		<ellipse class="vis-series1" cx="50%" cy="50%" rx="50%" ry="50%" />
+		<text x="10%" y="40%" class="vis-text">Visualizations</text>
+		<ellipse class="vis-series3" cx="70%" cy="55%" rx="20%" ry="30%" />
+		<text x="61%" y="58%" class="vis-text">Charts</text>
 	</svg>
+</section>
+
+<section class="step">
+	<h2>What does it mean to be "reusable"?</h2>
+</section>
+
+<section class="step" id="reusable-from-creator">
+	<h3>Defining "reusable"</h3>
+	<pre class="code"><code class="lang-javascript">
+		function chart() {
+			// generate chart here
+		}
+	</code></pre>
+	<blockquote>A function; the standard unit of code reuse!</blockquote>
+	<span class="quote-attribution">
+		-- Mike Bostock, <a href="http://bost.ocks.org/mike/chart/">Towards Reusable Charts</a>
+	</span>
+</section>
+
+<section class="step" id="reusable-from-community">
+	<h3>Defining "reusable"</h3>
+	<img src="img/reusable-search.png" />
+	<p>
+		ex:
+		<a href="http://javacrypt.wordpress.com/2012/12/15/improvements-to-d3s-reusable-component-pattern/">
+			Improvements in d3's Reusable Component Pattern
+		</a>
+	</p>
+</section>
+
+<section class="step" id="reusable-our-take">
+	<h3>Defining "reusable"</h3>
+	<h2>Our Take:</h2>
+	<ol>
+		<li>Repeatable</li>
+		<li>Modifiable</li>
+		<li>Configurable</li>
+		<li>Extensible</li>
+		<li>Composable</li>
+	</ol>
+</section>
+
+<section class="step" id="reusable-repeatable">
+	<h1>Repeatable</h1>
+</section>
+
+<section class="step" id="reusable-modifiable">
+	<h1>Modifiable</h1>
+</section>
+
+<section class="step" id="reusable-configurable">
+	<h1>Configurable</h1>
+</section>
+
+<section class="step" id="reusable-extensible">
+	<h1>Extensible</h1>
+</section>
+
+<section class="step" id="reusable-composable">
+	<h1>Composable</h1>
+</section>
+
+<section class="step" id="d3-chart">
+	<h1><img src="img/d3.chart.png" /></h1>
+</section>
+
+<section class="step" id="d3-chart-layer">
+	<h1>Layer</h1>
+</section>
+
+<section class="step" id="d3-chart-chart">
+	<h1>Chart</h1>
+</section>
+
+<section class="step" id="the-future">
+	<img src="img/future-is-cool.jpg" class="full-screen" />
+</section>
+
+<section class="step" id="future-bower-integration">
+	<img src="img/bower-logo.png" />
+</section>
+
+<section class="step" id="future-transitions">
+	<pre class="code"><code class="lang-javascript">
+		this.transition()
+				.transition()
+					.transition().text("Sharing");
+	</code></pre>
+</section>
+
+<section class="step" id="future-layer-types">
+	<h1>Improved <code class="inline">&lt;path&gt;</code> and <code class="inline">d3.layout</code> support</h1>
+</section>
+
+<section class="step" id="future-your-ideas">
+	<h1>Your ideas!</h1>
+	<a href="https://github.com/misoproject/d3.chart/issues"><button class="github-button">New Issue</button></a>
+</section>
+
+<section class="step" id="resources">
+	<h2>Resources</h2>
+	<ul>
+		<li>"The Future is Cool" t-shirt photograph coutesy <a href="https://secure.flickr.com/photos/rj3/">"Cowboy" Ben Alman</a></li>
+	</ul>
 </section>
 
 		</div>
