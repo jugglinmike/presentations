@@ -30,7 +30,7 @@ d3.json("bullets.json", function(error, data) {
       .attr("dy", "1em")
       .text(function(d) { return d.subtitle; });
 
-  d3.selectAll("button").on("click", function() {
+  d3.selectAll(".original-button").on("click", function() {
     svg.datum(randomize).each(chart.duration(1000)); // TODO automatic transition
   });
 });

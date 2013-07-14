@@ -8,6 +8,7 @@ var margin = {top: 5, right: 40, bottom: 20, left: 120},
     .height(height);*/
 
 d3.json("bullets.json", function(error, data) {
+	var charts = [];
   var svg = d3.select("#new").selectAll("svg")
       .data(data)
     .enter().append("svg")
@@ -17,7 +18,7 @@ d3.json("bullets.json", function(error, data) {
     .append("g")
       .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
       .each(function(d, i) {
-		d3.select(this).chart("Bullet", d, i);
+		charts.push(d3.select(this).chart("Bullet", d, i).duration(1000));
 	  });
 
   var title = svg.append("g")
@@ -33,7 +34,11 @@ d3.json("bullets.json", function(error, data) {
       .attr("dy", "1em")
       .text(function(d) { return d.subtitle; });
 
-  d3.selectAll("button").on("click", function() {
+  d3.selectAll(".new-button").on("click", function() {
+	data.forEach(randomize);
+	charts.forEach(function(chart, idx) {
+		chart.draw(data[idx]);
+	});
     //svg.datum(randomize).call(chart.duration(1000)); // TODO automatic transition
   });
 });

@@ -6,12 +6,6 @@ body {
   width: 960px;
 }
 
-button {
-  position: absolute;
-  right: 10px;
-  top: 10px;
-}
-
 .bullet { font: 10px sans-serif; }
 .bullet .marker { stroke: #000; stroke-width: 2px; }
 .bullet .tick line { stroke: #666; stroke-width: .5px; }
