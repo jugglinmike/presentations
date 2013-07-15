@@ -2,40 +2,39 @@
 // based on the work of Clint Ivy, Jamie Love, and Jason Davies.
 // http://projects.instantcognition.com/protovis/bulletchart/
 d3.chart("Bullet", {
-	initialize: function(d, i) {
+	initialize: function() {
+		this.xScale = d3.scale.linear();
+
 		// Default configuration
 		this.duration(0);
 		this.markers(bulletMarkers);
 		this.measures(bulletMeasures);
 		this.width(380);
 		this.height(30);
-		this.tickFormat(null);
+		this.tickFormat(this.xScale.tickFormat(8));
 		this.orient("left"); // TODO top & bottom
 		this.ranges(bulletRanges);
 
   // For each small multiple…
   //function bullet(g) {
-      var rangez = this._ranges.call(this.base, d, i).slice().sort(d3.descending),
-          markerz = this._markers.call(this.base, d, i).slice().sort(d3.descending),
-          measurez = this._measures.call(this.base, d, i).slice().sort(d3.descending),
-          g = this.base;
-		var duration = this.duration();
+      //var rangez = this._ranges.call(this.base, d, i).slice().sort(d3.descending),
+      //    markerz = this._markers.call(this.base, d, i).slice().sort(d3.descending),
+      //    measurez = this._measures.call(this.base, d, i).slice().sort(d3.descending),
+      //    g = this.base;
 
       // Compute the new x-scale.
-      var x1 = d3.scale.linear()
-          .domain([0, Math.max(rangez[0], markerz[0], measurez[0])])
-          .range(this._reverse ? [this.width(), 0] : [0, this.width()]);
-	  this.xScale = d3.scale.linear()
-		  .range(this._reverse ? [this.width(), 0] : [0, this.width()]);
+      //var x1 = d3.scale.linear()
+      //    .domain([0, Math.max(rangez[0], markerz[0], measurez[0])])
+      //    .range(this._reverse ? [this.width(), 0] : [0, this.width()]);
 
       // Retrieve the old x-scale, if this is an update.
-      var x0 = d3.scale.linear()
-          .domain([0, Infinity])
-          .range(x1.range());
+      //var x0 = d3.scale.linear()
+      //    .domain([0, Infinity])
+      //    .range(x1.range());
 
       // Derive width-scales from the x-scales.
-      var w0 = bulletWidth(x0),
-          w1 = bulletWidth(x1);
+      //var w0 = bulletWidth(x0),
+      //    w1 = bulletWidth(x1);
 
 		this.layer("ranges", this.base.append("g").classed("ranges", true), {
 			dataBind: function(data) {
@@ -193,17 +192,20 @@ d3.chart("Bullet", {
 		*/
 
       // Compute the tick format.
-      var format = this.tickFormat() || this.xScale.tickFormat(8);
+      //var format = this.tickFormat() || 
 
 		this.layer("ticks", this.base.append("g").classed("ticks", true), {
 			dataBind: function() {
+				var format = this.chart().tickFormat();
 				return this.selectAll("g.tick").data(this.chart().xScale.ticks(8), function(d) {
 					return this.textContent || format(d);
 				});
 			},
 			insert: function() {
 				var tick = this.append("g").attr("class", "tick");
-				var height = this.chart().height();
+				var chart = this.chart();
+				var height = chart.height();
+				var format = chart.tickFormat();
 
 				tick.append("line")
 					.attr("y1", height)
@@ -212,7 +214,7 @@ d3.chart("Bullet", {
 				tick.append("text")
 					.attr("text-anchor", "middle")
 					.attr("dy", "1em")
-					.attr("y", this.chart().height() * 7 / 6)
+					.attr("y", height * 7 / 6)
 					.text(format);
 
 				return tick;
@@ -344,6 +346,7 @@ d3.chart("Bullet", {
 	width: function(x) {
 		if (!arguments.length) return this._width;
 		this._width = x;
+		this.xScale.range(this._reverse ? [x, 0] : [0, x]);
 		return this;
 	},
 

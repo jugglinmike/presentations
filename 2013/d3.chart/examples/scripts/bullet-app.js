@@ -18,7 +18,10 @@ d3.json("bullets.json", function(error, data) {
     .append("g")
       .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
       .each(function(d, i) {
-		charts.push(d3.select(this).chart("Bullet", d, i).duration(1000));
+		charts.push(d3.select(this).chart("Bullet")
+			.duration(1000)
+			.width(width)
+			.height(height));
 	  });
 
   var title = svg.append("g")
