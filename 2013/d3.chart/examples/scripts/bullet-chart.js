@@ -3,6 +3,7 @@
 d3.chart("Bullet", {
 	initialize: function() {
 		this.xScale = d3.scale.linear();
+		this.base.classed("bullet", true);
 
 		// Default configuration
 		this.duration(0);
@@ -217,15 +218,35 @@ d3.chart("Bullet", {
 	},
 
 	width: function(x) {
+		var margin;
 		if (!arguments.length) return this._width;
 		this._width = x;
 		this.xScale.range(this._reverse ? [x, 0] : [0, x]);
+		margin = this.margin();
+		if (margin) {
+			if (margin.left) {
+				x -= margin.left;
+			}
+			if (margin.right) {
+				x -= margin.right;
+			}
+		}
+		this.base.attr("width", x);
 		return this;
 	},
 
 	height: function(x) {
 		if (!arguments.length) return this._height;
 		this._height = x;
+		this.base.attr("height", x);
+		return this;
+	},
+
+	margin: function(margin) {
+		if (!arguments.length) {
+			return this._margin;
+		}
+		this._margin = margin;
 		return this;
 	},
 
