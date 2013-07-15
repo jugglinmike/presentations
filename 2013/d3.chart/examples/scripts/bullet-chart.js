@@ -5,6 +5,7 @@ d3.chart("Bullet", {
 		this.xScale = d3.scale.linear();
 		this.base.classed("bullet", true);
 
+		this._margin = { top: 0, right: 0, bottom: 0, left: 0 };
 		// Default configuration
 		this.duration(0);
 		this.markers(function(d) {
@@ -20,6 +21,19 @@ d3.chart("Bullet", {
 		this.ranges(function(d) {
 			return d.ranges;
 		});
+
+		this.titleGroup = this.base.append("g")
+			.style("text-anchor", "end")
+			.attr("transform", "translate(-6," + height / 2 + ")");
+
+		this.title = this.titleGroup.append("text")
+			.attr("class", "title");
+			//.text(function(d) { return d.title; });
+
+		this.subtitle = this.titleGroup.append("text")
+			.attr("class", "subtitle")
+			.attr("dy", "1em");
+			//.text(function(d) { return d.subtitle; });
 
 		this.layer("ranges", this.base.append("g").classed("ranges", true), {
 			dataBind: function(data) {
@@ -176,6 +190,7 @@ d3.chart("Bullet", {
 	},
 
 	transform: function(data) {
+		// Copy data before sorting
 		var newData = {
 			title: data.title,
 			subtitle: data.subtitle,
@@ -184,7 +199,11 @@ d3.chart("Bullet", {
 			measures: data.measures.slice().sort(d3.descending),
 			markers: data.markers.slice().sort(d3.descending)
 		};
+
 		this.xScale.domain([0, Math.max(newData.ranges[0], newData.measures[0], newData.markers[0])]);
+		this.title.text(data.title);
+		this.subtitle.text(data.subtitle);
+
 		return newData;
 	},
 
@@ -219,34 +238,47 @@ d3.chart("Bullet", {
 
 	width: function(x) {
 		var margin;
-		if (!arguments.length) return this._width;
+		if (!arguments.length) {
+			return this._width;
+		}
+		margin = this.margin();
+		x -= margin.left + margin.right
 		this._width = x;
 		this.xScale.range(this._reverse ? [x, 0] : [0, x]);
-		margin = this.margin();
-		if (margin) {
-			if (margin.left) {
-				x -= margin.left;
-			}
-			if (margin.right) {
-				x -= margin.right;
-			}
-		}
+
 		this.base.attr("width", x);
+
 		return this;
 	},
 
 	height: function(x) {
-		if (!arguments.length) return this._height;
+		var margin;
+		if (!arguments.length) {
+			return this._height;
+		}
+		margin = this.margin();
+		x -= margin.top + margin.bottom;
 		this._height = x;
+
 		this.base.attr("height", x);
+
 		return this;
 	},
 
 	margin: function(margin) {
-		if (!arguments.length) {
+		if (!margin) {
 			return this._margin;
 		}
-		this._margin = margin;
+
+		["top", "right", "bottom", "left"].forEach(function(dimension) {
+			if (dimension in margin) {
+				this._margin[dimension] = margin[dimension];
+			}
+		}, this);
+
+		this.base.attr("transform", "translate(" + this._margin.left + "," +
+			this._margin.top + ")")
+
 		return this;
 	},
 
