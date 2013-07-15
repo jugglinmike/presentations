@@ -1,3 +1,5 @@
+// Chart design based on original implementation by Mike Bostock:
+// http://bl.ocks.org/mbostock/4061961
 d3.chart("Bullets", {
 	initialize: function(options) {
 		var mixins = this.mixins = [];
