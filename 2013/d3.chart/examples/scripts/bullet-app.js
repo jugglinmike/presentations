@@ -3,7 +3,15 @@ var margin = {top: 5, right: 40, bottom: 20, left: 120},
     width = 960 - margin.left - margin.right,
     height = 50 - margin.top - margin.bottom;
 
+
 d3.json("bullets.json", function(error, data) {
+
+	var myChart = d3.select("#new").chart("Bullets", {
+		margin: { top: 5, right: 40, bottom: 20, left: 120 },
+		data: data
+	});
+	myChart.draw(data);
+	/*
 	var charts = [];
   var svg = d3.select("#new").selectAll("svg")
       .data(data)
@@ -42,6 +50,7 @@ d3.json("bullets.json", function(error, data) {
 	});
     //svg.datum(randomize).call(chart.duration(1000)); // TODO automatic transition
   });
+  */
 });
 
 function randomize(d) {
