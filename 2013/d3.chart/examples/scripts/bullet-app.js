@@ -2,7 +2,7 @@
 
 "use strict";
 
-d3.json("bullets.json", function(error, data) {
+d3.json("data/bullets.json", function(error, data) {
 
 	var myChart = d3.select("#new").chart("Bullets", {
 		seriesCount: data.length
