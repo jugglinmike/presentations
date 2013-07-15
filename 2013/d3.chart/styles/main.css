@@ -40,23 +40,53 @@ pre.code {
 	font-style: italic;
 }
 
+.step .alternate-title {
+	margin-top: 2em;
+	text-align: right;
+	display: block;
+	opacity: 0.7;
+	font-size: 0.6em;
+}
+
 img.full-screen {
 	max-width: 100%;
 }
 
-#alternate-titles h1 {
-	position: absolute;
-	top: 50%;
-} #alternate-titles .field {
-	opacity: 0.4;
-} #alternate-titles .field li {
+#d3-examples ul {
+	text-align: center;
+} #d3-examples li {
 	display: inline-block;
-	width: 48%;
-	font-size: 0.8em;
+} #d3-examples a {
+	border: none;
+	text-decoration: none;
 }
 
 #d3-chart {
 	background-color: #fff;
+}
+
+#naming-is-difficult h1 {
+	position: absolute;
+	top: 40%;
+} #naming-is-difficult .field {
+	text-align: center;
+	opacity: 0.4;
+	margin: 0;
+	padding: 0;
+	white-space: no-wrap;
+	line-height: 0.5em;
+	white-space-collapse: discard;
+} #naming-is-difficult .field li {
+	display: inline;
+	margin: 0;
+	padding: 0;
+	font-size: 0.5em;
+} #naming-is-difficult .field li:after {
+	content: "/";
+	margin: 0 1em;
+} #naming-is-difficult .field li:last-child:after {
+	content: none;
+	margin: 0;
 }
 
 #future-your-ideas {
@@ -67,6 +97,13 @@ img.full-screen {
 	border: none;
 } #future-your-ideas .github-button {
 	font-size: 1em;
+}
+
+#resources ul {
+	font-size: 0.8em;
+} #resources ul ul {
+	margin-left: 2em;
+	font-size: 0.7em;
 }
 
 svg {

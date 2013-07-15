@@ -1,3 +1,5 @@
+// Chart design based on original implementation by Mike Bostock:
+// http://bl.ocks.org/mbostock/3883245
 d3.chart("StockLine", {
 	initialize: function() {
 		var x = this.x = d3.time.scale();
