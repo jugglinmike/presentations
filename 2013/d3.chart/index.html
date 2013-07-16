@@ -293,11 +293,25 @@
 
 <section class="step">
 	<h2>Transform Input Data</h2>
-
+	<pre class="code"><code class="lang-javascript">
+		d3.chart("Jones", {
+			transform: function(data) {
+				return d3.layout.chord()
+					.padding(.05)
+					.sortSubgroups(d3.descending)
+					.matrix(data);
+			}
+		});
+	</code></pre>
 </section>
 
 <section class="step">
 	<h2>Extend</h2>
+	<pre class="code"><code class="lang-javascript">
+		d3.chart("Drummer", {
+			// chart options: initialize, transform, etc...
+		});
+	</code></pre>
 	<pre class="code"><code class="lang-javascript">
 		d3.chart("Drummer").extend("Grohl", {
 			// chart options: initialize, transform, etc...
@@ -393,13 +407,44 @@
 
 <section class="step" id="future-your-ideas">
 	<h1>Your ideas!</h1>
-	<a href="https://github.com/misoproject/d3.chart/issues"><button class="github-button">New Issue</button></a>
+	<a href="https://github.com/misoproject/d3.chart/issues" target="_new">
+		<button class="github-button">New Issue</button>
+	</a>
 </section>
 
 <section class="step" id="resources">
 	<h2>Resources</h2>
 	<ul>
-		<li>"The Future is Cool" t-shirt photograph coutesy <a href="https://secure.flickr.com/photos/rj3/">"Cowboy" Ben Alman</a></li>
+		<li>
+			d3.js
+			<ul>
+				<li><a href="http://d3js.com">d3.js Homepage</a></li>
+				<li><a href="https://groups.google.com/forum/#!forum/d3-js">d3.js Mailing list</a></li>
+				<li><a href="http://bost.ocks.org/mike/chart/">Towards Reusable Charts</a>
+				by <a href="http://bost.ocks.org/mike/">Mike Bostock</a></li>
+				<li><a href="http://weblog.bocoup.com/reusability-with-d3/">Exploring Reusability with d3.js</a>
+				by <a href="http://mikepennisi.com">Mike Pennisi</a></li>
+			</ul>
+		</li>
+		<li>
+			d3.chart
+			<ul>
+				<li><a href="http://misoproject.com/d3-chart">d3.chart Homepage</a></li>
+				<li><a href="https://www.youtube.com/watch?v=TYgSc_S0lCw">The ABCs of Data Visualizations</a>
+				(video) by <a href="http://ireneros.com/">Irene Ros</a></li>
+				<li><a href="http://weblog.bocoup.com/introducing-d3-chart/">Introducing d3.chart</a>
+				by <a href="http://ireneros.com/">Irene Ros</a></li>
+				<li><a href="https://www.youtube.com/watch?v=pc3KWhu6o6M">Bocoup On Air - D3 & D3.chart</a> (video)</li>
+			</ul>
+		</li>
+		<li>
+			Miscellany
+			<ul>
+				<li><a href="http://bower.io">Bower - A package manager for the web</a></li>
+				<li><a href="http://www.flickr.com/photos/8395214@N06/5624862217/in/photolist-9z3Tz4-8VFCPF-8VJFGd-9prWGs-d9UtDK-dEgpFN-7Sm382-7Spjrj-7Sm3mV-7Sm3w4-7SpXyy-7SmFEi-d9UsvC-7HoeG1-9r72TP-efvLch-9yYj54-7HjjLT-7Hjjkk-9prWkm-9poUAM-9A2aTj-9zY4gi-dDVyXE-dDVsG7-dDQjjK-dDQ89g-dDVw5A-dDQiQp-dDVtL3-dDVAnm-dDQ7ha-dDQ9k2-dDVitu-dDPXoV-dDVwwf-dDQ8qV-dDVku3-dDVDSU-dDVDJm-dDVutQ-dDVFks-dDPWhn-dDVDB7-dDVgcW-dDVxYS-dDPSik-dDQdRD-dDVpr7-dDPTVM-dDVpjb">"The Future is Cool" t-shirt photograph</a>
+				by <a href="https://secure.flickr.com/photos/rj3/">"Cowboy" Ben Alman</a></li>
+			</ul>
+		</li>
 	</ul>
 </section>
 

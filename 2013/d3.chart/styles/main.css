@@ -99,6 +99,13 @@ img.full-screen {
 	font-size: 1em;
 }
 
+#resources ul {
+	font-size: 0.8em;
+} #resources ul ul {
+	margin-left: 2em;
+	font-size: 0.7em;
+}
+
 svg {
 	width: 100%;
 	height: 11em;
