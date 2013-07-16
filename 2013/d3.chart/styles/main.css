@@ -40,19 +40,40 @@ pre.code {
 	font-style: italic;
 }
 
+.step .alternate-title {
+	margin-top: 2em;
+	text-align: right;
+	display: block;
+	opacity: 0.7;
+	font-size: 0.6em;
+}
+
 img.full-screen {
 	max-width: 100%;
 }
 
 #alternate-titles h1 {
 	position: absolute;
-	top: 50%;
+	top: 40%;
 } #alternate-titles .field {
+	text-align: center;
 	opacity: 0.4;
+	margin: 0;
+	padding: 0;
+	white-space: no-wrap;
+	line-height: 0.5em;
+	white-space-collapse: discard;
 } #alternate-titles .field li {
-	display: inline-block;
-	width: 48%;
-	font-size: 0.8em;
+	display: inline;
+	margin: 0;
+	padding: 0;
+	font-size: 0.5em;
+} #alternate-titles .field li:after {
+	content: "/";
+	margin: 0 1em;
+} #alternate-titles .field li:last-child:after {
+	content: none;
+	margin: 0;
 }
 
 #d3-chart {

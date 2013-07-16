@@ -51,18 +51,30 @@
 </section>
 
 <section class="step" id="alternate-titles">
-	<h1>Alternate Slide Titles</h1>
+	<h1>Naming is Difficult</h1>
 	<ul class="field">
-		<li>This is a slide title</li>
-		<li>this is another slide title</li>
-		<li>This is a slide title</li>
-		<li>this is another slide title</li>
-		<li>This is a slide title</li>
-		<li>this is another slide title</li>
-		<li>This is a slide title</li>
-		<li>this is another slide title</li>
-		<li>This is a slide title</li>
-		<li>this is another slide title</li>
+		<li>Understanding Data Visualization: An Interpretive Dance</li><!--
+		--><li>Open Web Kittens</li><!--
+		--><li>d3.chart: I'm Just Going to Eat a Sandwhich</li><!--
+		--><li>d3.chart: there will be free food and beer why are you even reading this?</li><!--
+		--><li>d3.chart: I'm Frightened by the Tendrils that Grow Out of Old Potatoes</li><!--
+		--><li>d3.chart: I've never told anyone, but i have a dark secret</li><!--
+		--><li>d3.chart: If you stare are the word "number" long enough, it starts to lose all meaning</li><!--
+		--><li>Reusable charts with d3.chart</li><!--
+		--><li>d3.chart</li><!--
+		--><li>"d3.chart: If you use nested "quotes" then things get "hard to read""</li><!--
+		--><li>don't "question" my use of "quotes"</li><!--
+		--><li>chart chart chart chart chart CHART chart</li><!--
+		--><li>Building charts with d3.chart: A talk about charts</li><!--
+		--><li>Charting New Territory</li><!--
+		--><li>Charting your way thought reusable charts with d3.charts: a talk about charts (Warning: talk contains no charts)</li><!--
+		--><li>An ALL AXIS Pass to d3.chart</li><!--
+		--><li>I don't always make reusable charts, but when I do, I use d3.chart</li><!--
+		--><li>d3.chart: we've always been at war with eastasia</li><!--
+		--><li>Don't like government eavesdropping?! make charts with d3.chart</li><!--
+		--><li>d3.chart: put THAT in your memory hole!</li><!--
+		--><li>d3.chart: An Exploration of Alternative Titles for this Talk</li><!--
+		--><li>d3.chart: Who Charted?</li>
 	</ul>
 </section>
 
@@ -71,8 +83,15 @@
 	<h2>Data-Driven Documents</h2>
 </section>
 
+<section class="step" id="d3-example">
+	<img src="img/bullet-chart.png" class="full-screen" />
+	<span class="quote-attribution">
+		Walkthrough of <a href="http://bl.ocks.org/mbostock/4061961">Bullet Chart</a>
+	</span>
+</section>
+
 <section class="step">
-	<h1>Reusable Charts</h1>
+	<h1>re&middot;us&acute;&middot;a&middot;ble charts</h1>
 </section>
 
 <section class="step">
@@ -151,10 +170,90 @@
 
 <section class="step" id="d3-chart-layer">
 	<h1>Layer</h1>
+	<h2>Connect Data to Elements</h2>
+</section>
+
+<section class="step" id="d3-chart-layer-example-p1">
+	<pre class="code"><code class="lang-javascript">
+		var bar = g.selectAll("rect.bar")
+			.data(data);
+
+		bar.enter().append("rect")
+			.classed("bar", true);
+			.attr("height", function(d) { return d * 20; });
+			.attr("width", 0)
+			.transition()
+				.duration(1000)
+				.attr("width", 100);
+
+		bar.transition()
+			.duration(1000)
+			.attr("x", function(d, i) { return i * 100; });
+
+		bar.exit().transition().duration(1000)
+			.attr("width", 0)
+			.remove();
+	</code></pre>
+</section>
+
+<section class="step" id="d3-chart-layer-examplep-p2">
+	<pre class="code"><code class="lang-javascript">
+		g.layer({
+			dataBind: function(data) {
+				return this.selectAll("rect.bar").data(data);
+			},
+			insert: function() {
+				return this.append("rect").classed("bar", true);
+			},
+			events: {
+				enter: function() {
+					this.attr("height", function(d) { return d * 20; })
+						.attr("width", 0);
+				},
+				"enter:transition": function() {
+					this.duration(1000).attr("width", 100);
+				},
+				"update:transition": function() {
+					this.duration(1000)
+						.attr("x", function(d, i) { return i * 100; });
+				},
+				"exit:transition": function() {
+					this.duration(1000)
+						.attr("width", 0)
+						.remove();
+				}
+			}
+		});
+	</code></pre>
+</section>
+
+<section class="step" id="d3-chart-layer-examplep-p3">
+	<h2>Configuration</h2>
+	<pre class="code"><code class="lang-javascript">
+		g.on("enter", function() {
+			this.attr("width", 100)
+				.style("opacity", 0);
+		});
+		g.on("enter:transition", function() {
+			this.style("opacity", 1);
+		});
+		g.on("exit:transition", function() {
+			this.attr("width", 100)
+				.style("opacity", 0);
+		});
+	</code></pre>
 </section>
 
 <section class="step" id="d3-chart-chart">
 	<h1>Chart</h1>
+	<h2>Manage Layers, Extend, and Compose</h2>
+</section>
+
+<section class="step" id="d3-chart-example">
+	<img src="img/bullet-chart.png" class="full-screen" />
+	<span class="quote-attribution">
+		The <a href="http://bl.ocks.org/jugglinmike/6004102">Bullet Chart, revisted with d3.chart</a>
+	</span>
 </section>
 
 <section class="step" id="the-future">
@@ -162,7 +261,7 @@
 </section>
 
 <section class="step" id="future-bower-integration">
-	<img src="img/bower-logo.png" />
+	<a href="http://bower.io"><img src="img/bower-logo.png" /></a>
 </section>
 
 <section class="step" id="future-transitions">
@@ -195,7 +294,7 @@
 			<p>Use a spacebar or arrow keys to navigate</p>
 		</div>
 		<script>
-		if ("ontouchstart" in document.documentElement) { 
+		if ("ontouchstart" in document.documentElement) {
 			document.querySelector(".hint").innerHTML = "<p>Tap on the left or right to navigate</p>";
 		}
 		</script>

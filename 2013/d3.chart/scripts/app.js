@@ -6,15 +6,11 @@ var textProp = "innerText" in document.createElement("div") ?
 
 var s = toArray(document.querySelectorAll("#impress > .step"));
 var idx = 0;
-s.forEach(function(elem) {
+s.forEach(function(elem, i) {
 	var yPos = idx++ * 1500;
 	if (!elem.getAttribute("data-y")) {
 		elem.setAttribute("data-y", yPos);
 	}
-	toArray(elem.querySelectorAll(".step")).forEach(function(elem) {
-		elem.setAttribute("data-y", yPos);
-		elem.setAttribute("data-z", 100);
-	});
 });
 
 // Normalize indentation of code samples
