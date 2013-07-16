@@ -52,10 +52,23 @@ img.full-screen {
 	max-width: 100%;
 }
 
-#alternate-titles h1 {
+#d3-examples ul {
+	text-align: center;
+} #d3-examples li {
+	display: inline-block;
+} #d3-examples a {
+	border: none;
+	text-decoration: none;
+}
+
+#d3-chart {
+	background-color: #fff;
+}
+
+#naming-is-difficult h1 {
 	position: absolute;
 	top: 40%;
-} #alternate-titles .field {
+} #naming-is-difficult .field {
 	text-align: center;
 	opacity: 0.4;
 	margin: 0;
@@ -63,21 +76,17 @@ img.full-screen {
 	white-space: no-wrap;
 	line-height: 0.5em;
 	white-space-collapse: discard;
-} #alternate-titles .field li {
+} #naming-is-difficult .field li {
 	display: inline;
 	margin: 0;
 	padding: 0;
 	font-size: 0.5em;
-} #alternate-titles .field li:after {
+} #naming-is-difficult .field li:after {
 	content: "/";
 	margin: 0 1em;
-} #alternate-titles .field li:last-child:after {
+} #naming-is-difficult .field li:last-child:after {
 	content: none;
 	margin: 0;
-}
-
-#d3-chart {
-	background-color: #fff;
 }
 
 #future-your-ideas {
