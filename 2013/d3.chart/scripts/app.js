@@ -4,13 +4,23 @@ var toArray = Array.prototype.slice.call.bind(Array.prototype.slice);
 var textProp = "innerText" in document.createElement("div") ?
 	"innerText" : "textContent";
 
-var s = toArray(document.querySelectorAll("#impress > .step"));
+var s = toArray(document.querySelectorAll("#impress > .step, #impress > .step-group"));
 var idx = 0;
 s.forEach(function(elem, i) {
 	var yPos = idx++ * 1500;
 	if (!elem.getAttribute("data-y")) {
 		elem.setAttribute("data-y", yPos);
 	}
+});
+
+s = toArray(document.querySelectorAll("#impress > .step-group"));
+s.forEach(function(elem) {
+	var relY = +elem.getAttribute("data-y");
+	var steps = toArray(elem.querySelectorAll(".step"));
+	steps.forEach(function(elem) {
+		var localY = +(elem.getAttribute("data-y") || 0);
+		elem.setAttribute("data-y", localY + relY);
+	});
 });
 
 // Normalize indentation of code samples

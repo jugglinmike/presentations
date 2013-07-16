@@ -50,18 +50,20 @@
 	</ul>
 </section>
 
-<section class="step">
+<div class="step-group">
+
+<section class="step" id="d3-title">
 	<h1>d3.js</h1>
 	<h2>Data-Driven Documents</h2>
 </section>
 
-<section class="step">
+<section class="step" data-scale="0.3" data-x="-400" data-y="140">
 	<h2></h2>
 	<blockquote>D3.js is a JavaScript library for manipulating documents based on data. D3 helps you bring data to life using HTML, SVG and CSS [...]</blockquote>
 	<span class="quote-attribution"><a href="http://d3js.org/">d3js.org</a></span>
 </section>
 
-<section class="step" id="d3-examples">
+<section class="step" data-scale="0.3" data-y="140" id="d3-examples">
 	<h2>Visualizations</h2>
 	<ul>
 		<li><a href="http://bl.ocks.org/mbostock/4060954"><img src="img/d3-example-stream.png" /></a></li>
@@ -71,12 +73,14 @@
 	</ul>
 </section>
 
-<section class="step" id="d3-example">
+<section class="step" data-scale="0.3" data-x="400" data-y="140" id="d3-example">
 	<img src="img/bullet-chart.png" class="full-screen" />
 	<span class="quote-attribution">
 		Walkthrough of <a href="http://bl.ocks.org/mbostock/4061961">Bullet Chart</a>
 	</span>
 </section>
+
+</div>
 
 <section class="step">
 	<h1>re&middot;us&acute;&middot;a&middot;ble charts</h1>
@@ -122,34 +126,37 @@
 
 <section class="step" id="reusable-our-take">
 	<h3>Defining "reusable"</h3>
-	<h2>Our Take:</h2>
-	<ol>
-		<li>Repeatable</li>
-		<li>Modifiable</li>
-		<li>Configurable</li>
-		<li>Extensible</li>
-		<li>Composable</li>
-	</ol>
+	<h2>Our Take</h2>
 </section>
 
 <section class="step" id="reusable-repeatable">
+	<h3>Defining "reusable"</h3>
 	<h1>Repeatable</h1>
+	<img src="img/repeatable.png" class="full-screen" />
 </section>
 
 <section class="step" id="reusable-modifiable">
+	<h3>Defining "reusable"</h3>
 	<h1>Modifiable</h1>
+	<img src="img/modifiable.png" class="full-screen" />
 </section>
 
 <section class="step" id="reusable-configurable">
+	<h3>Defining "reusable"</h3>
 	<h1>Configurable</h1>
+	<img src="img/configurable.png" class="full-screen" />
 </section>
 
 <section class="step" id="reusable-extensible">
+	<h3>Defining "reusable"</h3>
 	<h1>Extensible</h1>
+	<img src="img/extensible.png" class="full-screen" />
 </section>
 
 <section class="step" id="reusable-composable">
+	<h3>Defining "reusable"</h3>
 	<h1>Composable</h1>
+	<img src="img/composable.png" class="full-screen" />
 </section>
 
 <section class="step" id="d3-chart">
@@ -184,12 +191,14 @@
 	</ul>
 </section>
 
+<div class="step-group">
+
 <section class="step" id="d3-chart-layer">
 	<h1>Layer</h1>
 	<h2>Connect Data to Elements</h2>
 </section>
 
-<section class="step" id="d3-chart-layer-pattern">
+<section class="step" data-scale="0.3" data-x="-600" data-y="200" id="d3-chart-layer-pattern">
 	<h2>d3.js pattern</h2>
 	<pre class="code"><code class="lang-javascript">
 		var bar = d3.select("svg g").selectAll("rect.bar")
@@ -213,7 +222,7 @@
 	</code></pre>
 </section>
 
-<section class="step" id="d3-chart-layer-setup">
+<section class="step" data-scale="0.3" data-x="-200" data-y="200" id="d3-chart-layer-setup">
 	<h2>Setup</h2>
 	<pre class="code"><code class="lang-javascript">
 		var layer = d3.select("svg g").layer({
@@ -245,14 +254,14 @@
 	</code></pre>
 </section>
 
-<section class="step" id="d3-chart-layer-rendering">
+<section class="step" data-scale="0.3" data-x="200" data-y="200" id="d3-chart-layer-rendering">
 	<h2>Rendering</h2>
 	<pre class="code"><code class="lang-javascript">
 		layer.draw(data);
 	</code></pre>
 </section>
 
-<section class="step" id="d3-chart-layer-configuration">
+<section class="step" data-scale="0.3" data-x="600" data-y="200" id="d3-chart-layer-configuration">
 	<h2>Configuration</h2>
 	<pre class="code"><code class="lang-javascript">
 		layer.on("enter", function() {
@@ -268,6 +277,8 @@
 		});
 	</code></pre>
 </section>
+
+</div>
 
 <section class="step" id="d3-chart-chart">
 	<h1>Chart</h1>
@@ -385,15 +396,17 @@
 	</span>
 </section>
 
+<div class="step-group">
+
 <section class="step" id="the-future">
 	<img src="img/future-is-cool.jpg" class="full-screen" />
 </section>
 
-<section class="step" id="future-bower-integration">
+<section class="step" data-z="1200" data-x="-1000" data-y="-200" id="future-bower-integration">
 	<a href="http://bower.io"><img src="img/bower-logo.png" /></a>
 </section>
 
-<section class="step" id="future-transitions">
+<section class="step" data-z="1200" data-y="-400" id="future-transitions">
 	<pre class="code"><code class="lang-javascript">
 		this.transition()
 				.transition()
@@ -401,16 +414,18 @@
 	</code></pre>
 </section>
 
-<section class="step" id="future-layer-types">
+<section class="step" data-z="1200" data-x="1000" data-y="-200" id="future-layer-types">
 	<h1>Improved <code class="inline">&lt;path&gt;</code> and <code class="inline">d3.layout</code> support</h1>
 </section>
 
-<section class="step" id="future-your-ideas">
+<section class="step" data-z="1200" data-y="400" id="future-your-ideas">
 	<h1>Your ideas!</h1>
 	<a href="https://github.com/misoproject/d3.chart/issues" target="_new">
 		<button class="github-button">New Issue</button>
 	</a>
 </section>
+
+</div>
 
 <section class="step" id="resources">
 	<h2>Resources</h2>
@@ -441,10 +456,18 @@
 			Miscellany
 			<ul>
 				<li><a href="http://bower.io">Bower - A package manager for the web</a></li>
-				<li><a href="http://www.flickr.com/photos/8395214@N06/5624862217/in/photolist-9z3Tz4-8VFCPF-8VJFGd-9prWGs-d9UtDK-dEgpFN-7Sm382-7Spjrj-7Sm3mV-7Sm3w4-7SpXyy-7SmFEi-d9UsvC-7HoeG1-9r72TP-efvLch-9yYj54-7HjjLT-7Hjjkk-9prWkm-9poUAM-9A2aTj-9zY4gi-dDVyXE-dDVsG7-dDQjjK-dDQ89g-dDVw5A-dDQiQp-dDVtL3-dDVAnm-dDQ7ha-dDQ9k2-dDVitu-dDPXoV-dDVwwf-dDQ8qV-dDVku3-dDVDSU-dDVDJm-dDVutQ-dDVFks-dDPWhn-dDVDB7-dDVgcW-dDVxYS-dDPSik-dDQdRD-dDVpr7-dDPTVM-dDVpjb">"The Future is Cool" t-shirt photograph</a>
-				by <a href="https://secure.flickr.com/photos/rj3/">"Cowboy" Ben Alman</a></li>
 			</ul>
 		</li>
+	</ul>
+</section>
+
+<section class="step" id="attribution">
+	<h2>Attribution</h2>
+	<ul>
+		<li><a href="http://www.flickr.com/photos/8395214@N06/5624862217/in/photolist-9z3Tz4-8VFCPF-8VJFGd-9prWGs-d9UtDK-dEgpFN-7Sm382-7Spjrj-7Sm3mV-7Sm3w4-7SpXyy-7SmFEi-d9UsvC-7HoeG1-9r72TP-efvLch-9yYj54-7HjjLT-7Hjjkk-9prWkm-9poUAM-9A2aTj-9zY4gi-dDVyXE-dDVsG7-dDQjjK-dDQ89g-dDVw5A-dDQiQp-dDVtL3-dDVAnm-dDQ7ha-dDQ9k2-dDVitu-dDPXoV-dDVwwf-dDQ8qV-dDVku3-dDVDSU-dDVDJm-dDVutQ-dDVFks-dDPWhn-dDVDB7-dDVgcW-dDVxYS-dDPSik-dDQdRD-dDVpr7-dDPTVM-dDVpjb">"The Future is Cool" t-shirt photograph</a>
+		by <a href="https://secure.flickr.com/photos/rj3/">"Cowboy" Ben Alman</a></li>
+		<li><a href="http://thenounproject.com/noun/notepad/#icon-No8155">Notepad icon</a>
+		by <a href="http://thenounproject.com/lemonliu">Lemon Liu</a></li>
 	</ul>
 </section>
 
