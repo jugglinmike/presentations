@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>Writing the Right Tests</title>
+		<meta name="viewport" content="width=device-width">
+		<meta name="DC.created" content="2014-08-07" />
+
+		<meta name="description" content="Breaking down web applications to understand test strategies" />
+		<meta name="author" content="Mike Pennisi" />
+
+		<link rel="stylesheet" href="styles/slide.css" media="screen">
+		<link rel="stylesheet" href="styles/custom.css" media="screen">
+		<script src="scripts/lib/jquery-1.9.0.min.js"></script>
+		<script src="scripts/slide.js"></script>
+
+
+		<script id="touch-template" type="template">
+			<div id="touch">
+				<button id="start">start presentation</button>
+				<button id="done">done</button>
+				<button id="prev">prev</button>
+				<button id="next">next</button>
+			</div>
+		</script>
+	</head>
+	<body>
+
+		<div id="wrapper">
+
+			<div class="slide">
+				<h1>Writing the Right Tests</h1>
+			</div>
+
+			<div class="slide">
+				<h1>Writing the Right Tests</h1>
+				<h3>Mike Pennisi</h3>
+				<h3>Bocoup</h3>
+			</div>
+
+			<div class="slide">
+				<h2>Initial Conception</h2>
+				<img src="images/01-code.png" />
+			</div>
+
+			<div class="slide">
+				<h2>A More Realistic Model</h2>
+				<img src="images/02-my-code.png" />
+			</div>
+
+			<div class="slide" id="blues">
+				<video>
+					<source src="music-both-kinds.ogg" />
+				</video>
+			</div>
+
+			<div class="slide">
+				<h2><pre>assert(new Model() instanceof Model);</pre></h2>
+			</div>
+
+			<div class="slide">
+				<h2><pre>assert(new Model() instanceof Model);</pre></h2>
+				<h2>(not helpful)</h2>
+			</div>
+
+			<div class="slide">
+				<h1>Taxonomies</h1>
+			</div>
+
+			<div class="slide">
+				<h2>Recap: Starting Point</h2>
+				<img src="images/02-my-code.png" />
+			</div>
+
+			<div class="slide">
+				<h2>Decomposition: "My Code"</h2>
+				<img src="images/03-my-application.png" />
+			</div>
+
+			<div class="slide">
+				<h2>Decomposition: "Their Code"</h2>
+				<img src="images/04-browsers-and-services.png" />
+			</div>
+
+			<div class="slide">
+				<h2>Decomposition: "Services"</h2>
+				<img src="images/05-first-and-third-party.png" />
+			</div>
+
+			<div class="slide">
+				<h1>What Does it All Mean?</h1>
+			</div>
+
+			<div class="slide">
+				<h2>Unit Tests</h2>
+				<img class="test-model" src="images/unit-tests.png" />
+				<h3>Tools</h3>
+				<a class="tool" href="https://github.com/cjohansen/Sinon.JS">
+					<img src="images/repo-icon.png" class="logo">
+					<span class="title">cjohansen / Sinon.JS</span>
+				</a><!--
+				--><a class="tool" href="https://github.com/airportyh/testem">
+					<img src="images/repo-icon.png" class="logo">
+					<span class="title">airportyh / testem</span>
+				</a><!--
+				--><a class="tool" href="https://karma-runner.github.io">
+					<img src="images/karma.png" class="logo">
+					<span class="title">Karma</span>
+				</a>
+				<h3>Schedule</h3>
+				<ul>
+					<li>On pull request</li>
+					<li><a href="http://www.git-scm.com/book/en/Customizing-Git-Git-Hooks">git pre-commit hook</a></li>
+				</ul>
+			</div>
+
+			<div class="slide">
+				<h2>UI Tests</h2>
+				<img class="test-model" src="images/ui-tests.png" />
+				<h3>Tools</h3>
+				<a class="tool" href="http://seleniumhq.org">
+					<img src="images/selenium-hq.png">
+					<span class="title">Selenium</span>
+				</a><!--
+				--><a class="tool" href="https://github.com/assaf/node-replay">
+					<img src="images/repo-icon.png" class="logo">
+					<span class="title">assaf / node-replay</span>
+				</a>
+				<h3>Schedule</h3>
+				On pull request
+			</div>
+
+			<div class="slide">
+				<h2>Browser Tests</h2>
+				<img class="test-model" src="images/browser-tests.png" />
+				<h3>Tools</h3>
+				<a class="tool" href="http://seleniumhq.org">
+					<img src="images/selenium-hq.png">
+					<span class="title">Selenium</span>
+				</a><!--
+				--><a class="tool" href="https://saucelabs.com/">
+					<img src="images/sauce-labs.png" class="logo">
+					<span class="title">Sauce Labs</span>
+				</a>
+				<h3>Schedule</h3>
+				On pull request
+			</div>
+
+			<div class="slide">
+				<h2>External Services</h2>
+				<img class="test-model" src="images/service-tests.png" />
+				<h3>Tools</h3>
+				(see UI tests)
+				<h3>Schedule</h3>
+				Hourly / daily
+			</div>
+
+			<div class="slide">
+				<h1>Thanks!</h1>
+				<h3><a href="http://jugglinmike.github.io/presentations/">jugglinmike.github.io/presentations/</a></h3>
+			</div>
+		</div>
+	</body>
+</html>
