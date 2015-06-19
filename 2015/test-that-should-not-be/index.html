@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>The Test that Should Not Be</title>
+    <meta charset="utf-8">
+    <meta name="DC.created" content="2015-06-19" />
+    <meta name="description" content="Writing language tests for confusing edge cases in ECMASCript 2015 (ES6)" />
+    <meta name="author" content="Mike Pennisi" />
+
+    <style>
+      @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+      @import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+      @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+      body { font-family: 'Droid Serif'; }
+      h1, h2, h3 {
+        font-family: 'Yanone Kaffeesatz';
+        font-weight: normal;
+      }
+      .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+
+.literal {
+  font-family: fixed;
+  font-weight: bold;
+}
+dl sub {
+  color: #49A08A;
+}
+
+blockquote {
+  padding: 0.2em 1em;
+  margin: 1em;
+  position: relative;
+
+  background-color: rgba(100, 100, 100, 0.1);
+}
+blockquote::before {
+  position: absolute;
+  top: -0.3em;
+  right: -0.1em;
+
+  content: "\0022";
+  font-size: 18em;
+  color: #444;
+}
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle
+
+# The Test that Should Not Be
+
+---
+class: center, middle
+
+# Background: Grammar Conventions
+
+---
+
+# Grammar Production Parameters
+
+> ### 5.1.5 Grammar Notation
+> 
+> [...]
+> 
+> A production may be parameterized by a subscripted annotation of the form
+> "<sub>[parameters]</sub>", which may appear as a suffix to the nonterminal
+> symbol defined by the production. “parameters” may be either a single name or a
+> comma separated list of names. A parameterized production is shorthand for a
+> set of productions defining all combinations of the parameter names, preceded
+> by an underscore, appended to the parameterized nonterminal symbol.
+
+---
+
+# Grammar Production Parameters
+
+> This means that:
+> 
+> <dl>
+>   <dt>StatementList<sub>[Return]</sub></dt>
+>   <dd>ReturnStatement</dd>
+>   <dd>ExpressionStatement</dd>
+> </dl>
+> 
+> is a convenient abbreviation for:
+> 
+> <dl>
+>   <dt>StatementList</dt>
+>   <dd>ReturnStatement</dd>
+>   <dd>ExpressionStatement</dd>
+>   <dt>StatementList_Return</dt>
+>   <dd>ReturnStatement</dd>
+>   <dd>ExpressionStatement</dd>
+> </dl>
+
+---
+
+# Grammar Production Parameters
+
+> and that:
+> 
+> <dl>
+>   <dt>StatementList<sub>[Return, In]</sub></dt>
+>   <dd>ReturnStatement</dd>
+>   <dd>ExpressionStatement</dd>
+> </dl>
+> 
+> is an abbreviation for:
+> 
+> <dt>StatementList</dt>
+>   <dd>ReturnStatement</dd>
+>   <dd>ExpressionStatement</dd>
+>   <dt>StatementList_Return</dt>
+>   <dd>ReturnStatement</dd>
+>   <dd>ExpressionStatement</dd>
+>   <dt>StatementList_In</dt>
+>   <dd>ReturnStatement</dd>
+>   <dd>ExpressionStatement</dd>
+>   <dt>StatementList_Return_In</dt>
+>   <dd>ReturnStatement</dd>
+>   <dd>ExpressionStatement</dd>
+> </dl>
+
+---
+
+# Apparent Origins
+
+From the ECMAScript 5 spec:
+
+> <dl>
+>   <dt>RelationalExpression</dt>
+>   <dd>ShiftExpression</dd>
+>   <dd>RelationalExpression <span class="literal">&lt;</span> ShiftExpression</dd>
+>   <dd>RelationalExpression <span class="literal">&gt;</span> ShiftExpression</dd>
+>   <dd>RelationalExpression <span class="literal">&lt;=</span> ShiftExpression</dd>
+>   <dd>RelationalExpression <span class="literal">&gt;=</span> ShiftExpression</dd>
+>   <dd>RelationalExpression <span class="literal">instanceof</span> ShiftExpression</dd>
+>   <dd>RelationalExpression <span class="literal">in</span> ShiftExpression</dd>
+>   <dt>RelationalExpressionNoIn</dt>
+>   <dd>ShiftExpression</dd>
+>   <dd>RelationalExpressionNoIn <span class="literal">&lt;</span> ShiftExpression</dd>
+>   <dd>RelationalExpressionNoIn <span class="literal">&gt;</span> ShiftExpression</dd>
+>   <dd>RelationalExpressionNoIn <span class="literal">&lt;=</span> ShiftExpression</dd>
+>   <dd>RelationalExpressionNoIn <span class="literal">&gt;=</span> ShiftExpression</dd>
+>   <dd>RelationalExpressionNoIn <span class="literal">instanceof</span> ShiftExpression</dd>
+> </dl>
+
+---
+class: center, middle
+
+# The Grammer Under Test
+
+---
+class: middle
+
+> ## [14.4](https://people.mozilla.org/~jorendorff/es6-draft.html#sec-generator-function-definitions) Generator Function Definitions
+> 
+> Syntax
+> 
+> <dl>
+>   <dt>GeneratorMethod<sub>[Yield]</sub></dt>
+>   <dd>
+>     <span class="literal">*</span> PropertyName<sub>[?Yield]</sub>
+>     <span class="literal">(</span> StrictFormalParameters<sub>[Yield,GeneratorParameter]</sub>
+>     <span class="literal">)</span> <span class="literal">{</span> GeneratorBody <span class="literal">}</span>
+>   </dd>
+> </dl>
+
+---
+class: center, middle
+
+# The Test that Should Not Be
+
+---
+
+```js
+// Copyright (C) 2015 the V8 project authors. All rights reserved.
+// This code is governed by the BSD license found in the LICENSE file.
+
+/*---
+description: >
+    When the `yield` keyword occurs within the Initializer of a
+    SingleNameBinding witihn the FormalParameters of a GeneratorMethod, it
+    behaves as a YieldExpression.
+es6id: 14.4
+features: [generators]
+flags: [noStrict]
+---*/
+
+var yield = 'defaultViaIdentifier';
+var obj;
+var iter = (function*() {
+  obj = {
+    *method(x = yield) {
+      return x;
+    }
+  };
+}());
+
+iter.next();
+
+iter.next('defaultViaExpression');
+
+assert.sameValue(obj.method().next().value, 'defaultViaExpression');
+```
+
+---
+class: center, middle
+
+![](img/twitter-p1.png)
+
+---
+class: center, middle
+
+![](img/twitter-p2.png)
+
+---
+class: center, middle
+
+![](img/twitter-p3.png)
+
+---
+
+<img src="img/updated-test.png" style="width: 100%">
+
+---
+class: center, middle
+
+# The Test that Should Not Be
+
+---
+class: center, middle
+
+# The Test that Should Not Be (and Isn't)
+    </textarea>
+    <script src="remark.js">
+    </script>
+    <script>
+      var slideshow = remark.create();
+    </script>
+  </body>
+</html>
