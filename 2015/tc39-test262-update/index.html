@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>July 2015 Test262 Status Update</title>
+    <meta charset="utf-8">
+    <meta name="DC.created" content="2015-07-29" />
+    <meta name="description" content="Recent developments in the official ECMAScript test suite" />
+    <meta name="author" content="Mike Pennisi" />
+
+    <style>
+      @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+      @import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+      @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+      body { font-family: 'Droid Serif'; }
+      h1, h2, h3 {
+        font-family: 'Yanone Kaffeesatz';
+        font-weight: normal;
+      }
+      .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+
+.literal {
+  font-family: fixed;
+  font-weight: bold;
+}
+dl sub {
+  color: #49A08A;
+}
+
+blockquote {
+  padding: 0.2em 1em;
+  margin: 1em;
+  position: relative;
+
+  background-color: rgba(100, 100, 100, 0.1);
+}
+blockquote::before {
+  position: absolute;
+  top: -0.3em;
+  right: -0.1em;
+
+  content: "\0022";
+  font-size: 18em;
+  color: #444;
+}
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle
+
+# Test262 Status Update
+
+![logo for ECMA International](img/ecma-logo.jpg)
+
+### 2015.07.29
+
+???
+
+- Thank you for having me
+- My name is Mike Pennisi
+- I work at an open web consultancy named Bocoup
+- I've been contributing to Test262 full-time for the past 6 months
+- Brian Terlson asked me to visit and give this brief update
+
+---
+class: middle
+
+### **ES2015 Coverage Recap**
+### Infrastructural Improvements
+### Future work
+
+---
+
+### ES2015 Coverage Recap
+
+**2014:** Early efforts by Sam Mikes
+
+Promise, Math, classes, generators
+
+--
+
+**Spring 2015:** Google-Bocoup partnership (6 months, 2 developers full-time)
+
+Templates, Generators, Proxy, Collections, Literals, Promise, built-in
+extensions (Object, RegExp), module syntax, `for..of`, Object literal
+extensions, classes
+
+???
+
+- First 2 months: working with V8 team to port "mjsunit" tests
+- Since then: authoring brand new tests from spec
+- Participants:
+  - V8/Google: Erik Arvidsson, Domenic Denicola, &amp; Cait Potter
+  - Bocoup: Rick Waldron &amp; Leo Balter
+  - TC39: Brian Terlson
+  - Andre Bargull
+
+--
+
+**In progress:** Tests being written/reviewed today
+
+Default parameters, built-in extensions (Array, String), well-known Symbols,
+destructring assignment, Reflect
+
+--
+
+**To do:**
+
+Spread operator, destructuring binding, Typed Arrays
+
+???
+
+For reasons I will explain in a moment, we are blocked on most of this work
+
+---
+
+### ES2015 Coverage Recap (continued)
+
+Bugs reported/confirmed/fixed
+
+V8: 30 / 29 / 26
+
+SpiderMonkey: 9 / 2 / 2
+
+ES6 Draft: 1 / 1 / 1
+
+ECMAScript specification: 10 / 6 / 6
+
+---
+class: middle
+
+### ES2015 Coverage Recap
+### **Infrastructural Improvements**
+### Future work
+
+---
+
+### Infrastructural Improvements
+
+- Ongoing: `features` tag ([ref:
+  gh-111](https://github.com/tc39/test262/issues/111))
+- Ongoing: behavior-based file names (ref:
+  [gh-132](https://github.com/tc39/test262/pull/132))
+- `raw` flag ([ref: gh-240](https://github.com/tc39/test262/pull/340))
+- `module` flag ([ref: gh-300](https://github.com/tc39/test262/pull/300))
+- Negative reform (making expectations more specific) (ref:
+  [gh-360](https://github.com/tc39/test262/pull/360))
+
+???
+
+- **Negative reform:** Tests are now far more explicit about expected runtime
+  errors, thanks to Domenic for writing `assert.throws`
+
+---
+class: middle
+
+### ES2015 Coverage Recap
+### Infrastructural Improvements
+### **Future work**
+
+---
+
+### Future Work (1/4): Miscellaneous
+
+- Avoiding ambiguity for AnnexB-related tests (ref
+  [gh-333](https://github.com/tc39/test262/issues/333))
+- Automated tests (ref:
+  [gh-306](https://github.com/tc39/test262/issues/306)) 
+- New publication styles (versioning, compilation?)
+
+???
+
+- Automated tests: frontmatter syntax, frontmatter semantics--e.g. no combining
+  `module` and `noStrict`--, copyright block format, code style
+
+---
+
+### Future Work (2/4): Negative Metadata
+
+```diff
+ /*---
+-negative: SyntaxError
++negative:
++  stage: parse
++  type: SyntaxError
+ ---*/
+ let x =;
+```
+
+```diff
+ /*---
+-negative: ReferenceError
++negative:
++  stage: runtime
++  type: Referenceerror
+ ---*/
+ let x = x;
+```
+
+```diff
+ /*---
+-negative: SyntaxError
++negative:
++  stage: early
++  type: SyntaxError
+ ---*/
+ let x, x;
+```
+
+References: [gh-126](https://github.com/tc39/test262/issues/196) &amp;
+[gh-382](https://github.com/tc39/test262/issues/382)
+
+???
+
+- Enable test consumption by JavaScript parsers
+- Simplify test writing (automatic insertion of `notEarlyError` pattern)
+- More rigorous test execution (differentiate between runtime errors and
+  early errors... see V8's behavior for `/?/`)
+
+---
+
+### Future Work (3/4): Website improvements
+
+- Content derived from flat files (i.e. `README.md`, `CONTRIBUTING.md`)
+- Automated interface tests
+- UI improvements
+- Optimizing test delivery
+
+???
+
+- UI improvements: load times, better control over test execution
+
+---
+
+### Future Work (4/4): Synchronizing Coverage
+
+**Problem:** How do we synchronize coverage for equivalent tests for
+highly-related productions?
+
+---
+
+### Future Work (4/4): Synchronizing Coverage
+
+- Typed Arrays (9)
+
+???
+
+- Most of the tests for TypedArrays have nothing to do with their element type.
+- You could exercise a fair amount of the behavior of Float32Array by limiting
+  yourself to unsigned 8-bit numbers.
+- We could easily write a whole bunch of tests for UInt8Array and then do some
+  text replacement to create tests for the other 8 TypedArrays.
+- But there is **no guarantee** that this synchronization would be honored in
+  the future. It would be the contributor's and maintainer's job to ensure this
+  moving forward. As an informal requirement, it would likely lead to
+  inconsistent coverage for the various TypedArrays.
+- This is probably the easiest feature to synchronize; tests could be written
+  using a `forEachTypedArray` helper to ensure consistent behavior for the
+  element-type-agnostic tests
+- In fact, Domenic proposed exactly such a helper last year
+- But this approach will not work for syntax-driven features, or tests
+  involving invalid syntax
+
+--
+
+- Destructuring Assignment (3)
+  - AssignmentExpression evaluation
+  - ForIn/OfBodyEvaluation
+      - `for..in` statement
+      - `for..of` statement
+- Spread Operator (4)
+  - ArrayLiteral: `[...x]`
+  - ArgumentList
+      - SuperCall: `super(...x)`
+      - CallExpression: `f(...x)`
+      - MemberExpression: `new f(...x)`
+- Expressions &amp; Declarations
+  - Function
+  - Generator
+  - Class
+
+---
+
+- Destructuring Binding (18)
+  - var
+  - let
+  - const
+  - FunctionExpression parameter
+  - FunctionDeclaration parameter
+  - GeneratorExpression parameter
+  - GeneratorDeclaration parameter
+  - ArrowFunction parameter
+  - MethodDefinition parameter (object initializers)
+  - GeneratorMethod parameter (object initializers)
+  - MethodDefinition parameter (class declarations)
+  - StaticMethodDefinition parameter (class declaractions)
+  - GeneratorMethod parameter (class declaractions)
+  - StaticGeneratorMethod parameter (class declarations)
+  - MethodDefinition parameter (class expressions)
+  - StaticMethodDefinition parameter (class expressions)
+  - GeneratorMethod parameter (class expressions)
+  - StaticGeneratorMethod parameter (class expressions)
+
+???
+
+If you wanted to be *extremely* exhaustive, then Destructuring Binding would
+have you testing 18 different productions.
+
+---
+
+### Future Work (4/4): Synchronizing Coverage
+
+Solution 1: verify synchronization via metadata at check-in time
+
+File: `parity.yml`
+
+```yaml
+- features:
+  - destructuringAssignment
+  locations:
+  - language/expressions/assignment/destructuring
+  - language/statements/for-in/destructuring
+  - language/statements/for-of/destructuring
+```
+
+Reference: [gh-276](https://github.com/tc39/test262/issues/276)
+
+---
+
+### Future Work (4/4): Synchronizing Coverage
+
+Solution 2: test generation
+
+```
++----------+       +--------+
+|   test   |       |  test  |       +--------+                  +--------+
+| template |   +   | source |   =   | test 1 |   +   [...]  +   | test n |
+|   file   |       |  file  |       +--------+                  +--------+
++----------+       +--------+
+```
+
+Reference: [Procedural Test Generation in
+Test262](https://gist.github.com/jugglinmike/476bdb6dd69ffddaf9d2))
+
+---
+
+### Future Work (4/4): Synchronizing Coverage
+
+Solution 3: this is not a problem
+
+???
+
+It may be that there is nothing to duplicate here, and that I am just a cowboy
+programmer that loves creating abstraction of the sake of abstraction.
+
+This raises an important question, though...
+
+---
+class: center, middle
+
+## How does TC-39/Test262 define "exhaustive"?
+
+???
+
+This is not a new problem; the example of DestructuringBinding is really a
+special case of an issue faced by tests for function parameters.
+
+Going on prior art is not enough, though. Test262 already makes an assumption
+that all tests will be run both in strict mode and outside of strict mode
+(unless configured otherwise).
+
+We need some clarity on what we mean by "exhaustive", and how we achieve that
+sustainably.
+
+---
+class: center, middle
+
+# Thank you
+
+???
+
+Thank you all for your time, and thanks especially to Brian. He's had to review
+a lot of tests, which has got to be one of the least glamorous programming
+tasks there is.
+    </textarea>
+    <script src="remark.js">
+    </script>
+    <script>
+      var slideshow = remark.create();
+    </script>
+  </body>
+</html>
