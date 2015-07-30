@@ -3,7 +3,7 @@
   <head>
     <title>July 2015 Test262 Status Update</title>
     <meta charset="utf-8">
-    <meta name="DC.created" content="2015-07-29" />
+    <meta name="DC.created" content="2015-07-30" />
     <meta name="description" content="Recent developments in the official ECMAScript test suite" />
     <meta name="author" content="Mike Pennisi" />
 
@@ -19,30 +19,46 @@
       }
       .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
 
-.literal {
-  font-family: fixed;
-  font-weight: bold;
-}
-dl sub {
-  color: #49A08A;
-}
+      a, a:visited, a:active, a:hover {
+          color: #000;
+      }
 
-blockquote {
-  padding: 0.2em 1em;
-  margin: 1em;
-  position: relative;
+      .remark-inline-code {
+        padding: 0.1em 0.3em;
 
-  background-color: rgba(100, 100, 100, 0.1);
-}
-blockquote::before {
-  position: absolute;
-  top: -0.3em;
-  right: -0.1em;
+        background-color: #ddd;
+        border-radius: 0.2em;
+      }
 
-  content: "\0022";
-  font-size: 18em;
-  color: #444;
-}
+      .bug-report {
+          width: 100%;
+          margin-bottom: 1.5em;
+      }
+      .bug-report .project {
+          width: 15%;
+
+          text-align: center;
+          font-size: 0.7em;
+      }
+      .bug-report .project img {
+          width: 100%;
+      }
+      .bug-report .count {
+          width: 20%;
+      }
+      .bug-report .bar {
+        border-style: solid;
+        border-width: 3px;
+      }
+      .bugs-reported .bar {
+        border-color: black;
+      }
+      .bugs-confirmed .bar {
+        border-color: grey;
+      }
+      .bugs-fixed .bar {
+        border-color: orange;
+      }
     </style>
   </head>
   <body>
@@ -53,7 +69,7 @@ class: center, middle
 
 ![logo for ECMA International](img/ecma-logo.jpg)
 
-### 2015.07.29
+### 2015.07.30
 
 ???
 
@@ -95,6 +111,7 @@ extensions, classes
   - Bocoup: Rick Waldron &amp; Leo Balter
   - TC39: Brian Terlson
   - Andre Bargull
+- Many thanks to Google for their significant investment in Test262!
 
 --
 
@@ -117,15 +134,88 @@ For reasons I will explain in a moment, we are blocked on most of this work
 
 ### ES2015 Coverage Recap (continued)
 
-Bugs reported/confirmed/fixed
+<table class="bug-report">
+  <tr>
+      <td rowspan="3" class="project">
+        <img src="img/v8-logo.png">
+        V8
+      </td>
+      <td class="count">30 reported</td>
+      <td class="bugs-reported"><div class="bar" style="width: 100%;"></div></td>
+  </tr>
+  <tr>
+      <td>29 confirmed</td>
+      <td class="bugs-confirmed"><div class="bar" style="width: 97%;"></div></td>
+  </tr>
+  <tr>
+      <td>26 fixed</td>
+      <td class="bugs-fixed"><div class="bar" style="width: 87%;"></div></td>
+  </tr>
+</table>
 
-V8: 30 / 29 / 26
+<table class="bug-report">
+  <tr>
+      <td rowspan="3" class="project">
+        <img src="img/mozilla-logo.png">
+        SpiderMonkey
+      </td>
+      <td class="count">9 reported</td>
+      <td class="bugs-reported"><div class="bar" style="width: 30%;"></div></td>
+  </tr>
+  <tr>
+      <td>2 confirmed</td>
+      <td class="bugs-confirmed"><div class="bar" style="width: 7%;"></div></td>
+  </tr>
+  <tr>
+      <td>2 fixed</td>
+      <td class="bugs-fixed"><div class="bar" style="width: 7%;"></div></td>
+  </tr>
+</table>
 
-SpiderMonkey: 9 / 2 / 2
+<table class="bug-report">
+  <tr>
+      <td rowspan="3" class="project">
+        es6draft
+      </td>
+      <td class="count">1 reported</td>
+      <td class="bugs-reported"><div class="bar" style="width: 3%;"></div></td>
+  </tr>
+  <tr>
+      <td>1 confirmed</td>
+      <td class="bugs-confirmed"><div class="bar" style="width: 3%;"></div></td>
+  </tr>
+  <tr>
+      <td>1 fixed</td>
+      <td class="bugs-fixed"><div class="bar" style="width: 3%;"></div></td>
+  </tr>
+</table>
 
-ES6 Draft: 1 / 1 / 1
+<table class="bug-report">
+  <tr>
+      <td rowspan="3" class="project">
+        <img src="img/ecma-logo.jpg">
+        ECMAScript
+      </td>
+      <td class="count">10 reported</td>
+      <td class="bugs-reported"><div class="bar" style="width: 33%;"></div></td>
+  </tr>
+  <tr>
+      <td>6 confirmed</td>
+      <td class="bugs-confirmed"><div class="bar" style="width: 20%;"></div></td>
+  </tr>
+  <tr>
+      <td>6 fixed</td>
+      <td class="bugs-fixed"><div class="bar" style="width: 20%;"></div></td>
+  </tr>
+</table>
 
-ECMAScript specification: 10 / 6 / 6
+*as of Monday, July 27, 2015*
+
+???
+
+SpiderMonkey hasn't been quite as receptive to our reports. Ironically, one of
+the two fixed bugs is titled, "Generator methods incorrectly restricted from
+use as constructors"
 
 ---
 class: middle
@@ -158,6 +248,11 @@ class: middle
 ### ES2015 Coverage Recap
 ### Infrastructural Improvements
 ### **Future work**
+
+???
+
+If anyone sees anything they would like to participate in, I've included
+references to open issues on the project repository.
 
 ---
 
@@ -238,9 +333,7 @@ References: [gh-126](https://github.com/tc39/test262/issues/196) &amp;
 **Problem:** How do we synchronize coverage for equivalent tests for
 highly-related productions?
 
----
-
-### Future Work (4/4): Synchronizing Coverage
+--
 
 - Typed Arrays (9)
 
@@ -341,7 +434,7 @@ Solution 2: test generation
 ```
 
 Reference: [Procedural Test Generation in
-Test262](https://gist.github.com/jugglinmike/476bdb6dd69ffddaf9d2))
+Test262](https://gist.github.com/jugglinmike/476bdb6dd69ffddaf9d2)
 
 ---
 
@@ -380,9 +473,9 @@ class: center, middle
 
 ???
 
-Thank you all for your time, and thanks especially to Brian. He's had to review
-a lot of tests, which has got to be one of the least glamorous programming
-tasks there is.
+- Thank you all for your time
+- Thanks especially to Brian. He's had to review a lot of tests, which has got
+  to be one of the least glamorous programming tasks there is.
     </textarea>
     <script src="remark.js">
     </script>
