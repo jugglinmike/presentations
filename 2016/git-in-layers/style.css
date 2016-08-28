@@ -1,0 +1,119 @@
+h1 {
+  font-size: 20em;
+}
+
+pre code {
+  display: block;
+  padding: 1em;
+
+  background-color: #444;
+  color: #eee;
+}
+
+/**
+ * Even when the highlighting feature is dsiabled, Remark.js transforms
+ * code between "backtick" characters ("`"). This custom styling
+ * effectively reverses the effects of that transformation.
+ */
+.remark-code-span-highlighted:before,
+.remark-code-span-highlighted:after {
+  content: '`';
+}
+.remark-code-span-highlighted {
+  background-color: transparent;
+  padding: 0;
+}
+
+
+.foo img {
+  transition: width 1s 1s;
+  width: 120vw;
+}
+.remark-visible .foo img {
+  width: 50vw;
+}
+
+.overview li, .overview .git-logo {
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: contain;
+}
+
+.overview li {
+	border-width: 0;
+	padding: 1em;
+
+	border-style: solid;
+	border-color: #333;
+	list-style-type: none;
+}
+.overview li .img {
+	position: absolute;
+	top: 1em;
+	right: 1em;
+	bottom: 1em;
+	left: 1em;
+
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: contain;
+}
+
+.overview .one {
+	right: 50%;
+	bottom: 50%;
+
+	border-right-width: 1px;
+	border-bottom-width: 1px;
+}
+.overview .one .img {
+	background-image: url('diagram-01-patch.svg');
+}
+
+.overview .two {
+	bottom: 50%;
+	left: 50%;
+
+	border-left-width: 1px;
+	border-bottom-width: 1px;
+}
+.overview .two .img {
+	background-image: url('diagram-02-commit.svg');
+}
+
+.overview .three {
+	top: 50%;
+	right: 50%;
+
+	border-top-width: 1px;
+	border-right-width: 1px;
+}
+.overview .three .img {
+	background-image: url('diagram-03-branch.svg');
+}
+
+.overview .four {
+	top: 50%;
+	left: 50%;
+
+	border-top-width: 1px;
+	border-left-width: 1px;
+}
+.overview .four .img {
+	background-image: url('diagram-05-remote.svg');
+}
+
+.overview .git-logo {
+	top: 20%;
+	right: 20%;
+	bottom: 20%;
+	left: 20%;
+
+	background-image: url('git-logo.png');
+}
