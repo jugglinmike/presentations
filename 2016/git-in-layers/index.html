@@ -17,12 +17,12 @@ class: center, middle
 
 ---
 
-## Why git?
+## Why git? (1/3)
 
 Industry.
 
-![](vcs-job-trends.png)
-
+![Trends in job postings mentioning specific version control
+systems](vcs-job-trends.png)
 
 ???
 
@@ -33,103 +33,50 @@ employment and making money.
 
 ---
 
-- Why git?
-  - It's becoming more and more important in the software development industry
-  - It's becoming more and more important for open source software
-  - It's powerful and fast
-- What about GUIs?
-  - They're great, but they're no substitute for understanding
+## Why git? (2/3)
+
+Open source software.
+
+![](vcs-usage-2010-2013.png)
+
+???
+
+It's becoming more and more important for open source software
 
 ---
 
-## Patches
+## Why git? (3/3)
 
-  - A description of change
-  - Context: sofware collaboration
-    - We have the same copy of a project
-    - I make a small change to my copy
-    - I send you *all the files*, even though 99% is the same. I explain what
-      I've changed in detail
-    - You take my word for it
-  - Enter Larry Wall
-  - History: Larry Wall (author of Perl and patch), Apache, etc.
-  - Look ma, no git (using `diff` and `patch` on a \*nix system)
-  - Takeaway: the *file* is the *change*
+It's a great tool!
+
+It's powerful and fast
 
 ---
 
-## Commits
+## What about GUIs?
 
-  - A patch works for a one-off fix, but we should expect to make many, many
-    changes over time
-  - We could try to manage this on our own, but things would get out of hand
-    quickly
-  - *In git terms*, a **commit** is a patch that references the patch that came
-    before it (the **parent**). It also has a bunch of meta-data like a
-    description of the patch, the time the patch was created, and the patch
-    author's name. (`git show`)
-  - By maintaining a "commit history", git allows us to review how the project
-    has changed over time (`git log`)
-  - ...and even rewind history and return the project to a prior state (`git
-    checkout`)
-  - Takeaway: the changes may be stacked
+![Screenshot of the GitHub Desktop application](github-desktop.png)
 
+(source: GitHub desktop: https://desktop.github.com/)
 
----
-class: foo
-
-![](diagram.svg)
+???
 
 ---
 
-## Branches
-  - This would all work perfectly if we knew, in advance, everything we had to
-    do and exactly how we would do it.
-  - In the real world, this is rarely the case
-  - Sometimes, we need to experiment with an idea without fowling up the "real"
-    version of the project
-  - ...and sometimes, we'd like to work on two separate features at the same
-    time
-  - We've already seen how commit histories let us store prior versions of our
-    project, but these use cases call for a slightly different ability. We'd
-    need to maintain multiple actively-developed states
-  - Up until now, we've been thinking of git's "history" just like the
-    plain-English definition: a linear sequence of events (commits in this
-    case)
-  - Really, though, git organizes commits in the form of a "graph." That word 
-    has a formal definition in Computer Science terms, but effectively, it
-    means that multiple commits can have the same parent
-  - Whenever this occurs, we label the divergence as a "branch"
-  - Once you wrap your head around the idea of a whole *graph* of commits, the
-    concept of a "branch" is natural
-  - *In git terms*, a **branch** is just a commit with a name
-  - Takeaway: we can build divergent histories by piling changes in different
-    stacks
+## What about GUIs?
 
----
+> We want GUIs largely because they are convenient and because they are
+> easy--or at least the GUI makes it seem that way. Of course, nothing is
+> really easy and simple, and putting a nice interface on top of it does not
+> change that fact.
 
-## Remotes
+Neil Stephenson, *In the Beginning... Was the Command Line* (1999)
 
-  - At this point, we've seen all the fundamental primitives that make up a
-    git project. Combined, the are known as a **repository**
-  - *In git terms*, a **repository** is a collection of source files along with
-    a commit graph
-  - Git is known as a "distributed version control system" because it was
-    designed to support concurrent development across multiple computers, any
-    of which may be offline
-  - *In git terms*, a **remote** is a parallel version of an entire repository
-  - In order to contribute to a project, you begin by "cloning" the repository
-    to your local machine. It's called "cloning" because at that moment, the
-    commit graph on your computer is identical to the one on the remote
-    repository
+???
 
----
-
-```
-$ git show
-dsaf
-$
-```
+In other words, GUIs are great, but they're no substitute for understanding.
+I'm hopeful that this talk can help you understand the fundamentals so that you
+can use git effectively, regardless of the interface.
 
 ---
 class: overview
@@ -138,15 +85,214 @@ class: overview
 	<li class="one"><div class="img"></div></li>
 	<li class="two"><div class="img"></div></li>
 	<li class="three"><div class="img"></div></li>
-	<li class="four"><div class="img"></div></li>
+	<li class="four"><div class="img"></li>
+</ul>
+<div class="git-logo"></div>
+
+---
+class: overview
+
+<ul>
+	<li class="one"><h3>Patches</h3></li>
+	<li class="two"></li>
+	<li class="three"></li>
+	<li class="four"></li>
 </ul>
 <div class="git-logo"></div>
 
 ---
 
-http://redmonk.com/sogrady/2013/12/19/dvcs-and-git-2013/
+### Patches
 
-http://www.fordfoundation.org/library/reports-and-studies/roads-and-bridges-the-unseen-labor-behind-our-digital-infrastructure/
+Context: sofware collaboration
+
+1. We have the same copy of a project
+2. I make a small change to my copy
+3. I send you *all the source files* (even though 99% are identical). I explain
+   what I've changed in detail
+4. You take my word for it
+
+---
+class: center middle
+
+### Patches
+
+.journal[
+  ![](patches-journal-1.png)
+  ![](patches-journal-2.png)
+]
+
+```
+$ diff journal.md journal-2.md 
+5c5
+< I had cereal for breakfast.
+---
+> I had eggs for breakfast.
+7a8,9
+> 
+> I read an issue of *Sandman* before falling to sleep.
+$ 
+```
+
+---
+
+### Patches
+
+New collaboration workflow:
+
+1. We have the same copy of a project
+2. I make a small change to my copy
+3. I send you ~~*all the source files* (even though 99% are identical). I
+   explain what I've changed in detail~~ a patch file
+4. You ~~take my word for it~~ review my changes and apply them using `patch`
+
+---
+class: center middle takeaway
+
+### Patches
+
+![](diagram-01-patch.svg)
+
+Takeaway: the *file* is the *change*
+
+---
+
+class: overview
+
+<ul>
+	<li class="one"><div class="img"></div></li>
+	<li class="two"><h3>Commits</h3></li>
+	<li class="three"></li>
+	<li class="four"></li>
+</ul>
+<div class="git-logo"></div>
+
+---
+
+### Commits
+
+- A patch works for a one-off fix, but we should expect to make many, many
+  changes over time
+- We could try to manage this on our own, but things would get out of hand
+  quickly
+- *In git terms*, a **commit** is a patch that references the patch that came
+  before it (the **parent**). It also has a bunch of meta-data like a
+  description of the patch, the time the patch was created, and the patch
+  author's name. (`git show`)
+- By maintaining a "commit history", git allows us to review how the project
+  has changed over time (`git log`)
+- ...and even rewind history and return the project to a prior state (`git
+  checkout`)
+
+---
+class: center middle takeaway
+
+### Commits
+
+![](diagram-02-commit.svg)
+
+Takeaway: changes can be *stacked*
+
+---
+
+class: overview
+
+<ul>
+	<li class="one"><div class="img"></div></li>
+	<li class="two"><div class="img"></div></li>
+	<li class="three"><h3>Branches</h3></li>
+	<li class="four"></li>
+</ul>
+<div class="git-logo"></div>
+
+---
+
+### Branches
+
+- This would all work perfectly if we knew, in advance, everything we had to
+  do and exactly how we would do it.
+- In the real world, this is rarely the case
+- Sometimes, we need to experiment with an idea without fowling up the "real"
+  version of the project
+- ...and sometimes, we'd like to work on two separate features at the same
+  time
+- We've already seen how commit histories let us store prior versions of our
+  project, but these use cases call for a slightly different ability. We'd
+  need to maintain multiple actively-developed states
+- Up until now, we've been thinking of git's "history" just like the
+  plain-English definition: a linear sequence of events (commits in this
+  case)
+- Really, though, git organizes commits in the form of a "graph." That word 
+  has a formal definition in Computer Science terms, but effectively, it
+  means that multiple commits can have the same parent
+- Whenever this occurs, we label the divergence as a "branch"
+- Once you wrap your head around the idea of a whole *graph* of commits, the
+  concept of a "branch" is natural
+- *In git terms*, a **branch** is just a commit with a name
+
+---
+class: center middle takeaway
+
+### Branches
+
+![](diagram-03-branch.svg)
+
+Takeaway: we can build divergent histories by piling changes in different
+stacks
+
+---
+class: overview
+
+<ul>
+	<li class="one"><div class="img"></div></li>
+	<li class="two"><div class="img"></div></li>
+	<li class="three"><div class="img"></div></li>
+	<li class="four"><h3>Remotes</h3></li>
+</ul>
+<div class="git-logo"></div>
+
+---
+
+### Remotes
+
+- At this point, we've seen all the fundamental primitives that make up a
+  git project. Combined, the are known as a **repository**
+- *In git terms*, a **repository** is a collection of source files along with
+  a commit graph
+- Git is known as a "distributed version control system" because it was
+  designed to support concurrent development across multiple computers, any
+  of which may be offline
+- *In git terms*, a **remote** is a parallel version of an entire repository
+- In order to contribute to a project, you begin by "cloning" the repository
+  to your local machine. It's called "cloning" because at that moment, the
+  commit graph on your computer is identical to the one on the remote
+  repository
+
+---
+class: center middle takeaway
+
+### Remotes
+
+![](diagram-05-remote.svg)
+
+Takeaway: projects are distributed
+
+---
+class: overview
+
+<ul>
+	<li class="one"><div class="img"></div></li>
+	<li class="two"><div class="img"></div></li>
+	<li class="three"><div class="img"></div></li>
+	<li class="four"><div class="img"></li>
+</ul>
+<div class="git-logo"></div>
+
+---
+
+ http://redmonk.com/sogrady/2013/12/19/dvcs-and-git-2013/
+
+ http://www.fordfoundation.org/library/reports-and-studies/roads-and-bridges-the-unseen-labor-behind-our-digital-infrastructure/
 
 ---
 
@@ -161,14 +307,6 @@ http://www.fordfoundation.org/library/reports-and-studies/roads-and-bridges-the-
   1997-04-15. Archived from the original on April 15, 1997.
 
 ---
-
-> We want GUIs largely because they are convenient and because they are
-> easy--or at least the GUI makes it seem that way. Of course, nothing is
-> really easy and simple, and putting a nice interface on top of it does not
-> change that fact.
-
-- Neil Stephenson, *In the Beginning... Was the Command Line* (1999)
-
 </textarea>
     <script src="repl-sim.js"></script>
     <script src="remark.js">

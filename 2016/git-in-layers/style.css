@@ -8,6 +8,7 @@ pre code {
 
   background-color: #444;
   color: #eee;
+  text-align: left;
 }
 
 /**
@@ -24,16 +25,11 @@ pre code {
   padding: 0;
 }
 
-
-.foo img {
-  transition: width 1s 1s;
-  width: 120vw;
-}
-.remark-visible .foo img {
-  width: 50vw;
+img {
+	max-width: 100%;
 }
 
-.overview li, .overview .git-logo {
+.overview li, .overview .git-logo-bg, .overview .git-logo {
 	position: absolute;
 	top: 0;
 	right: 0;
@@ -55,14 +51,25 @@ pre code {
 }
 .overview li .img {
 	position: absolute;
-	top: 1em;
-	right: 1em;
-	bottom: 1em;
-	left: 1em;
+	top: 2em;
+	right: 2em;
+	bottom: 2em;
+	left: 2em;
 
 	background-position: center;
 	background-repeat: no-repeat;
 	background-size: contain;
+}
+.overview h3 {
+	position: absolute;
+	top: calc(50% - 1em);
+	left: 0;
+	right: 0;
+
+	margin: 0;
+
+	font-size: 2em;
+	text-align: center;
 }
 
 .overview .one {
@@ -114,6 +121,32 @@ pre code {
 	right: 20%;
 	bottom: 20%;
 	left: 20%;
-
+}
+.overview .git-logo {
 	background-image: url('git-logo.png');
+}
+
+.takeaway img {
+	max-width: 100%;
+	max-height: 50vh;
+}
+
+.remark-slide-content > h2,
+.remark-slide-content > h3 {
+	color: #f05033;
+}
+
+.remark-slide-content > h3 {
+	transform: rotateZ(-90deg) translateX(-100%) translateY(-100%);
+	position: absolute;
+	transform-origin: top left;
+
+	font-size: 4em;
+	top: 0;
+	margin: 0;
+}
+
+.journal img {
+	width: 47%;
+	display: inline-block;
 }
