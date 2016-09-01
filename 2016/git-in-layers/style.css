@@ -1,3 +1,7 @@
+body.remark-container {
+	background-color: #000;
+}
+
 h1 {
   font-size: 20em;
 }
@@ -23,6 +27,13 @@ pre code {
 .remark-code-span-highlighted {
   background-color: transparent;
   padding: 0;
+}
+
+.remark-slide-scaler {
+	box-shadow: none;
+}
+.remark-slide-content {
+	background-color: #f0efe7;
 }
 
 img {
@@ -131,6 +142,7 @@ img {
 	max-height: 50vh;
 }
 
+.remark-slide-content > h1,
 .remark-slide-content > h2,
 .remark-slide-content > h3 {
 	color: #f05033;
