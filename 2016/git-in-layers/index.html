@@ -314,13 +314,25 @@ class: center, middle
     <script src="remark.js">
     </script>
     <script>
-      var slideshow = remark.create();
-	  var elems = document.querySelectorAll('pre code');
+	  (function() {
+	    'use strict';
+	    var repls = [];
+        var slideshow = remark.create();
+		slideshow.on('afterShowSlide', function() {
+			repls.forEach(function(repl) {
+				console.log('destroy');
+				repl.destroy();
+			});
+			repls.length = 0;
 
-	  Array.prototype.forEach.call(elems, function(elem) {
-		var rs = new replSim(elem);
-		rs.play();
-	  });
+			var elems = document.querySelectorAll('.remark-visible pre code');
+			Array.prototype.forEach.call(elems, function(elem) {
+			  var repl = new replSim(elem);
+			  repl.play();
+			  repls.push(repl);
+			});
+		});
+	  }());
     </script>
   </body>
 </html>
