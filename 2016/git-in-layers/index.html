@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Git in Layers</title>
+    <meta charset="utf-8">
+    <meta name="DC.created" content="2016-08-12" />
+    <meta name="description" content="Understanding git concepts, piece-by-piece" />
+    <meta name="author" content="Mike Pennisi" />
+
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle
+
+# Git in Layers
+
+---
+
+## Why git? (1/3)
+
+Industry.
+
+![Trends in job postings mentioning specific version control
+systems](img/vcs-job-trends.png)
+
+???
+
+git is becoming more and more important in the software development industry.
+
+This is only so compelling, though. Many of us are motivated by factors beyond
+employment and making money.
+
+---
+
+## Why git? (2/3)
+
+Open source software.
+
+![](img/vcs-usage-2010-2013.png)
+
+???
+
+It's becoming more and more important for open source software
+
+---
+
+## Why git? (3/3)
+
+![](img/cheetah.jpg)
+
+.attribution[
+"[Cheetah Run](https://www.flickr.com/photos/wcdumonts/14696217588)" by [Mark
+Dumont](https://www.flickr.com/photos/wcdumonts/) is licensed under [CC BY-NC
+2.0](https://creativecommons.org/licenses/by-nc/2.0/)
+]
+
+???
+
+It's both powerful and fast.
+
+---
+
+## What about GUIs?
+
+![Screenshot of the GitHub Desktop application](img/github-desktop.png)
+
+.attribution[
+Source: GitHub desktop: https://desktop.github.com/
+]
+
+???
+
+---
+
+## What about GUIs?
+
+> We want GUIs largely because they are convenient and because they are
+> easy--or at least the GUI makes it seem that way. Of course, nothing is
+> really easy and simple, and putting a nice interface on top of it does not
+> change that fact.
+
+Neil Stephenson, *In the Beginning... Was the Command Line* (1999)
+
+???
+
+In other words, GUIs are great, but they're no substitute for understanding.
+I'm hopeful that this talk can help you understand the fundamentals so that you
+can use git effectively, regardless of the interface.
+
+---
+class: overview
+
+<ul>
+	<li class="one"><div class="img"></div></li>
+	<li class="two"><div class="img"></div></li>
+	<li class="three"><div class="img"></div></li>
+	<li class="four"><div class="img"></li>
+</ul>
+<div class="git-logo"></div>
+
+---
+class: overview
+
+<ul>
+	<li class="one"><h3>Patches</h3></li>
+	<li class="two"></li>
+	<li class="three"></li>
+	<li class="four"></li>
+</ul>
+<div class="git-logo"></div>
+
+---
+
+### Patches
+
+Context: sofware collaboration
+
+1. We have the same copy of a project
+2. I make a small change to my copy
+3. I send you *all the source files* (even though 99% are identical). I explain
+   what I've changed in detail
+4. You take my word for it
+
+---
+class: center middle
+
+### Patches
+
+.journal[
+  ![](img/patches-journal-1.png)
+  ![](img/patches-journal-2.png)
+]
+
+```
+$ diff journal.md journal-2.md 
+5c5
+< I had cereal for breakfast.
+---
+> I had eggs for breakfast.
+7a8,9
+> 
+> I read an issue of *Sandman* before falling to sleep.
+$ 
+```
+
+???
+
+Developers built tools to help analyze modifications in text files. This
+example demonstrates the Unix `diff` tool.
+
+---
+
+### Patches
+
+New collaboration workflow:
+
+1. We have the same copy of a project
+2. I make a small change to my copy
+3. I send you ~~*all the source files* (even though 99% are identical). I
+   explain what I've changed in detail~~ a patch file
+4. You ~~take my word for it~~ review my changes and apply them using `patch`
+
+???
+
+These change summaries, sometimes called **diffs** or **deltas**, could be
+saved to a file and shared directly. A **patch** is a file containing a change
+set.
+
+---
+class: center middle
+
+### Patches
+
+.journal[
+ ![](img/patches-journal-1.png)
+ ![](img/patches-journal-patch.png)
+]
+
+```
+$ patch journal.md journal.patch
+patching file journal.md
+$ cat journal.md 
+# My journal
+​
+Today was a nice day.
+​
+I had eggs for breakfast.
+​
+I went to bed at 23:45.
+​
+I read an issue of *Sandman* before falling to sleep.
+$ 
+```
+
+???
+
+Here's what that might look like.
+
+---
+class: center middle takeaway
+
+### Patches
+
+![](img/diagram-01-patch.svg)
+
+Takeaway: the *file* is the *change*
+
+---
+
+class: overview
+
+<ul>
+	<li class="one"><div class="img"></div></li>
+	<li class="two"><h3>Commits</h3></li>
+	<li class="three"></li>
+	<li class="four"></li>
+</ul>
+<div class="git-logo"></div>
+
+???
+
+- A patch works for a one-off fix, but we should expect to make many, many
+  changes over time
+- We could try to manage this on our own, but things would get out of hand
+  quickly
+
+---
+class: middle, center
+
+### Commits
+
+#### Example: Managing the menu at Mike's Sandwhiches
+
+![](img/menu-01.png)
+
+---
+class: middle
+
+### Commits
+
+*In git terms*, a **commit** is a patch that references the patch that came
+before it (the **parent**). It also has a bunch of meta-data like a description
+of the patch, the time the patch was created, and the patch author's name.
+
+```
+$ git show HEAD
+commit da61ed837fc17b993f6b8317aa3f7973edd34a46
+Author: Mike Pennisi <mike@mikepennisi.com>
+Date:   Wed Aug 31 21:36:02 2016 -0400
+​
+    Raise price of PB&J
+​
+diff --git a/menu.txt b/menu.txt
+index 5246961..b02a4e4 100644
+--- a/menu.txt
++++ b/menu.txt
+@@ -1,6 +1,6 @@
+ Mike's Sandwiches
+​
+-- PB&J .................... $1.50
++- PB&J .................... $2.00
+ - Turkey Reuban ........... $4.00
+ - Veggie Burger ........... $3.00
+ - Grilled Cheese .......... $2.00
+$ 
+```
+
+???
+
+---
+
+### Commits
+
+By maintaining a "commit history", git allows us to review how the project has
+changed over time
+
+```
+$ git log
+commit 576c28187efd7b2e4f20e7ba7fca5e444b35fa63
+Author: Mike Pennisi <mike@mikepennisi.com>
+Date:   Wed Aug 31 21:36:33 2016 -0400
+​
+    Adjust for sales tax
+​
+commit da61ed837fc17b993f6b8317aa3f7973edd34a46
+Author: Mike Pennisi <mike@mikepennisi.com>
+Date:   Wed Aug 31 21:36:02 2016 -0400
+​
+    Raise price of PB&J
+​
+commit 5f8ba1a52ed38beac5a0f2eebaab8912a852b06a
+Author: Mike Pennisi <mike@mikepennisi.com>
+Date:   Wed Aug 31 21:34:41 2016 -0400
+​
+    Initial commit
+$ 
+```
+
+---
+
+### Commits
+
+```
+$ git checkout master
+Previous HEAD position was 3171c8d... Add slogan
+HEAD is now at 576c281... Adjust for sales tax
+```
+
+![](img/menu-hist-01.png)
+
+---
+
+### Commits
+
+```
+$ git checkout master~1
+Previous HEAD position was 576c281... Adjust for sales tax
+HEAD is now at da61ed8... Raise price of PB&J
+```
+
+![](img/menu-hist-02.png)
+
+---
+
+### Commits
+
+```
+$ git checkout master~2
+Previous HEAD position was da61ed8... Raise price of PB&J
+HEAD is now at 5f8ba1a... Initial commit
+```
+
+![](img/menu-hist-03.png)
+
+???
+
+This structure even lets us rewind history and return the project to a prior
+state.
+
+---
+class: center middle takeaway
+
+### Commits
+
+![](img/diagram-02-commit.svg)
+
+Takeaway: changes can be *stacked*
+
+---
+
+class: overview
+
+<ul>
+	<li class="one"><div class="img"></div></li>
+	<li class="two"><div class="img"></div></li>
+	<li class="three"><h3>Branches</h3></li>
+	<li class="four"></li>
+</ul>
+<div class="git-logo"></div>
+
+???
+
+- This would all work perfectly if we knew, in advance, everything we had to
+  do and exactly how we would do it.
+- In the real world, this is rarely the case
+- Sometimes, we need to experiment with an idea without fowling up the "real"
+  version of the project
+- ...and sometimes, we'd like to work on two separate features at the same
+  time
+- We've already seen how commit histories let us store prior versions of our
+  project, but these use cases call for a slightly different ability. We'd
+  need to maintain multiple actively-developed states
+
+---
+background-image: url("img/history-short.svg")
+
+### Branches
+
+???
+
+Up until now, we've been thinking of git's "history" just like the
+plain-English definition: a linear sequence of events (commits in this case)
+
+---
+background-image: url("img/history-long-linear.svg")
+
+### Branches
+
+???
+
+???
+
+It doesn't take too much imagination to see how this could support a
+long-running project. More commits--longer history.
+
+---
+background-image: url("img/history-long-branches.svg")
+
+### Branches
+
+???
+
+Really, though, git organizes commits in the form of a "graph." That word has a
+formal definition in Computer Science terms, but effectively, it means that
+multiple commits can have the same parent
+
+---
+background-image: url("img/history-long-branches-named.svg")
+
+### Branches
+
+???
+
+Whenever this occurs, we label the divergence as a "branch"
+
+Once you wrap your head around the idea of a whole *graph* of commits, the
+concept of a "branch" is natural
+
+*In git terms*, a **branch** is just a commit with a name
+
+---
+class: center middle
+
+### Branches
+
+![](img/menu-02.png)
+
+???
+
+This is a bit abstract, though, so lets return to the sandwhich shop example.
+
+---
+class: center middle
+
+### Branches
+
+![](img/menu-02-branch.png)
+
+???
+
+Let's say that one day, we decide to offer a brand new sandwhich. We could add
+it to the menu and make a commit for that.
+
+---
+class: center
+
+### Branches
+
+![](img/menu-02-01.png)
+
+???
+
+But at the same time, maybe in a separate shop, we want to flex our marketing
+abilities and advertise with a brand new slogan.
+
+We could make a new branch from the original state (the one without the new
+sandwhich) and add a commit with the new slogan.
+
+--
+
+![](img/menu-02-02.png)
+
+???
+
+...and maybe after a few days, we find that the wording is a bit too strong. We
+can add another commit to fix that.
+
+---
+class: center middle
+
+### Branches
+
+![](img/menu-03.png)
+
+???
+
+After a few weeks, we're confident that the new sandwhich is a hit *and* that
+the slogan is effective. We can **merge** the two branches, resulting in a
+menu that has both improvements.
+
+---
+
+### Branches
+
+```
+$ git log --graph --oneline
+​* d9bd7b6 Remove "new" from description
+​* 2e42fcf Merge branch 'new-sandwhich'
+​|\  
+​| * 8daea81 Introduce new sandwich
+​* | 70d348b Amend slogan
+​* | 3171c8d Add slogan
+​|/  
+​* 576c281 Adjust for sales tax
+​* da61ed8 Raise price of PB&J
+​* 5f8ba1a Initial commit
+$ 
+```
+
+???
+
+All this--the changes, the time they were made, and even the fact that they
+occurred in separate tracks--is captured in the project history.
+
+git does its best to desribe this in a text-based form, but it's admittedly a
+little hard to read. Reviewing commit history is a case where GUI tools can
+really shine.
+
+---
+class: center middle takeaway
+
+### Branches
+
+![](img/diagram-03-branch.svg)
+
+Takeaway: we can build divergent histories by piling changes in different
+stacks
+
+---
+class: overview
+
+<ul>
+	<li class="one"><div class="img"></div></li>
+	<li class="two"><div class="img"></div></li>
+	<li class="three"><div class="img"></div></li>
+	<li class="four"><h3>Remotes</h3></li>
+</ul>
+<div class="git-logo"></div>
+
+---
+
+### Remotes
+
+![](img/diagram-04-repository.svg)
+
+*In git terms*, a **repository** is a collection of source files along with a
+commit graph
+
+???
+
+At this point, we've seen all the fundamental primitives that make up a git
+project. Combined, the are known as a **repository**
+
+---
+
+### Remotes
+
+![](img/diagram-05-remote.svg)
+
+*In git terms*, a **remote** is a parallel version of an entire repository
+
+???
+
+Git is known as a "distributed version control system" because it was designed
+to support concurrent development across multiple computers, any of which may
+be offline.
+
+---
+class: center middle
+
+### Remotes
+
+```
+$ git clone git@github.com:jugglinmike/sandwich-shop.git
+Cloning into 'sandwich-shop'...
+remote: Counting objects: 62, done.
+remote: Total 62 (delta 0), reused 0 (delta 0), pack-reused 62
+Receiving objects: 100% (62/62), 199.97 KiB | 0 bytes/s, done.
+Resolving deltas: 100% (10/10), done.
+Checking connectivity... done.
+$
+```
+
+???
+
+In order to contribute to a project, you begin by "cloning" the repository to
+your local machine. It's called "cloning" because at that moment, the commit
+graph on your computer is identical to the one on the remote repository.
+
+---
+class: img4 middle center
+
+### Remotes
+
+- ![](img/menu-04-01.png)
+- ![](img/menu-04-02.png)
+- ![](img/menu-04-03.png)
+- ![](img/menu-04-04.png)
+
+---
+class: center middle takeaway
+
+### Remotes
+
+![](img/diagram-05-remote.svg)
+
+Takeaway: projects are distributed
+
+---
+class: overview
+
+<ul>
+	<li class="one"><div class="img"></div></li>
+	<li class="two"><div class="img"></div></li>
+	<li class="three"><div class="img"></div></li>
+	<li class="four"><div class="img"></li>
+</ul>
+<div class="git-logo"></div>
+
+---
+class: center, middle
+
+# Git in Layers
+
+---
+
+ http://redmonk.com/sogrady/2013/12/19/dvcs-and-git-2013/
+
+ http://www.fordfoundation.org/library/reports-and-studies/roads-and-bridges-the-unseen-labor-behind-our-digital-infrastructure/
+
+---
+
+
+> The Apache group was formed around a number of people who provided patch
+> files that had been written for NCSA httpd 1.3. The result after combining
+> them was A PAtCHy server.
+
+- "[Information on the Apache HTTP Server
+  Project](https://web.archive.org/web/19970415054031/www.apache.org/info.html)".
+  1997-04-15. Archived from the original on April 15, 1997.
+</textarea>
+    <script src="repl-sim.js"></script>
+    <script src="remark.js">
+    </script>
+    <script>
+	  (function() {
+	    'use strict';
+		var options = {
+			getHeight: function(el) {
+				var parent = el.parentNode;
+				var style = getComputedStyle(parent);
+				var top = parseInt(style.paddingTop || 0, 10);
+				var bottom = parseInt(style.paddingBottom || 0, 10);
+				return parent.clientHeight - top - bottom;
+			}
+		};
+
+		var repls = [];
+		var slideshow = remark.create({ highlightLanguage: 'no-highlight', highlightLines: false });
+		slideshow.getHighlightLines = function () { return false; };
+		slideshow.on('afterShowSlide', function() {
+			repls.forEach(function(repl) {
+				repl.destroy();
+			});
+			repls.length = 0;
+
+			var elems = document.querySelectorAll('.remark-visible pre code');
+			Array.prototype.forEach.call(elems, function(elem) {
+			  var repl = new replSim(elem, options);
+			  repl.play();
+			  repls.push(repl);
+			});
+		});
+	  }());
+    </script>
+  </body>
+</html>

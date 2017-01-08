@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN" "http://www.w3.org/TR/2001/PR-SVG-20010719/DTD/svg10.dtd">
+<svg width="8cm" height="28cm" viewBox="349 274 145 558" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <g>
+    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="422.131" y1="490.476" x2="422.06" y2="633.165"/>
+    <polygon style="fill: #000000" points="422.139,475.476 432.129,495.481 422.131,490.476 412.129,495.471 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="422.139,475.476 432.129,495.481 422.131,490.476 412.129,495.471 "/>
+  </g>
+  <g>
+    <g>
+      <polygon style="fill: #ffffff" points="351,275.365 457.725,275.365 493.3,310.94 493.3,453.24 351,453.24 "/>
+      <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="351,275.365 457.725,275.365 493.3,310.94 493.3,453.24 351,453.24 "/>
+      <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="457.725,275.365 457.725,310.94 493.3,310.94 493.3,310.94 "/>
+    </g>
+    <text font-size="67.7333" style="fill: #000000;text-anchor:start;font-family:Ubuntu;font-style:normal;font-weight:normal" x="380.132" y="389.453">
+      <tspan x="380.132" y="389.453">+/-</tspan>
+    </text>
+  </g>
+  <g>
+    <g>
+      <polygon style="fill: #ffffff" points="350.9,653.165 457.625,653.165 493.2,688.74 493.2,831.04 350.9,831.04 "/>
+      <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="350.9,653.165 457.625,653.165 493.2,688.74 493.2,831.04 350.9,831.04 "/>
+      <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="457.625,653.165 457.625,688.74 493.2,688.74 493.2,688.74 "/>
+    </g>
+    <text font-size="67.7333" style="fill: #000000;text-anchor:start;font-family:Ubuntu;font-style:normal;font-weight:normal" x="380.032" y="767.253">
+      <tspan x="380.032" y="767.253">+/-</tspan>
+    </text>
+  </g>
+</svg>
