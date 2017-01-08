@@ -88,7 +88,7 @@ img {
 	bottom: 50%;
 }
 .overview .one .img {
-	background-image: url('diagram-01-patch.svg');
+	background-image: url('img/diagram-01-patch.svg');
 }
 
 .overview .two {
@@ -96,7 +96,7 @@ img {
 	left: 50%;
 }
 .overview .two .img {
-	background-image: url('diagram-02-commit.svg');
+	background-image: url('img/diagram-02-commit.svg');
 }
 
 .overview .three {
@@ -104,7 +104,7 @@ img {
 	right: 50%;
 }
 .overview .three .img {
-	background-image: url('diagram-03-branch.svg');
+	background-image: url('img/diagram-03-branch.svg');
 }
 
 .overview .four {
@@ -112,7 +112,7 @@ img {
 	left: 50%;
 }
 .overview .four .img {
-	background-image: url('diagram-05-remote.svg');
+	background-image: url('img/diagram-05-remote.svg');
 }
 
 .overview .git-logo {
@@ -122,7 +122,7 @@ img {
 	left: 20%;
 }
 .overview .git-logo {
-	background-image: url('git-logo.png');
+	background-image: url('img/git-logo.png');
 }
 
 .takeaway img {
