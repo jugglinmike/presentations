@@ -14,8 +14,8 @@ index: true
 				<h2 class="byline">by <a href="http://mikepennisi.com">Mike Pennisi</a></h2>
 			</header>
 			<ul class="presentations">
-			{% for page in site.pages reversed %}
-				{% if page.index == null %}
+			{% for page in (site.pages | sort: 'date') %}
+				{% if page.date != null %}
 				<li class="presentation">
 					<span class="date">{{ page.date | date:'%b %d, %Y' }}</span>
 					<span class="title">
