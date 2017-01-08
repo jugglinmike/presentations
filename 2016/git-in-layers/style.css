@@ -86,9 +86,6 @@ img {
 .overview .one {
 	right: 50%;
 	bottom: 50%;
-
-	border-right-width: 1px;
-	border-bottom-width: 1px;
 }
 .overview .one .img {
 	background-image: url('diagram-01-patch.svg');
@@ -97,9 +94,6 @@ img {
 .overview .two {
 	bottom: 50%;
 	left: 50%;
-
-	border-left-width: 1px;
-	border-bottom-width: 1px;
 }
 .overview .two .img {
 	background-image: url('diagram-02-commit.svg');
@@ -108,9 +102,6 @@ img {
 .overview .three {
 	top: 50%;
 	right: 50%;
-
-	border-top-width: 1px;
-	border-right-width: 1px;
 }
 .overview .three .img {
 	background-image: url('diagram-03-branch.svg');
@@ -119,9 +110,6 @@ img {
 .overview .four {
 	top: 50%;
 	left: 50%;
-
-	border-top-width: 1px;
-	border-left-width: 1px;
 }
 .overview .four .img {
 	background-image: url('diagram-05-remote.svg');
@@ -148,6 +136,16 @@ img {
 	color: #f05033;
 }
 
+.remark-slide-content > h2 {
+	margin-top: 0;
+}
+
+.attribution {
+	font-size: 0.7em;
+	opacity: 0.6;
+	text-align: right;
+}
+
 .remark-slide-content > h3 {
 	transform: rotateZ(-90deg) translateX(-100%) translateY(-100%);
 	position: absolute;
@@ -156,6 +154,19 @@ img {
 	font-size: 4em;
 	top: 0;
 	margin: 0;
+}
+
+.img4 li {
+	width: 45%;
+	padding: 1%;
+	display: inline-block;
+
+	text-align: center;
+}
+
+.img4 li img {
+	width: 100%;
+	display: block;
 }
 
 .journal img {

@@ -47,9 +47,17 @@ It's becoming more and more important for open source software
 
 ## Why git? (3/3)
 
-It's a great tool!
+![](cheetah.jpg)
 
-It's powerful and fast
+.attribution[
+"[Cheetah Run](https://www.flickr.com/photos/wcdumonts/14696217588)" by [Mark
+Dumont](https://www.flickr.com/photos/wcdumonts/) is licensed under [CC BY-NC
+2.0](https://creativecommons.org/licenses/by-nc/2.0/)
+]
+
+???
+
+It's both powerful and fast.
 
 ---
 
@@ -57,7 +65,9 @@ It's powerful and fast
 
 ![Screenshot of the GitHub Desktop application](github-desktop.png)
 
-(source: GitHub desktop: https://desktop.github.com/)
+.attribution[
+Source: GitHub desktop: https://desktop.github.com/
+]
 
 ???
 
@@ -134,6 +144,11 @@ $ diff journal.md journal-2.md
 $ 
 ```
 
+???
+
+Developers built tools to help analyze modifications in text files. This
+example demonstrates the Unix `diff` tool.
+
 ---
 
 ### Patches
@@ -145,6 +160,42 @@ New collaboration workflow:
 3. I send you ~~*all the source files* (even though 99% are identical). I
    explain what I've changed in detail~~ a patch file
 4. You ~~take my word for it~~ review my changes and apply them using `patch`
+
+???
+
+These change summaries, sometimes called **diffs** or **deltas**, could be
+saved to a file and shared directly. A **patch** is a file containing a change
+set.
+
+---
+class: center middle
+
+### Patches
+
+.journal[
+ ![](patches-journal-1.png)
+ ![](patches-journal-patch.png)
+]
+
+```
+$ patch journal.md journal.patch
+patching file journal.md
+$ cat journal.md 
+# My journal
+​
+Today was a nice day.
+​
+I had eggs for breakfast.
+​
+I went to bed at 23:45.
+​
+I read an issue of *Sandman* before falling to sleep.
+$ 
+```
+
+???
+
+Here's what that might look like.
 
 ---
 class: center middle takeaway
@@ -167,22 +218,125 @@ class: overview
 </ul>
 <div class="git-logo"></div>
 
----
-
-### Commits
+???
 
 - A patch works for a one-off fix, but we should expect to make many, many
   changes over time
 - We could try to manage this on our own, but things would get out of hand
   quickly
-- *In git terms*, a **commit** is a patch that references the patch that came
-  before it (the **parent**). It also has a bunch of meta-data like a
-  description of the patch, the time the patch was created, and the patch
-  author's name. (`git show`)
-- By maintaining a "commit history", git allows us to review how the project
-  has changed over time (`git log`)
-- ...and even rewind history and return the project to a prior state (`git
-  checkout`)
+
+---
+class: middle, center
+
+### Commits
+
+#### Example: Managing the menu at Mike's Sandwhiches
+
+![](menu-01.png)
+
+---
+class: middle
+
+### Commits
+
+*In git terms*, a **commit** is a patch that references the patch that came
+before it (the **parent**). It also has a bunch of meta-data like a description
+of the patch, the time the patch was created, and the patch author's name.
+
+```
+$ git show HEAD
+commit da61ed837fc17b993f6b8317aa3f7973edd34a46
+Author: Mike Pennisi <mike@mikepennisi.com>
+Date:   Wed Aug 31 21:36:02 2016 -0400
+​
+    Raise price of PB&J
+​
+diff --git a/menu.txt b/menu.txt
+index 5246961..b02a4e4 100644
+--- a/menu.txt
++++ b/menu.txt
+@@ -1,6 +1,6 @@
+ Mike's Sandwiches
+​
+-- PB&J .................... $1.50
++- PB&J .................... $2.00
+ - Turkey Reuban ........... $4.00
+ - Veggie Burger ........... $3.00
+ - Grilled Cheese .......... $2.00
+$ 
+```
+
+???
+
+---
+
+### Commits
+
+By maintaining a "commit history", git allows us to review how the project has
+changed over time
+
+```
+$ git log
+commit 576c28187efd7b2e4f20e7ba7fca5e444b35fa63
+Author: Mike Pennisi <mike@mikepennisi.com>
+Date:   Wed Aug 31 21:36:33 2016 -0400
+​
+    Adjust for sales tax
+​
+commit da61ed837fc17b993f6b8317aa3f7973edd34a46
+Author: Mike Pennisi <mike@mikepennisi.com>
+Date:   Wed Aug 31 21:36:02 2016 -0400
+​
+    Raise price of PB&J
+​
+commit 5f8ba1a52ed38beac5a0f2eebaab8912a852b06a
+Author: Mike Pennisi <mike@mikepennisi.com>
+Date:   Wed Aug 31 21:34:41 2016 -0400
+​
+    Initial commit
+$ 
+```
+
+---
+
+### Commits
+
+```
+$ git checkout master
+Previous HEAD position was 3171c8d... Add slogan
+HEAD is now at 576c281... Adjust for sales tax
+```
+
+![](menu-hist-01.png)
+
+---
+
+### Commits
+
+```
+$ git checkout master~1
+Previous HEAD position was 576c281... Adjust for sales tax
+HEAD is now at da61ed8... Raise price of PB&J
+```
+
+![](menu-hist-02.png)
+
+---
+
+### Commits
+
+```
+$ git checkout master~2
+Previous HEAD position was da61ed8... Raise price of PB&J
+HEAD is now at 5f8ba1a... Initial commit
+```
+
+![](menu-hist-03.png)
+
+???
+
+This structure even lets us rewind history and return the project to a prior
+state.
 
 ---
 class: center middle takeaway
@@ -205,9 +359,7 @@ class: overview
 </ul>
 <div class="git-logo"></div>
 
----
-
-### Branches
+???
 
 - This would all work perfectly if we knew, in advance, everything we had to
   do and exactly how we would do it.
@@ -219,16 +371,141 @@ class: overview
 - We've already seen how commit histories let us store prior versions of our
   project, but these use cases call for a slightly different ability. We'd
   need to maintain multiple actively-developed states
-- Up until now, we've been thinking of git's "history" just like the
-  plain-English definition: a linear sequence of events (commits in this
-  case)
-- Really, though, git organizes commits in the form of a "graph." That word 
-  has a formal definition in Computer Science terms, but effectively, it
-  means that multiple commits can have the same parent
-- Whenever this occurs, we label the divergence as a "branch"
-- Once you wrap your head around the idea of a whole *graph* of commits, the
-  concept of a "branch" is natural
-- *In git terms*, a **branch** is just a commit with a name
+
+---
+background-image: url("history-short.svg")
+
+### Branches
+
+???
+
+Up until now, we've been thinking of git's "history" just like the
+plain-English definition: a linear sequence of events (commits in this case)
+
+---
+background-image: url("history-long-linear.svg")
+
+### Branches
+
+???
+
+???
+
+It doesn't take too much imagination to see how this could support a
+long-running project. More commits--longer history.
+
+---
+background-image: url("history-long-branches.svg")
+
+### Branches
+
+???
+
+Really, though, git organizes commits in the form of a "graph." That word has a
+formal definition in Computer Science terms, but effectively, it means that
+multiple commits can have the same parent
+
+---
+background-image: url("history-long-branches-named.svg")
+
+### Branches
+
+???
+
+Whenever this occurs, we label the divergence as a "branch"
+
+Once you wrap your head around the idea of a whole *graph* of commits, the
+concept of a "branch" is natural
+
+*In git terms*, a **branch** is just a commit with a name
+
+---
+class: center middle
+
+### Branches
+
+![](menu-02.png)
+
+???
+
+This is a bit abstract, though, so lets return to the sandwhich shop example.
+
+---
+class: center middle
+
+### Branches
+
+![](menu-02-branch.png)
+
+???
+
+Let's say that one day, we decide to offer a brand new sandwhich. We could add
+it to the menu and make a commit for that.
+
+---
+class: center
+
+### Branches
+
+![](menu-02-01.png)
+
+???
+
+But at the same time, maybe in a separate shop, we want to flex our marketing
+abilities and advertise with a brand new slogan.
+
+We could make a new branch from the original state (the one without the new
+sandwhich) and add a commit with the new slogan.
+
+--
+
+![](menu-02-02.png)
+
+???
+
+...and maybe after a few days, we find that the wording is a bit too strong. We
+can add another commit to fix that.
+
+---
+class: center middle
+
+### Branches
+
+![](menu-03.png)
+
+???
+
+After a few weeks, we're confident that the new sandwhich is a hit *and* that
+the slogan is effective. We can **merge** the two branches, resulting in a
+menu that has both improvements.
+
+---
+
+### Branches
+
+```
+$ git log --graph --oneline
+​* d9bd7b6 Remove "new" from description
+​* 2e42fcf Merge branch 'new-sandwhich'
+​|\  
+​| * 8daea81 Introduce new sandwich
+​* | 70d348b Amend slogan
+​* | 3171c8d Add slogan
+​|/  
+​* 576c281 Adjust for sales tax
+​* da61ed8 Raise price of PB&J
+​* 5f8ba1a Initial commit
+$ 
+```
+
+???
+
+All this--the changes, the time they were made, and even the fact that they
+occurred in separate tracks--is captured in the project history.
+
+git does its best to desribe this in a text-based form, but it's admittedly a
+little hard to read. Reviewing commit history is a case where GUI tools can
+really shine.
 
 ---
 class: center middle takeaway
@@ -255,18 +532,61 @@ class: overview
 
 ### Remotes
 
-- At this point, we've seen all the fundamental primitives that make up a
-  git project. Combined, the are known as a **repository**
-- *In git terms*, a **repository** is a collection of source files along with
-  a commit graph
-- Git is known as a "distributed version control system" because it was
-  designed to support concurrent development across multiple computers, any
-  of which may be offline
-- *In git terms*, a **remote** is a parallel version of an entire repository
-- In order to contribute to a project, you begin by "cloning" the repository
-  to your local machine. It's called "cloning" because at that moment, the
-  commit graph on your computer is identical to the one on the remote
-  repository
+![](diagram-04-repository.svg)
+
+*In git terms*, a **repository** is a collection of source files along with a
+commit graph
+
+???
+
+At this point, we've seen all the fundamental primitives that make up a git
+project. Combined, the are known as a **repository**
+
+---
+
+### Remotes
+
+![](diagram-05-remote.svg)
+
+*In git terms*, a **remote** is a parallel version of an entire repository
+
+???
+
+Git is known as a "distributed version control system" because it was designed
+to support concurrent development across multiple computers, any of which may
+be offline.
+
+---
+class: center middle
+
+### Remotes
+
+```
+$ git clone git@github.com:jugglinmike/sandwich-shop.git
+Cloning into 'sandwich-shop'...
+remote: Counting objects: 62, done.
+remote: Total 62 (delta 0), reused 0 (delta 0), pack-reused 62
+Receiving objects: 100% (62/62), 199.97 KiB | 0 bytes/s, done.
+Resolving deltas: 100% (10/10), done.
+Checking connectivity... done.
+$
+```
+
+???
+
+In order to contribute to a project, you begin by "cloning" the repository to
+your local machine. It's called "cloning" because at that moment, the commit
+graph on your computer is identical to the one on the remote repository.
+
+---
+class: img4 middle center
+
+### Remotes
+
+- ![](menu-04-01.png)
+- ![](menu-04-02.png)
+- ![](menu-04-03.png)
+- ![](menu-04-04.png)
 
 ---
 class: center middle takeaway
@@ -316,18 +636,28 @@ class: center, middle
     <script>
 	  (function() {
 	    'use strict';
-	    var repls = [];
-        var slideshow = remark.create();
+		var options = {
+			getHeight: function(el) {
+				var parent = el.parentNode;
+				var style = getComputedStyle(parent);
+				var top = parseInt(style.paddingTop || 0, 10);
+				var bottom = parseInt(style.paddingBottom || 0, 10);
+				return parent.clientHeight - top - bottom;
+			}
+		};
+
+		var repls = [];
+		var slideshow = remark.create({ highlightLanguage: 'no-highlight', highlightLines: false });
+		slideshow.getHighlightLines = function () { return false; };
 		slideshow.on('afterShowSlide', function() {
 			repls.forEach(function(repl) {
-				console.log('destroy');
 				repl.destroy();
 			});
 			repls.length = 0;
 
 			var elems = document.querySelectorAll('.remark-visible pre code');
 			Array.prototype.forEach.call(elems, function(elem) {
-			  var repl = new replSim(elem);
+			  var repl = new replSim(elem, options);
 			  repl.play();
 			  repls.push(repl);
 			});
