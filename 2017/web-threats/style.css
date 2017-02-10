@@ -1,0 +1,67 @@
+body.remark-container {
+	background-color: #000;
+}
+
+h1 {
+  font-size: 20em;
+}
+
+pre code {
+  display: block;
+  padding: 1em;
+
+  background-color: #444;
+  color: #eee;
+  text-align: left;
+}
+
+.remark-slide-scaler {
+  box-shadow: none;
+}
+.remark-slide-content {
+  background-color: #f0efe7;
+  background-size: cover;
+  color: #333;
+}
+
+.remark-slide-content a {
+  color: inherit;
+}
+
+.remark-slide-content.dark {
+  color: #eee;
+}
+
+.img-attribution {
+  position: absolute;
+  bottom: 0;
+  left: 1em;
+  font-size: 0.7em;
+}
+
+.title {
+  padding-top: 9em;
+}
+
+.title h1, .title h2 {
+  margin: 0;
+  text-align: center;
+}
+.title h2 {
+  font-size: 0.9em;
+  text-transform: uppercase;
+}
+.title h3 {
+  position: absolute;
+  right: -0em;
+  bottom: -0.2em;
+
+  margin: 0;
+  padding: 0;
+
+  color: #555;
+  font-size: 35vh;
+}
+.title .remark-slide-number {
+  display: none;
+}
