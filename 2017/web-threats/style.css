@@ -65,3 +65,7 @@ pre code {
 .title .remark-slide-number {
   display: none;
 }
+.title .link {
+  display: block;
+  text-align: center;
+}
