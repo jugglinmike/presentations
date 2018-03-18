@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>The Strictness of Function Names</title>
+    <meta charset='utf-8'>
+    <style>
+      h1, h2, h3 {
+        font-family: 'Yanone Kaffeesatz';
+        font-weight: normal;
+      }
+      .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+
+      /* Remark style over rides */
+      .remark-slide-scaler {
+        box-shadow: none;
+      }
+      .remark-container {
+        background: none;
+      }
+
+      /* Custom content */
+      .remark-slide-content .license { position: absolute; bottom: 0; font-size: 0.6em; }
+      .remark-slide-content .license img {
+        margin: 0;
+        display: inline;
+        vertical-align: middle;
+      }
+
+      .remark-slide-content blockquote {
+        background-color: #eee;
+        padding: 1em;
+      }
+      .remark-slide-content blockquote h3 {
+        font-size: 1.3em;
+      }
+
+	  .remark-slide-content table {
+		margin: 0 auto;
+	  }
+
+      .remark-slide-content th, .remark-slide-content td {
+		padding-right: 1em;
+		text-align: left;
+	  }
+
+      .remark-slide-content .patch {
+        color: #77cc77;
+        font-weight: bold;
+      }
+
+      .remark-slide-content .valid {
+        color: #77cc77;
+        font-weight: bold;
+      }
+      .remark-slide-content .error {
+        color: #a00;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <textarea id='source'>
+class: middle, center
+
+# The Strictness of Function Names
+
+2018-03-21
+
+.softer[
+
+(press the <kbd>p</kbd> key to view presenter's notes)
+
+]
+
+.license[
+
+<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" src="./cc-by-sa.png" /></a>
+This presentation is licensed under a
+<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.
+
+]
+
+---
+
+# Contentious Questions
+
+```javascript
+function static() { 'use strict'; }
+```
+
+Is this JavaScript?
+
+```javascript
+(function static() { 'use strict'; });
+```
+
+Is this JavaScript?
+
+---
+
+# ECMAScript 2017: "Yes"
+
+<blockquote>
+  <h3>10.2 Types of Source Code</h3>
+
+  <p>[...]</p>
+
+  <ul>
+    <li>
+      <em>Function code</em> is source text that is parsed to supply the value
+      of the [[ECMAScriptCode]] and [[FormalParameters]] internal slots (see
+      9.2) of an ECMAScript function object. [...]
+    </li>
+  </ul>
+</blockquote>
+
+https://tc39.github.io/ecma262/#sec-strict-mode-code
+
+---
+
+# Implementations: "No\*"
+
+<table>
+  <tr><th rowspan="5">Runtimes</th><td></td><td></td><td></td></tr>
+  <tr><td>ChakraCore</td><td>1.8.2</td><td class='error'>SyntaxError</td></tr>
+  <tr><td>JavaScriptCore</td><td>???</td><td class='error'>SyntaxError</td></tr>
+  <tr><td>SpiderMonkey</td><td>61.0</td><td class='error'>SyntaxError</td></tr>
+  <tr><td>V8</td><td>???</td><td class='error'>SyntaxError</td></tr>
+  <tr><th rowspan="6">Parsers</th><td></td><td></td></tr>
+  <tr><td>Acorn</td><td>5.5.3</td><td class='error'>SyntaxError</td></tr>
+  <tr><td>Babylon</td><td>6.18.0</td><td class='error'>SyntaxError</td></tr>
+  <tr><td>Esprima</td><td>4.0.0</td><td class='error'>SyntaxError</td></tr>
+  <tr><td>Shift</td><td>5.2.3</td><td class='valid'>valid</td></tr>
+</table>
+
+???
+
+With the exception of [the Shift parser from Shape
+Security](https://github.com/shapesecurity/shift-parser-js), all modern
+runtimes and parsers violate ES2017 by producing a SyntaxError.
+
+---
+
+# Related behavior
+
+```javascript
+var static = function() {
+  'use strict';
+};
+```
+
+This <em>is</em> JavaScript.
+
+```javascript
+function __tmp() {
+  'use strict';
+  var static = __tmp;
+}
+```
+
+This <em>is not</em> JavaScript.
+
+???
+
+The distinction between function expression and function declaration may be
+relevant here.
+
+Those two syntactic forms differ in the environment record they modify.
+
+If the intent is to interpret the binding in terms of the code where it is
+created, the answer has to be more complicated.
+
+---
+
+# Proposal: "Yes and no."
+
+<blockquote>
+  <h3>10.2 Types of Source Code <span class="patch">(amended)<span></h3>
+
+  <p>[...]</p>
+
+  <ul>
+    <li>
+      <em>Function code</em> is source text that is parsed to supply the value
+      of the [[ECMAScriptCode]] and [[FormalParameters]] internal slots (see
+      9.2) of an ECMAScript function object<span class="patch">, along with the
+      <em>BindingIdentifier</em> of <em>FunctionExpression</em>s,
+      <em>GeneratorExpression</em>s, and <em>AsyncFunctionExpression</em>s (if
+      present)</span>.
+
+      [...]
+    </li>
+  </ul>
+</blockquote>
+
+https://github.com/tc39/ecma262/pull/1091
+
+???
+
+I've proposed that we extend the definition of "function code" to include the
+BindingIdentifier <em>only when that value modifies the function code
+itself</em>--i.e.  only when it is present in a function expression.
+
+---
+
+# Seeking Consensus
+
+```javascript
+                                       // ES2017 | Implementations | Proposal
+                                       // -------|-----------------|------------
+function static() { 'use strict'; }    // valid  | SyntaxError     | valid
+(function static() { 'use strict'; }); // valid  | SyntaxError     | SyntaxError
+```
+
+What should ES2018 say?
+
+---
+class: center, middle
+
+Thanks
+
+Mike Pennisi, [Bocoup](https://bocoup.com)
+    </textarea>
+    <script src='./remark.js'>
+    </script>
+    <script>
+      var slideshow = remark.create();
+    </script>
+  </body>
+</html>

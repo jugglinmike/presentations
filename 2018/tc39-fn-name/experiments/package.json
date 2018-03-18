@@ -1,0 +1,16 @@
+{
+  "name": "experiments",
+  "version": "1.0.0",
+  "description": "",
+  "main": "parsers.js",
+  "private": true,
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "acorn": "^5.5.3",
+    "babylon": "^6.18.0",
+    "esprima": "^4.0.0",
+    "shift-parser": "^5.2.3"
+  }
+}
