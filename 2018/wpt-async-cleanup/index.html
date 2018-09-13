@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>The Long Road to Async Cleanup</title>
+    <meta charset='utf-8'>
+    <meta name="DC.created" content="2018-09-18" />
+    <meta name="description" content="Reflection on adding a feature to a giant test suite" />
+    <meta name="author" content="Mike Pennisi" />
+
+    <style>
+      h1, h2, h3 {
+        font-family: 'Yanone Kaffeesatz';
+        font-weight: normal;
+      }
+      .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+
+      /* Remark style over rides */
+      .remark-slide-scaler {
+        box-shadow: none;
+      }
+      .remark-container {
+        background: none;
+      }
+
+      /* Custom content */
+      .remark-slide-content .license {
+        position: absolute;
+        bottom: 0;
+
+        font-size: 0.6em;
+      }
+      .remark-slide-content .license img {
+        margin: 0;
+        display: inline;
+        vertical-align: middle;
+      }
+
+      .side-by-side pre {
+        width: 50%;
+
+        float: left;
+      }
+
+      .image-attribution {
+        position: absolute;
+        bottom: 0;
+
+        font-size: 0.6em;
+      }
+
+	  .web-page-screenshot {
+        transform: rotate(-25deg);
+	  }
+
+      .remark-slide-content blockquote {
+        background-color: #eee;
+        padding: 1em;
+      }
+      .remark-slide-content blockquote h3 {
+        font-size: 1.3em;
+      }
+
+      .remark-slide-content table {
+        margin: 0 auto;
+      }
+
+      .remark-slide-content th, .remark-slide-content td {
+        padding-right: 1em;
+        text-align: left;
+      }
+    </style>
+  </head>
+  <body>
+    <textarea id='source'>
+class: middle, center
+
+# The Long Road to Async Cleanup
+
+2018-09-18
+
+.softer[
+
+(press the <kbd>p</kbd> key to view presenter's notes)
+
+
+]
+
+.license[
+
+<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" src="./cc-by-sa.png" /></a>
+This presentation is licensed under a
+<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.
+
+]
+
+---
+class: middle, center
+background-image: url(img/calipers.png)
+background-size: contain
+
+# Discussion
+
+Which is your favorite testing framework and why?
+
+.image-attribution[
+  [Calipers!](https://www.flickr.com/photos/fciron/5510886440/) by [Lewis Meyer](https://www.flickr.com/photos/fciron/) is licensed [CC BY-NC 2.0](https://creativecommons.org/licenses/by-nc/2.0/)
+]
+
+---
+
+.web-page-screenshot[
+  ![Bocoup's Service Workers project](img/bocoup-service-workers.png)
+]
+
+---
+
+# The problem
+
+```js
+promise_test(function(t) {
+  var worker = "resources/client-navigate-worker.js";
+  var scope = "resources/client-navigate-frame.html";
+
+  return service_worker_register(t, worker, scope)
+    .then(function() { /* etc. */ })
+    .then(service_worker_unregister(t, scope));
+});
+```
+
+--
+
+```js
+promise_test(function(t) {
+  var worker = "resources/client-navigate-worker.js";
+  var scope = "resources/client-navigate-frame.html";
+
+  return service_worker_unregister_and_register(t, worker, scope)
+    .then(function() { /* etc. */ })
+    .then(service_worker_unregister(t, scope));
+});
+```
+
+---
+class: side-by-side
+
+```js
+promise_test(function() {
+  return change_global_state()
+    .then(function() {
+        // conformance test
+      })
+    .then(function() {
+        // revert global state
+      });
+});
+```
+
+--
+
+```js
+promise_test(function() {
+  var cleanup = function() {
+      // revert global state
+    };
+  var test_body = change_global_state()
+    .then(function() {
+        // conformance test
+      });
+
+  // Ensure that test "clean up" is
+  // deferred  until after the test body
+  // executes. `Test#add_cleanup` cannot
+  // be used for this purpose because
+  // the operation is asynchronous, and
+  // `add_cleanup` does not support
+  // asynchronous operations at the time
+  // of this writing. See
+  // https://github.com/web-platform-tests/wpt/issues/6075
+  // Ensure also that test failure is
+  // not hidden by successful cleanup
+  // operation.
+  return test_body
+    .then(cleanup, cleanup)
+    .then(function() {
+        return test_body;
+      });
+});
+```
+
+???
+
+This is an asynchronous version of `try`/`finally`.
+
+It could be expressed more concisely with an `async` function or with
+`Promise.prototype.finally`.
+
+We had a goal to make these tests as accessible as possible, so neither of
+these were viable options.
+
+---
+
+# Initial Interest
+
+![Initial interest](img/comments/initial-interest.png)
+
+---
+
+# It Begins
+
+![It begins](img/comments/it-begins.png)
+
+???
+
+This is a screenshot of a discussion thread on GitHub.
+
+It is also a screenshot of naivety.
+
+---
+
+# The process
+
+1. Write some code
+2. Use the new code to run *all of WPT* in Chromium's build system
+3. Identify new failures in the web platform tests
+4. Investigate what change to the test harness triggered the failures--these
+   are regressions
+
+--
+
+Why Chromium? Why all of WPT?
+
+---
+class: center, middle
+
+# No Tests.
+
+???
+
+Prior to this project, WPT's test harness was essentially untested.
+
+It included a handful of manual tests, but a manual test is no more resilient
+to rot than documentation.
+
+We essentially used all of WPT as a test suite.
+
+---
+class: center, middle
+background-image: url(img/servo.png)
+background-size: contain
+
+???
+
+The Servo browser presented another challenge.
+
+Servo is the experimental browser that was started at Mozilla.
+
+It also runs WPT, and it had a unique deficiency.
+
+--
+
+![No Promises in Servo](img/comments/servo-no-promises.png)
+
+???
+
+It would be easy to change the test harness in a way that made it impossible
+for Servo to run WPT.
+
+We wanted to avoid this, so we took on an additional constraint: we would only
+use the `Promise` API if the current test already involved promises.
+
+---
+
+# Improved testing
+
+![Improved testing](img/comments/improved-testing.png)
+
+- [gh-5627: Introduce automated tests for testharness.js](https://github.com/web-platform-tests/wpt/pull/5627)
+- [gh-6151: [testharness.js] `Test#add_cleanup` tests and fix](https://github.com/web-platform-tests/wpt/pull/6151)
+- [gh-8597: [testharness.js] Formalize test types](https://github.com/web-platform-tests/wpt/pull/8597)
+- [gh-11150: [testharness.js] Extend test suite with "variants"](https://github.com/web-platform-tests/wpt/pull/11150)
+
+---
+
+# The process
+
+1. Write some code
+2. Use the new code to run *all of WPT* in Chromium's build system
+3. Identify new failures in the web platform tests
+4. **Investigate what change to the test harness triggered the failures--these
+   are regressions**
+
+---
+
+# Diagnosing failures
+
+- **Behavioral regressions (my fault)**
+- Test bugs (someone else's fault)
+- Implementation bugs (someone else's fault)
+
+???
+
+Since we were vetting correctness by using the web platform tests themselves,
+even just diagnosing failures was a challenge.
+
+Reports wouldn't describe test harness regressions directly; instead, they
+appeared to highlight browser implementation errors.
+
+Those failures fell into 3 basic categories.
+
+While it's easy to assign blame, it doesn't matter whose "fault" it was.
+
+All of the failures were my problem.
+
+---
+
+### Behavioral regressions
+
+Expected scheduling behavior:
+
+    Task | Microtask | Synchronous steps
+    1    | 1         | test() ---------> { /*body*/ } --> testharness complete
+    2    | 1         |                                                          (uncaught exceptions)
+
+    Task | Microtask | Synchronous steps
+    1    | 1         | promise_test()
+    1    | 2         |        `--------> { return p; }
+    1    | 3         |                        `---------> testharness complete
+    2    | 1         |                                                          (uncaught exceptions)
+
+Regression:
+
+    Task | Microtask | Synchronous steps
+    1    | 1         | promise_test()
+    1    | 2         |        `--------> { return p; }
+    2    | 1         |                        |         (uncaught exceptions)
+    3    | 1         |                        `-------------------------------> testharness complete
+
+???
+
+One particularly challenging issue concerned the event loop, tasks, and
+microtasks.
+
+The initial version of the patch identified a number of tests with uncaught
+exceptions.
+
+It was tempting to call this an improvement, but we ultimately decided that
+ignoring these types of exceptions was an undocumented feature of the test
+harness.
+
+---
+
+### Behavioral regressions
+
+Existing usages of `add_cleanup`
+
+- [gh-8742: Do not return value from "cleanup" functions](https://github.com/web-platform-tests/wpt/pull/8742)
+- [gh-11733: [fullscreen] Do not return value from cleanup fns](https://github.com/web-platform-tests/wpt/pull/11733)
+- [gh-11740: [html] Do not return value from cleanup fns](https://github.com/web-platform-tests/wpt/pull/11740)
+- [gh-11741: [fetch] Do not return value from cleanup fns](https://github.com/web-platform-tests/wpt/pull/11741)
+- [chromium-1109513: Make add_cleanup step in no-inherit-type.html return undefined](https://chromium-review.googlesource.com/c/chromium/src/+/1109513) (thanks, Philip!)
+
+???
+
+Plenty of tests were already using `add_cleanup`, which was just fine by us.
+
+However, some of them returned a value
+
+Even though doing so had no effect, this was a concern for two reasons:
+
+1. The patch made it an error for a test to return a non-promise value. This
+   would help authors avoid making mistakes (e.g. `return foo` instead of
+   `return foo()`), but it was also a new restriction, so we were responsible
+   for integrating it.
+2. Tests that happened to return promise values would suddenly start to behave
+   differently after the patch was landed. We didn't want to introduce any
+   behavior changes to existing tests, since it would be hard for the tests'
+   maintainers to recognize cases where this was a problem
+
+---
+
+```diff
+diff --git a/html/semantics/forms/the-select-element/selected-index.html b/html/semantics/forms/the-select-element/selected-index.html
+index 6c30698a8ae1..46f19da7da29 100644
+--- a/html/semantics/forms/the-select-element/selected-index.html
++++ b/html/semantics/forms/the-select-element/selected-index.html
+@@ -70,7 +70,7 @@
+   assertSelectedIndex(select, 2);
+-  this.add_cleanup(() => select.selectedIndex = 0);
++  this.add_cleanup(() => { select.selectedIndex = 0; });
+ }, "set (HTMLSelectElement)");
+```
+
+???
+
+This was generally straightforward.
+
+--
+
+```diff
+diff --git a/fullscreen/api/element-ready-check-allowed-cross-origin-manual.sub.html b/fullscreen/api/element-ready-check-allowed-cross-origin-manual.sub.html
+index fa753f8b41be..92d499bc691b 100644
+--- a/fullscreen/api/element-ready-check-allowed-cross-origin-manual.sub.html
++++ b/fullscreen/api/element-ready-check-allowed-cross-origin-manual.sub.html
+@@ -7,7 +7,9 @@
+ async_test((t) => {
+-  t.add_cleanup(() => document.exitFullscreen());
++  t.add_cleanup(() => {
++    Promise.resolve(document.exitFullscreen()).catch(() => {});
++  });
+
+   // When a message is received from a child frame, ensure that the report
+   // matches the expectations.
+```
+
+???
+
+Though sometimes, it required a little extra work.
+
+---
+
+# Diagnosing failures
+
+- Behavioral regressions (my fault)
+- **Test bugs (someone else's fault)**
+- Implementation bugs (someone else's fault)
+
+---
+
+### Test bugs
+
+Uncaught errors and unhandled rejections
+
+- [gh-12266: [client-hints] Detect errors to avoid timeouts](https://github.com/web-platform-tests/wpt/pull/12266)
+- [gh-12267: [web-locks] Detect errors to avoid timeouts](https://github.com/web-platform-tests/wpt/pull/12267)
+- [gh-12268: [workers] Detect errors to avoid timeouts](https://github.com/web-platform-tests/wpt/pull/12268)
+- [chromium-1109689: Fix two testharness.js tests with harness errors due to stray asserts](https://chromium-review.googlesource.com/c/chromium/src/+/1109689) (thanks, Robert!)
+
+---
+class: middle
+
+```diff
+diff --git a/workers/modules/dedicated-worker-import-blob-url.any.js b/workers/modules/dedicated-worker-import-blob-url.any.js
+index 9a50b23893b3..e3f61867c5b9 100644
+--- a/workers/modules/dedicated-worker-import-blob-url.any.js
++++ b/workers/modules/dedicated-worker-import-blob-url.any.js
+@@ -11,7 +11,10 @@ function import_blob_url_test(testCase) {
+     const blobURL = URL.createObjectURL(blob);
+
+     const worker = new Worker(blobURL, { type: 'module'});
+-    const msgEvent = await new Promise(resolve => worker.onmessage = resolve);
++    const msgEvent = await new Promise((resolve, reject) => {
++      worker.onmessage = resolve;
++      worker.onerror = (error) => reject(error && error.message);
++    });
+     assert_array_equals(msgEvent.data, testCase.expectation);
+   }, testCase.description);
+ }
+```
+
+???
+
+These were mostly easy fixes.
+
+---
+
+### Test bugs
+
+Race conditions
+
+[gh-11082: [css-fonts] Avoid race condition](https://github.com/web-platform-tests/wpt/pull/11082)
+
+Surprisingly, just the one.
+
+---
+background-image: url(img/comments/css-review.png)
+background-size: contain
+
+???
+
+However, fixing even just one test can take quite a lot of work.
+
+This review involved six people and ran for just over 3 months.
+
+---
+
+### Test bugs
+
+Unhandled promise rejections
+
+```js
+function fillStackThenCallPut(foo, request, response) {
+  try {
+    fillStackThenCallPut(foo, request, response);
+  } finally {
+    // This runs thousands of times, causing the console to spew "Uncaught
+    // (in promise) TypeError: Response body is already used" messages, but
+    // it's harmless.
+    // stack is full.
+    if (putRunsLeft > 0) {
+      --putRunsLeft;
+      foo.put(request, response);
+    }
+  }
+}
+```
+
+[chromium-1150882: Allow unhandled promise rejection in LayoutTest](https://chromium-review.googlesource.com/1150882)
+
+---
+
+```diff
+diff --git a/third_party/WebKit/LayoutTests/http/tests/fetch/chromium/call-extra-crash-is-locked.html b/third_party/WebKit/LayoutTests/http/tests/fetch/chromium/call-extra-crash-is-locked.html
+index ae651ec0af9e8..d6335ebde831d 100644
+--- a/third_party/WebKit/LayoutTests/http/tests/fetch/chromium/call-extra-crash-is-locked.html
++++ b/third_party/WebKit/LayoutTests/http/tests/fetch/chromium/call-extra-crash-is-locked.html
+@@ -2,6 +2,11 @@
+ <script src="/resources/testharness.js"></script>
+ <script src="/resources/testharnessreport.js"></script>
+ <script>
++// Unhandled rejections must be permitted due to the expected unhandled
++// reections described below.
++setup({
++  allow_uncaught_exception: true
++});
+ // Running put several times is necessary to trigger the crash, but running too
+ // many times causes the test to timeout on windows.
+ let putRunsLeft = 64;
+@@ -13,7 +18,8 @@
+     } finally {
+         // This runs thousands of times, causing the console to spew "Uncaught
+         // (in promise) TypeError: Response body is already used" messages, but
+-        // it's harmless.
++        // it's harmless. The rejection cannot be handled because the call
++        // stack is full.
+         if (putRunsLeft > 0) {
+           --putRunsLeft;
+           foo.put(request, response);
+```
+
+???
+
+Yes, this did land with a typo :(
+
+---
+
+# Diagnosing failures
+
+- Behavioral regressions (my fault)
+- Test bugs (someone else's fault)
+- **Implementation bugs (someone else's fault)**
+
+---
+
+### Implementation bugs
+
+False negatives from tests known to elicit flaky browser behavior
+
+![IRC log discussing known flakiness in Chromium](img/comments/chromium-flakiness.png)
+
+![GitHub comment describing known flakiness in Firefox](img/comments/firefox-flakiness.png)
+
+---
+
+### Implementation bugs
+
+Brittle expectations files
+
+`chromium / src / third_party / WebKit / LayoutTests / fast / dom / custom / svg-use-shadow-tree-expected.txt`
+
+```
+CONSOLE ERROR: line 2748: Uncaught Error: assert_false: Should not call createdCallback in UA ShadowRoot. expected false got true
+CONSOLE ERROR: line 2748: Uncaught Error: assert_false: Should not call attachedCallback in UA ShadowRoot. expected false got true
+CONSOLE ERROR: line 2748: Uncaught Error: assert_false: Should not call createdCallback in UA ShadowRoot. expected false got true
+CONSOLE ERROR: line 2748: Uncaught Error: assert_false: Should not call attachedCallback in UA ShadowRoot. expected false got true
+This is a testharness.js-based test.
+Harness Error. harness_status.status = 1 , harness_status.message = Uncaught Error: assert_false: Should not call attachedCallback in UA ShadowRoot. expected false got true
+PASS SVG <use> shadow trees should not be exposed through custom elements.
+Harness: the test ran to completion.
+```
+
+???
+
+Chromium's "test expectations" files for WPT hard-code the line number on which
+the assertions are defined.
+
+That line number is not considered "stable" by WPT.
+
+Most changes to the test harness naturally change the location of the
+surrounding code.
+
+---
+class: center, middle
+
+![git log of Chromium developers maintaining a brittle test expectations file](img/brittle-test-maintenance.png)
+
+???
+
+This line number had been maintained for many months.
+
+---
+
+# Final validation
+
+--
+
+![Validation from Chromium](img/comments/home-stretch-chromium.png)
+
+--
+
+![Validation from Firefox](img/comments/home-stretch-firefox.png)
+
+--
+
+![Validation from Servo](img/comments/home-stretch-servo.png)
+
+---
+
+![Done](img/comments/done.png)
+
+---
+class: center, middle
+background-image: url(img/servo.png)
+background-size: contain
+
+--
+
+![Actually, Servo supports Promises now](img/comments/servo-yes-promises.png)
+
+---
+
+# Unanticipated benefits
+
+Improving WPT's coverage for web platform features
+
+1. [gh-8748: [testharness.js] Honor promises from cleanup fns](https://github.com/web-platform-tests/wpt/pull/8748)
+2. [gh-12267: [web-locks] Detect errors to avoid timeouts](https://github.com/web-platform-tests/wpt/pull/12267)
+3. [gh-12283: [html] Add test for iframe onerror event](https://github.com/web-platform-tests/wpt/pull/12283)
+4. [gh-12290: Add test for blocked iframe navigation](https://github.com/web-platform-tests/wpt/pull/12290)
+5. [gh-12343: [html] Verify synchronicity of beforeunload event](https://github.com/web-platform-tests/wpt/pull/12343)
+   [crbug-873683: Pass the web-platform-test: beforeunload-synchronous.html](https://bugs.chromium.org/p/chromium/issues/detail?id=873683)
+
+![Results of one of the new conformance tests across many browsers](img/conformance-test-results.png)
+
+---
+
+# Unanticipated benefits
+
+Testing the test harness
+
+???
+
+This ended up being more important to me than the feature itself.
+
+By mid-June, it was the reason I was still pushing for (and to) the patch.
+
+Now any change can be vetted for regressions in a matter of seconds (not
+		hours).
+
+When failures occur, they are expressed in terms of the test harness's
+capabilities (not some arbitrary web platform feature).
+
+---
+
+### Don't Call it `done` before it's `COMPLETE`
+
+    commit 2e6377ec71edfc2986e1ca3148e0b4b67d1c0f42
+    Author: Mike Pennisi <mike@mikepennisi.com>
+    Date:   Mon Sep 17 19:48:13 2018 -0400
+
+        PARTIAL: [service-workers] Use async cleanup
+
+     .../postmessage.https.html                         | 11 +++-
+     .../ServiceWorkerGlobalScope/unregister.https.html | 20 +++++--
+     .../ServiceWorkerGlobalScope/update.https.html     |  5 +-
+     .../about-blank-replacement.https.html             |  8 ++-
+
+    (...)
+
+     .../service-worker/websocket.https.html            | 31 ++++++-----
+     .../windowclient-navigate.https.html               | 17 ++----
+     .../service-worker/worker-interception.https.html  | 31 ++++++-----
+     61 files changed, 567 insertions(+), 361 deletions(-)
+
+???
+
+It'd be ironic for me to call this project finished when there was still work
+to do.
+
+The Service Workers still use that confusing pattern, so I've been working to
+integrate this feature.
+
+The hardest part is going to be finding someone to review all this!
+
+---
+class: center, middle
+
+Thanks
+
+Mike Pennisi, [Bocoup](https://bocoup.com)
+    </textarea>
+    <script src='./remark.js'>
+    </script>
+    <script>
+      var slideshow = remark.create();
+    </script>
+  </body>
+</html>
