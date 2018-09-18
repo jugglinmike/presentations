@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Changing the tires on an exploding car</title>
+    <title>The Long Road to Async Cleanup</title>
     <meta charset='utf-8'>
     <meta name="DC.created" content="2018-09-18" />
     <meta name="description" content="Reflection on adding a feature to a giant test suite" />
@@ -22,8 +22,25 @@
         background: none;
       }
 
-      .side-by-side pre { width: 50%; float: left; }
-      .deemphasized { opacity: 0.4; }
+      /* Custom content */
+      .remark-slide-content .license {
+        position: absolute;
+        bottom: 0;
+
+        font-size: 0.6em;
+      }
+      .remark-slide-content .license img {
+        margin: 0;
+        display: inline;
+        vertical-align: middle;
+      }
+
+      .side-by-side pre {
+        width: 50%;
+
+        float: left;
+      }
+
       .image-attribution {
         position: absolute;
         bottom: 0;
@@ -31,13 +48,9 @@
         font-size: 0.6em;
       }
 
-      /* Custom content */
-      .remark-slide-content .license { position: absolute; bottom: 0; font-size: 0.6em; }
-      .remark-slide-content .license img {
-        margin: 0;
-        display: inline;
-        vertical-align: middle;
-      }
+	  .web-page-screenshot {
+        transform: rotate(-25deg);
+	  }
 
       .remark-slide-content blockquote {
         background-color: #eee;
@@ -55,27 +68,13 @@
         padding-right: 1em;
         text-align: left;
       }
-
-      .remark-slide-content .patch {
-        color: #77cc77;
-        font-weight: bold;
-      }
-
-      .remark-slide-content .valid {
-        color: #77cc77;
-        font-weight: bold;
-      }
-      .remark-slide-content .error {
-        color: #a00;
-        font-weight: bold;
-      }
     </style>
   </head>
   <body>
     <textarea id='source'>
 class: middle, center
 
-# Changing the tires on an exploding car
+# The Long Road to Async Cleanup
 
 2018-09-18
 
@@ -95,12 +94,13 @@ This presentation is licensed under a
 ]
 
 ---
+class: middle, center
 background-image: url(img/calipers.png)
 background-size: contain
 
 # Discussion
 
-Which is your favorite JavaScript testing framework and why?
+Which is your favorite testing framework and why?
 
 .image-attribution[
   [Calipers!](https://www.flickr.com/photos/fciron/5510886440/) by [Lewis Meyer](https://www.flickr.com/photos/fciron/) is licensed [CC BY-NC 2.0](https://creativecommons.org/licenses/by-nc/2.0/)
@@ -108,7 +108,9 @@ Which is your favorite JavaScript testing framework and why?
 
 ---
 
-![Bocoup's Service Workers project](img/bocoup-service-workers.png)
+.web-page-screenshot[
+  ![Bocoup's Service Workers project](img/bocoup-service-workers.png)
+]
 
 ---
 
@@ -189,7 +191,7 @@ promise_test(function() {
 
 This is an asynchronous version of `try`/`finally`.
 
-It coulp be expressed more concisely with an `async` function or with
+It could be expressed more concisely with an `async` function or with
 `Promise.prototype.finally`.
 
 We had a goal to make these tests as accessible as possible, so neither of
@@ -206,6 +208,12 @@ these were viable options.
 # It Begins
 
 ![It begins](img/comments/it-begins.png)
+
+???
+
+This is a screenshot of a discussion thread on GitHub.
+
+It is also a screenshot of naivety.
 
 ---
 
@@ -226,12 +234,23 @@ class: center, middle
 
 # No Tests.
 
+???
+
+Prior to this project, WPT's test harness was essentially untested.
+
+It included a handful of manual tests, but a manual test is no more resilient
+to rot than documentation.
+
+We essentially used all of WPT as a test suite.
+
 ---
 class: center, middle
 background-image: url(img/servo.png)
 background-size: contain
 
 ???
+
+The Servo browser presented another challenge.
 
 Servo is the experimental browser that was started at Mozilla.
 
@@ -278,18 +297,28 @@ use the `Promise` API if the current test already involved promises.
 - Test bugs (someone else's fault)
 - Implementation bugs (someone else's fault)
 
+???
+
+Since we were vetting correctness by using the web platform tests themselves,
+even just diagnosing failures was a challenge.
+
+Reports wouldn't describe test harness regressions directly; instead, they
+appeared to highlight browser implementation errors.
+
+Those failures fell into 3 basic categories.
+
+While it's easy to assign blame, it doesn't matter whose "fault" it was.
+
+All of the failures were my problem.
+
 ---
 
 ### Behavioral regressions
 
-Timing (the event loop, tasks, and microtasks)
+Expected scheduling behavior:
 
     Task | Microtask | Synchronous steps
     1    | 1         | test() ---------> { /*body*/ } --> testharness complete
-    2    | 1         |                                                          (uncaught exceptions)
-
-    Task | Microtask | Synchronous steps
-    1    | 1         | async_test() ---> { t.done(); } -> testharness complete
     2    | 1         |                                                          (uncaught exceptions)
 
     Task | Microtask | Synchronous steps
@@ -306,6 +335,17 @@ Regression:
     2    | 1         |                        |         (uncaught exceptions)
     3    | 1         |                        `-------------------------------> testharness complete
 
+???
+
+One particularly challenging issue concerned the event loop, tasks, and
+microtasks.
+
+The initial version of the patch identified a number of tests with uncaught
+exceptions.
+
+It was tempting to call this an improvement, but we ultimately decided that
+ignoring these types of exceptions was an undocumented feature of the test
+harness.
 
 ---
 
@@ -612,6 +652,44 @@ Testing the test harness
 This ended up being more important to me than the feature itself.
 
 By mid-June, it was the reason I was still pushing for (and to) the patch.
+
+Now any change can be vetted for regressions in a matter of seconds (not
+		hours).
+
+When failures occur, they are expressed in terms of the test harness's
+capabilities (not some arbitrary web platform feature).
+
+---
+
+### Don't Call it `done` before it's `COMPLETE`
+
+    commit 2e6377ec71edfc2986e1ca3148e0b4b67d1c0f42
+    Author: Mike Pennisi <mike@mikepennisi.com>
+    Date:   Mon Sep 17 19:48:13 2018 -0400
+
+        PARTIAL: [service-workers] Use async cleanup
+
+     .../postmessage.https.html                         | 11 +++-
+     .../ServiceWorkerGlobalScope/unregister.https.html | 20 +++++--
+     .../ServiceWorkerGlobalScope/update.https.html     |  5 +-
+     .../about-blank-replacement.https.html             |  8 ++-
+
+    (...)
+
+     .../service-worker/websocket.https.html            | 31 ++++++-----
+     .../windowclient-navigate.https.html               | 17 ++----
+     .../service-worker/worker-interception.https.html  | 31 ++++++-----
+     61 files changed, 567 insertions(+), 361 deletions(-)
+
+???
+
+It'd be ironic for me to call this project finished when there was still work
+to do.
+
+The Service Workers still use that confusing pattern, so I've been working to
+integrate this feature.
+
+The hardest part is going to be finding someone to review all this!
 
 ---
 class: center, middle
