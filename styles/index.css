@@ -1,0 +1,42 @@
+body {
+  border: 0;
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+  color: #333;
+}
+a {
+  color: #336;
+}
+#container {
+  width: 450px;
+  margin: 2em auto;
+  border-right: 3px solid #eee;
+}
+header {
+  margin-bottom: 1.5em;
+} header .title {
+  margin: 0;
+  padding: 0;
+  font-weight: bold;
+} header .byline {
+  font-size: 1.2em;
+  font-weight: normal;
+  margin: 0;
+}
+.presentations {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+.presentation {
+  margin-bottom: 0.7em;
+} .presentation .date {
+  font-size: 0.8em;
+  display: block;
+  color: #333;
+}
+footer {
+  margin-top: 2em;
+  font-size: 0.8em;
+}
