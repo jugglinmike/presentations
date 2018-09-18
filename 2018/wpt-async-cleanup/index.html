@@ -3,7 +3,7 @@
   <head>
     <title>Changing the tires on an exploding car</title>
     <meta charset='utf-8'>
-    <meta name="DC.created" content="2018-09-13" />
+    <meta name="DC.created" content="2018-09-18" />
     <meta name="description" content="Reflection on adding a feature to a giant test suite" />
     <meta name="author" content="Mike Pennisi" />
 
@@ -24,6 +24,12 @@
 
       .side-by-side pre { width: 50%; float: left; }
       .deemphasized { opacity: 0.4; }
+      .image-attribution {
+        position: absolute;
+        bottom: 0;
+
+        font-size: 0.6em;
+      }
 
       /* Custom content */
       .remark-slide-content .license { position: absolute; bottom: 0; font-size: 0.6em; }
@@ -71,7 +77,7 @@ class: middle, center
 
 # Changing the tires on an exploding car
 
-2018-09-13
+2018-09-18
 
 .softer[
 
@@ -89,8 +95,48 @@ This presentation is licensed under a
 ]
 
 ---
+background-image: url(img/calipers.png)
+background-size: contain
+
+# Discussion
+
+Which is your favorite JavaScript testing framework and why?
+
+.image-attribution[
+  [Calipers!](https://www.flickr.com/photos/fciron/5510886440/) by [Lewis Meyer](https://www.flickr.com/photos/fciron/) is licensed [CC BY-NC 2.0](https://creativecommons.org/licenses/by-nc/2.0/)
+]
+
+---
 
 ![Bocoup's Service Workers project](img/bocoup-service-workers.png)
+
+---
+
+# The problem
+
+```js
+promise_test(function(t) {
+  var worker = "resources/client-navigate-worker.js";
+  var scope = "resources/client-navigate-frame.html";
+
+  return service_worker_register(t, worker, scope)
+    .then(function() { /* etc. */ })
+    .then(service_worker_unregister(t, scope));
+});
+```
+
+--
+
+```js
+promise_test(function(t) {
+  var worker = "resources/client-navigate-worker.js";
+  var scope = "resources/client-navigate-frame.html";
+
+  return service_worker_unregister_and_register(t, worker, scope)
+    .then(function() { /* etc. */ })
+    .then(service_worker_unregister(t, scope));
+});
+```
 
 ---
 class: side-by-side
@@ -151,6 +197,8 @@ these were viable options.
 
 ---
 
+# Initial Interest
+
 ![Initial interest](img/comments/initial-interest.png)
 
 ---
@@ -183,9 +231,23 @@ class: center, middle
 background-image: url(img/servo.png)
 background-size: contain
 
+???
+
+Servo is the experimental browser that was started at Mozilla.
+
+It also runs WPT, and it had a unique deficiency.
+
 --
 
 ![No Promises in Servo](img/comments/servo-no-promises.png)
+
+???
+
+It would be easy to change the test harness in a way that made it impossible
+for Servo to run WPT.
+
+We wanted to avoid this, so we took on an additional constraint: we would only
+use the `Promise` API if the current test already involved promises.
 
 ---
 
@@ -305,7 +367,7 @@ index fa753f8b41be..92d499bc691b 100644
 +  t.add_cleanup(() => {
 +    Promise.resolve(document.exitFullscreen()).catch(() => {});
 +  });
- 
+
    // When a message is received from a child frame, ensure that the report
    // matches the expectations.
 ```
@@ -334,7 +396,7 @@ Uncaught errors and unhandled rejections
 - [chromium-1109689: Fix two testharness.js tests with harness errors due to stray asserts](https://chromium-review.googlesource.com/c/chromium/src/+/1109689) (thanks, Robert!)
 
 ---
-class: center, middle
+class: middle
 
 ```diff
 diff --git a/workers/modules/dedicated-worker-import-blob-url.any.js b/workers/modules/dedicated-worker-import-blob-url.any.js
@@ -343,7 +405,7 @@ index 9a50b23893b3..e3f61867c5b9 100644
 +++ b/workers/modules/dedicated-worker-import-blob-url.any.js
 @@ -11,7 +11,10 @@ function import_blob_url_test(testCase) {
      const blobURL = URL.createObjectURL(blob);
- 
+
      const worker = new Worker(blobURL, { type: 'module'});
 -    const msgEvent = await new Promise(resolve => worker.onmessage = resolve);
 +    const msgEvent = await new Promise((resolve, reject) => {
@@ -354,6 +416,10 @@ index 9a50b23893b3..e3f61867c5b9 100644
    }, testCase.description);
  }
 ```
+
+???
+
+These were mostly easy fixes.
 
 ---
 
@@ -447,9 +513,11 @@ Yes, this did land with a typo :(
 
 ### Implementation bugs
 
-False negatives from tests known to elicit flaky behavior in Chromium
+False negatives from tests known to elicit flaky browser behavior
 
 ![IRC log discussing known flakiness in Chromium](img/comments/chromium-flakiness.png)
+
+![GitHub comment describing known flakiness in Firefox](img/comments/firefox-flakiness.png)
 
 ---
 
@@ -522,16 +590,22 @@ background-size: contain
 
 # Unanticipated benefits
 
-- Improving WPT's coverage for web platform features
-  1. [[testharness.js] Honor promises from cleanup fns](https://github.com/web-platform-tests/wpt/pull/8748)
-  2. [[web-locks] Detect errors to avoid timeouts](https://github.com/web-platform-tests/wpt/pull/12267)
-  3. [[html] Add test for iframe onerror event](https://github.com/web-platform-tests/wpt/pull/12283)
-  4. [Add test for blocked iframe navigation](https://github.com/web-platform-tests/wpt/pull/12290)
-  5. [[html] Verify synchronicity of beforeunload event](https://github.com/web-platform-tests/wpt/pull/12343)
+Improving WPT's coverage for web platform features
 
---
+1. [gh-8748: [testharness.js] Honor promises from cleanup fns](https://github.com/web-platform-tests/wpt/pull/8748)
+2. [gh-12267: [web-locks] Detect errors to avoid timeouts](https://github.com/web-platform-tests/wpt/pull/12267)
+3. [gh-12283: [html] Add test for iframe onerror event](https://github.com/web-platform-tests/wpt/pull/12283)
+4. [gh-12290: Add test for blocked iframe navigation](https://github.com/web-platform-tests/wpt/pull/12290)
+5. [gh-12343: [html] Verify synchronicity of beforeunload event](https://github.com/web-platform-tests/wpt/pull/12343)
+   [crbug-873683: Pass the web-platform-test: beforeunload-synchronous.html](https://bugs.chromium.org/p/chromium/issues/detail?id=873683)
 
-- Testing the test harness 
+![Results of one of the new conformance tests across many browsers](img/conformance-test-results.png)
+
+---
+
+# Unanticipated benefits
+
+Testing the test harness
 
 ???
 
